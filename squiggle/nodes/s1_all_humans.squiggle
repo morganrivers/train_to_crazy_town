@@ -1,6 +1,6 @@
-// Stop 1 - All present humans count equally (drop the nationality discount;
-// Singer's famine argument). Exemplar who gets off here: Alexander Berger.
-// Expected winner: cheap measurable global health / cash (GiveWell / GiveDirectly).
+// Stop 1 (trunk) - All present humans. Exemplar(s): Alexander Berger.
+// Expected winner: GiveWell top charity (AMF).
+// GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
 
 assumptions = {

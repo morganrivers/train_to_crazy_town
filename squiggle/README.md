@@ -8,16 +8,22 @@ assumptions change, so the winner changes down the train.
 
 ## Layout
 
-- **`base_model.squiggle`** — the shared logic. Defines the fixed donation
-  slate, the `wDALY/$` formula, and `export evaluate(assumptions)`, which ranks
-  the slate under a given assumption record.
-- **`nodes/*.squiggle`** — one model per stop. Each does
-  `import "hub:morganrivers/base_model" as base` and passes its own `assumptions`
-  (moral weight per domain, the animal `neuron_exponent`, the `accept_tiny_prob`
-  switch) to `base.evaluate`.
+- **`base_model.squiggle`** — the shared logic. Defines the `wDALY/$` formula and
+  `export evaluate(assumptions)`, which ranks the slate under a given assumption
+  record. Its `slate = [...]` block (between the `GENERATED SLATE` markers) is
+  generated from [`../data/model.json`](../data/model.json); the logic around it
+  is hand-written.
+- **`nodes/*.squiggle`** — one model per stop, **generated** from
+  `../data/model.json`. Each does `import "hub:morganrivers/base_model" as base`
+  and passes its own `assumptions` (moral weight per domain — derived from the
+  stop's moral circle — plus the animal `neuron_exponent` and the
+  `accept_tiny_prob` switch) to `base.evaluate`.
 
-Editing one number (e.g. `neuron_exponent` in `nodes/s3_inverts.squiggle`) flips
-the ranking — the instability the project shows.
+These files are generated: edit `../data/model.json` and run
+`python3 ../data/generate.py`, don't hand-edit the `.squiggle` files. Changing
+one number (e.g. `neuron_exponent` for `s3_inverts` in `model.json`) flips the
+ranking — the instability the project shows. `../data/test_sync.py` fails if a
+generated file drifts from the model.
 
 Numbers are placeholder order-of-magnitude estimates (`lo to hi` = lognormal 90%
 CI) traceable to published work: GiveWell CEAs; Rethink Priorities / Fischer

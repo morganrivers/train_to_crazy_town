@@ -1,0 +1,108 @@
+{
+  "_comment": "CANONICAL SINGLE SOURCE OF TRUTH for the train to crazy town. Every representation is generated from or reads this file: allocate.py (portfolio math) reads `orgs` + `stops` directly; diagram/train_tree.json (the draw.io graph) is generated from `stops`/`edges`/`orgs`; squiggle/base_model.squiggle (slate block) and squiggle/nodes/*.squiggle (per-node assumptions) are generated from `orgs` + `stops`. DO NOT hand-edit the generated files - edit this one and run `python3 data/generate.py`; `python3 data/test_sync.py` asserts the three stay in sync. Numbers keep their provenance: animal/invertebrate `x_givewell` figures are from published EA Forum CEAs (see each org's `source`/`source_url`); human, future and x-risk figures are illustrative placeholders. squiggle `daly_per_usd` are order-of-magnitude BOTECs (`[lo, hi]` = lognormal 90% CI). The two models are deliberately different valuation lenses over the SAME inputs, so their computed winners can differ; `top_pick` is the illustrative narrative winner shown on the diagram.",
+
+  "constants": {
+    "human_neurons": 8.6e10,
+    "soil_x_givewell": 1.11e5,
+    "soil_source_url": "https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane",
+    "fanatical_mult": 1e6,
+    "xrisk_refused_mult": 1e-6
+  },
+
+  "domains": {
+    "local":       {"squiggle": "local_human",   "animal": false},
+    "global":      {"squiggle": "global_human",  "animal": false},
+    "farmed":      {"squiggle": "farmed_animal", "animal": true},
+    "invert":      {"squiggle": "invertebrate",  "animal": true},
+    "wild_invert": {"squiggle": null,            "animal": true},
+    "future":      {"squiggle": "future_human",  "animal": false},
+    "xrisk":       {"squiggle": "xrisk_future",  "animal": false}
+  },
+
+  "orgs": [
+    {"id": "rotary",   "name": "Local Rotary Club",              "domain": "local",       "x_givewell": 0.01,   "source": "placeholder", "daly_per_usd": [0.0002, 0.002], "neurons": 8.6e10},
+    {"id": "gd",       "name": "GiveDirectly",                   "domain": "global",      "x_givewell": 0.1,    "source": "placeholder", "daly_per_usd": [0.005, 0.02],   "neurons": 8.6e10},
+    {"id": "amf",      "name": "GiveWell top charity (AMF)",     "domain": "global",      "x_givewell": 1.0,    "source": "baseline",    "daly_per_usd": [0.02, 0.1],     "neurons": 8.6e10},
+    {"id": "aim",      "name": "AIM / Charity Entrepreneurship", "domain": "global",      "x_givewell": 2.0,    "source": "placeholder", "daly_per_usd": [0.05, 0.3],     "neurons": 8.6e10},
+    {"id": "thl",      "name": "The Humane League",              "domain": "farmed",      "x_givewell": 1.51e3, "source": "published",   "source_url": "https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken", "daly_per_usd": [1, 30], "neurons": 2.2e8},
+    {"id": "swp",      "name": "Shrimp Welfare Project",         "domain": "invert",      "x_givewell": 6.43e4, "source": "published",   "source_url": "https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane", "daly_per_usd": [10, 5000], "neurons": 1e5},
+    {"id": "wildbugs", "name": "Wild insects (humane pesticides)", "domain": "wild_invert", "x_givewell": 2.37e4, "source": "published", "source_url": "https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane", "daly_per_usd": null, "neurons": null},
+    {"id": "allfed",   "name": "ALLFED",                         "domain": "future",      "x_givewell": 3.0,    "source": "placeholder", "daly_per_usd": [0.01, 100],     "neurons": 8.6e10},
+    {"id": "redwood",  "name": "AI safety (Redwood Research)",   "domain": "xrisk",       "x_givewell": 5.0,    "source": "placeholder", "daly_per_usd": [0.001, 1e6],    "neurons": 8.6e10}
+  ],
+
+  "stops": [
+    {"id": "s0_parochial", "stop": 0, "branch": "trunk",
+     "label": "Parochial\ncommunity + nation",
+     "file": "Only my community + nation count",
+     "circle": ["local"],
+     "neuron_exponent": 0, "accept_tiny_prob": false, "count_soil": false,
+     "figures": ["common-sense default"],
+     "top_pick": "Local Rotary Club",
+     "desc": "Least-crazy end of the line. Moral weight only on people near me; heavy pure-time discount; humans only; only near-certain, measurable effects count. Under these assumptions distant strangers, animals and the future are discounted to ~0, so the local/civic option wins. The pre-EA commonsense baseline; no single EA figure defends it."},
+
+    {"id": "s1_all_humans", "stop": 1, "branch": "trunk",
+     "label": "All present\nhumans",
+     "file": "All present humans count equally",
+     "circle": ["local", "global"],
+     "neuron_exponent": 0, "accept_tiny_prob": false, "count_soil": false,
+     "figures": ["Alexander Berger"],
+     "top_pick": "GiveWell top charity (AMF)",
+     "desc": "Flip: drop the nationality discount (Peter Singer's famine argument is the origin). A life saved abroad counts like a life saved at home, so cheap, measurable global-health and cash interventions dominate. Alexander Berger is the prominent exemplar of deliberately getting off the train here and staying with robust, evidence-backed global health & wellbeing (GiveWell / Open Phil)."},
+
+    {"id": "s2_animals", "stop": 2, "branch": "trunk",
+     "label": "Farmed\nanimals count",
+     "file": "Nonhuman animals count (welfare range)",
+     "circle": ["local", "global", "farmed"],
+     "neuron_exponent": 0.5, "accept_tiny_prob": false, "count_soil": false,
+     "figures": ["Peter Singer", "Lewis Bollard"],
+     "top_pick": "The Humane League",
+     "desc": "Flip: extend the moral circle to farmed vertebrates, weighted by a sentience-adjusted welfare range. Peter Singer (Animal Liberation) is the canonical articulator; Lewis Bollard leads Open Phil's farm-animal-welfare work. Corporate welfare campaigns avert enormous suffering per dollar and overtake human global health under most welfare-range estimates."},
+
+    {"id": "s3_inverts", "stop": 3, "branch": "trunk", "subgraph": true,
+     "label": "Invertebrates\ncount",
+     "file": "Invertebrates count (neuron-count exponent)",
+     "circle": ["local", "global", "farmed", "invert"],
+     "neuron_exponent": 0.4, "accept_tiny_prob": false, "count_soil": false,
+     "figures": ["Brian Tomasik"],
+     "top_pick": "Shrimp Welfare Project", "top_pick_note": "UNSTABLE",
+     "desc": "Flip: count invertebrates, with welfare range ~ (neuron count)^exponent. Brian Tomasik is the prominent voice on insect / invertebrate suffering. This is the worked example of the train's instability: sweeping the exponent from 0 to 2 swings shrimp welfare range across ~12 orders of magnitude and flips the ranking (edit neuron_exponent in the node's Squiggle model to watch the top pick move). It is the FORK point: the tree splits here into a soil-animal branch (A) and a longtermist branch (F)."},
+
+    {"id": "s4_soil", "stop": 4, "branch": "A",
+     "label": "Soil animals\ncount (branch A)",
+     "file": "Soil / wild invertebrates count (sign uncertain)",
+     "circle": ["local", "global", "farmed", "invert", "wild_invert"],
+     "neuron_exponent": 0.4, "accept_tiny_prob": false, "count_soil": true,
+     "figures": ["Brian Tomasik"],
+     "top_pick": "GiveWell top charity (AMF)", "top_pick_note": "sign uncertain",
+     "squiggle": false,
+     "desc": "Branch A (biological micro-minds): once you count the ~10^19 soil animals affected by land use, GiveWell top charities' cropland effect works out to ~1.11 kQALY/$ (~1.74x the Shrimp Welfare Project Humane Slaughter Initiative). The 'normal' human charity leaps to ~1.11e5x GiveWell's own direct value - and its SIGN is uncertain (it could be net-negative for soil nematodes). This branch has no Squiggle model yet: there is no comparable published soil-animal BOTEC to copy, so it is not fabricated."},
+
+    {"id": "s4_future", "stop": 4, "branch": "F",
+     "label": "Future\npeople count",
+     "file": "Future people count (low/zero time discount)",
+     "circle": ["local", "global", "farmed", "invert", "future"],
+     "neuron_exponent": 0.4, "accept_tiny_prob": false, "count_soil": false,
+     "figures": ["Ajeya Cotra", "Toby Ord"],
+     "top_pick": "ALLFED",
+     "desc": "Branch F (longtermist): stop discounting future lives. Toby Ord (The Precipice) and Will MacAskill (What We Owe The Future) are the prominent longtermists; Ajeya Cotra coined the 'train to crazy town' metaphor and rides roughly to here via worldview diversification, taking the future seriously while flagging where it gets uncomfortable. Reducing global-catastrophic risk (e.g. ALLFED's civilisational-resilience work) starts to dominate present-focused giving. The fanatical x-risk tail is still refused here (accept_tiny_prob: false)."},
+
+    {"id": "s5_astro", "stop": 5, "branch": "F",
+     "label": "Astronomical\nstakes",
+     "file": "Astronomical waste + tiny-probability bets count",
+     "circle": ["local", "global", "farmed", "invert", "future", "xrisk"],
+     "neuron_exponent": 0.4, "accept_tiny_prob": true, "count_soil": false,
+     "figures": ["Nick Bostrom", "Eliezer Yudkowsky"],
+     "top_pick": "AI safety (Redwood Research)",
+     "desc": "Last marked stop on branch F: accept Nick Bostrom's astronomical-waste argument and take small-probability / huge-payoff bets at face value; Eliezer Yudkowsky pushes AI-risk reasoning to its stark conclusions. Existential-risk reduction dominates everything. This is the far end Cotra's near-termist deliberately gets off before; ride further and you reach fanaticism / Pascal's-mugging territory."}
+  ],
+
+  "edges": [
+    {"from": "s0_parochial",  "to": "s1_all_humans", "label": "drop nationality discount",  "kind": "expand"},
+    {"from": "s1_all_humans", "to": "s2_animals",    "label": "add animal welfare range",    "kind": "expand"},
+    {"from": "s2_animals",    "to": "s3_inverts",    "label": "add invertebrate sentience",  "kind": "expand"},
+    {"from": "s3_inverts",    "to": "s4_soil",       "label": "count soil / wild animals",   "kind": "branch"},
+    {"from": "s3_inverts",    "to": "s4_future",     "label": "stop discounting the future", "kind": "branch"},
+    {"from": "s4_future",     "to": "s5_astro",      "label": "accept astronomical waste",   "kind": "expand"}
+  ]
+}

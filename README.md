@@ -53,10 +53,11 @@ flip. Ordered by how much moral expansion they reward:
 |---|---|---|
 | **Local Rotary Club** | Community / civic | the root (parochial) |
 | **GiveDirectly** | Global poor, direct cash | moral circle = all present humans |
-| **GiveWell top charity (AMF / bednets)** | Global health, lives saved | same, DALY-maximizing |
+| **GiveWell top charity (AMF)** | Global health, lives saved | same, DALY-maximizing |
 | **AIM / Charity Entrepreneurship** | Incubation across health, policy, animals | higher-variance, expanding scope |
-| **Farm animal welfare (The Humane League)** | Farmed vertebrates | moral circle includes animals |
+| **The Humane League** | Farmed vertebrates | moral circle includes animals |
 | **Shrimp Welfare Project** | Invertebrates | the exponent-sensitive stops |
+| **Wild insects (humane pesticides)** | Wild / soil invertebrates | the soil-animal branch (A) |
 | **ALLFED** | Global catastrophic risk / resilience | near–far bridge, future people |
 | **AI safety (Redwood Research)** | Existential risk, astronomical waste | the far end of the line |
 
@@ -70,17 +71,30 @@ flip. Ordered by how much moral expansion they reward:
   invertebrates plus a neuron-count exponent → Shrimp Welfare Project; add future
   people and accept small-probability/large-payoff bets → x-risk. The winner
   changes as you descend.
-- **Nested subgraphs.** Above a set node count, a node expands into its own tree:
-  the invertebrate node into the soil-animal sub-tree (macroarthropods /
-  microarthropods / nematodes); the longtermism node into a digital-minds /
-  x-risk sub-tree.
+- **The tree forks** at the invertebrate stop into a soil-animal branch (**A**),
+  where counting ~10¹⁹ soil animals reverses which human charities look good, and
+  a longtermist branch (**F**), future people → astronomical stakes. Further
+  nesting (the soil sub-tree of macroarthropods / microarthropods / nematodes; a
+  digital-minds / x-risk sub-tree) is where a node later expands into its own
+  child tree.
+
+## Single source of truth (`data/`)
+
+Every number lives once, in **[`data/model.json`](data/model.json)**: the orgs
+(with sourced cost-effectiveness figures), the worldview/branch tree, and the
+assumption knobs. `allocate.py` reads it directly; `diagram/train_tree.json` and
+the Squiggle models are **generated** from it by `data/generate.py`; and
+`data/test_sync.py` (run in CI) fails if any generated copy drifts. Edit
+`model.json`, run `python3 data/generate.py`, and all three representations move
+together. See [`data/README.md`](data/README.md).
 
 ## Diagram pipeline (`diagram/`)
 
 Graph-generation code mirroring the Graphviz→draw.io setup in
 `morganrivers/iati_webapp` (`docs/diagram/`):
 
-- **`train_tree.json`** — the node/edge graph. Nodes are get-off points with a
+- **`train_tree.json`** — the node/edge graph, **generated from
+  `data/model.json`** (do not hand-edit). Nodes are get-off points with a
   `top_pick`, a `squiggle` model path, and a `figures` list — the public figures
   who most prominently articulate that stop's worldview (Berger; Singer /
   Bollard; Tomasik; Cotra / Ord; Bostrom / Yudkowsky). Edges are
@@ -117,10 +131,12 @@ Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 
 `python3 allocate.py --center W --diversification D [--animal-weight M]` prints
 each org's cost-effectiveness (as a multiple of GiveWell top charities) and its
-share of a portfolio; `--list` shows the worldviews. The worldview-diversification
+share of a portfolio; `--list` shows the worldviews (`parochial`, `all_humans`,
+`animals`, `inverts`, `soil`, `future`, `astro`). The worldview-diversification
 coefficient sets the ordering: `D = 0` funds only the center worldview's single
 best org (pure EV-max); higher `D` spreads credence across worldviews by depth
-and funds the best org in each.
+and funds the best org in each. The orgs, their figures and the worldview tree
+are read from `data/model.json` (nothing is hard-coded here).
 
 The tree forks after the invertebrate stop into a soil-animal branch — where the
 sign of the effect on ~10¹⁹ nematodes reverses which human charities look good —

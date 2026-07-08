@@ -1,0 +1,23 @@
+name: sync
+
+# Enforce the single source of truth: data/model.json drives allocate.py, the
+# diagram graph (diagram/train_tree.json) and the Squiggle models. This job
+# regenerates the derived files and fails if any committed copy has drifted, so
+# a number can never be edited in one representation without the others.
+
+on:
+  push:
+    branches: [main, "claude/train-crazy-town-pr-adangy"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assert generated files are in sync with data/model.json
+        run: python3 data/test_sync.py

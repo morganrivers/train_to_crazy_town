@@ -31,11 +31,14 @@ edges = G['edges']
 # https://squigglehub.org/models/<owner>/<node-id>. Owner defaults to
 # morganrivers; override with SQUIGGLE_HUB_OWNER.
 REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-concept-j2y7pn')
+REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-pr-adangy')
 HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', 'morganrivers')
 
 def model_link(n):
-    """Return the node's Squiggle Hub model URL."""
+    """Return the node's Squiggle Hub model URL, or None if it has no model
+    (e.g. the soil-animal branch, which has no published BOTEC to copy yet)."""
+    if not n.get('squiggle'):
+        return None
     return f'https://squigglehub.org/models/{HUB_OWNER}/{n["id"]}'
 
 
