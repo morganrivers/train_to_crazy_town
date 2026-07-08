@@ -1,12 +1,10 @@
-// Stop 1 (trunk) - All present humans. Exemplar(s): Alexander Berger.
-// Expected winner: GiveWell top charity (AMF).
+// Stop 1 (trunk) - Humanitarian all present humans. Exemplar(s): Alexander Berger.
+// This node inherits s0_parochial and adds w_global=1.
+// Winner (illustrative): GiveWell top charity (AMF).
 // GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s0_parochial" as parent
 
-assumptions = {
-  w_local: 1, w_global: 1, w_farmed: 0, w_invert: 0, w_future: 0, w_xrisk: 0,
-  neuron_exponent: 0,
-  accept_tiny_prob: false,
-}
+export coeffs = Dict.merge(parent.coeffs, { w_global: 1 })
 
-ranking = base.evaluate(assumptions)
+ranking = base.evaluate(coeffs)

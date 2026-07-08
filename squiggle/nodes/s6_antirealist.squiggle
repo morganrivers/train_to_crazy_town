@@ -1,0 +1,10 @@
+// Stop 6 (R) - Moral anti-realism nothing matters. Exemplar(s): J. L. Mackie.
+// This node inherits s5_astro and adds override="antirealist".
+// Winner (illustrative): Local soup kitchen (all negative - keep your money).
+// GENERATED from data/model.json by data/generate.py - do not edit by hand.
+import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s5_astro" as parent
+
+export coeffs = Dict.merge(parent.coeffs, { override: "antirealist" })
+
+ranking = base.evaluate(coeffs)

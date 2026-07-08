@@ -1,12 +1,10 @@
 // Stop 5 (F) - Astronomical stakes. Exemplar(s): Nick Bostrom, Eliezer Yudkowsky.
-// Expected winner: AI safety (Redwood Research).
+// This node inherits s4_future and adds w_xrisk=1, accept_tiny_prob=true.
+// Winner (illustrative): AI safety (Redwood Research).
 // GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s4_future" as parent
 
-assumptions = {
-  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 1,
-  neuron_exponent: 0.4,
-  accept_tiny_prob: true,
-}
+export coeffs = Dict.merge(parent.coeffs, { w_xrisk: 1, accept_tiny_prob: true })
 
-ranking = base.evaluate(assumptions)
+ranking = base.evaluate(coeffs)

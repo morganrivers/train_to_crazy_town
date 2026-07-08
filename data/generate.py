@@ -5,8 +5,11 @@ derived representations, so no number lives in more than one place.
 
 Writes / overwrites:
   - diagram/train_tree.json                (node/edge graph the diagram builds from)
-  - squiggle/base_model.squiggle           (the GENERATED SLATE block only)
-  - squiggle/nodes/*.squiggle              (one per stop that has a Squiggle model)
+  - squiggle/base_model.squiggle           (the GENERATED SOUP KITCHEN BOTEC, SLATE
+                                            and DEFAULTS blocks only)
+  - squiggle/nodes/*.squiggle              (one per stop that has a Squiggle model;
+                                            each imports its PARENT node and merges
+                                            its one-line `sets` delta)
 
 Usage:
   python3 data/generate.py            # regenerate everything
@@ -32,11 +35,8 @@ BASE_MODEL = os.path.join(ROOT, "squiggle", "base_model.squiggle")
 NODES_DIR = os.path.join(ROOT, "squiggle", "nodes")
 HUB_OWNER = "morganrivers"
 
-SLATE_START = "// >>> GENERATED SLATE"
-SLATE_END = "// <<< GENERATED SLATE"
 
-
-# ---- number formatting for Squiggle ----------------------------------------
+# ---- number / value formatting for Squiggle --------------------------------
 def sq_num(n):
     """Render a JSON number as compact Squiggle source (drop trailing .0)."""
     if isinstance(n, bool):
@@ -48,10 +48,27 @@ def sq_num(n):
     return repr(n)
 
 
+def sq_val(v):
+    """Render a JSON scalar (number/bool/string) as Squiggle source."""
+    if isinstance(v, str):
+        return f'"{v}"'
+    return sq_num(v)
+
+
 def sq_neurons(n):
     if math.isclose(n, M.CONSTANTS["human_neurons"]):
         return "humanNeurons"
     return sq_num(n)
+
+
+def camel(s):
+    """snake_case / id -> camelCase Squiggle identifier."""
+    parts = s.split("_")
+    return parts[0] + "".join(p.capitalize() for p in parts[1:])
+
+
+def botec_var(org):
+    return camel(org["id"]) + "DalyPerUsd"
 
 
 # ---- diagram/train_tree.json ------------------------------------------------
@@ -65,9 +82,11 @@ def build_train_tree():
             "id": s["id"],
             "stop": s["stop"],
             "branch": s["branch"],
+            "parent": s.get("parent"),
             "file": s["file"],
             "lbl": s["label"],
             "top_pick": pick,
+            "sets": s.get("sets", {}),
             "figures": s["figures"],
             "squiggle": (f'squiggle/nodes/{s["id"]}.squiggle'
                          if s.get("squiggle", True) else None),
@@ -79,12 +98,15 @@ def build_train_tree():
 
     tree = {
         "_comment": ("GENERATED from data/model.json by data/generate.py - do not edit "
-                     "by hand. Nodes are get-off points (a fixed set of moral assumptions); "
-                     "edges are crucial-consideration flips. Every node ranks the SAME "
-                     "donation slate; only the assumptions change, so 'top_pick' changes as "
-                     "you ride down. 'figures' names the public people who most prominently "
-                     "articulate that stop's worldview. The tree forks at s3_inverts into a "
-                     "soil-animal branch (A) and a longtermist branch (F)."),
+                     "by hand. Nodes are get-off points (a coefficient record); each edge "
+                     "flips ONE crucial consideration, recorded in the child's `sets`. Every "
+                     "node ranks the SAME donation slate; only the coefficients change, so "
+                     "'top_pick' changes as you ride down. 'parent' is the node whose coeffs "
+                     "this one inherits and merges its `sets` onto. 'figures' names the public "
+                     "people who most prominently articulate that stop's worldview. The tree "
+                     "forks at s3_inverts (soil branch A / longtermist branch F), forks again "
+                     "at s4_future (discount / nuclear / astronomical), and ends past s5_astro "
+                     "in the two override stops (Boltzmann brain B, moral anti-realism R)."),
         "slate": [o["name"] for o in M.ORGS],
         "nodes": nodes,
         "edges": M.EDGES,
@@ -92,51 +114,107 @@ def build_train_tree():
     return json.dumps(tree, indent=2, ensure_ascii=False) + "\n"
 
 
-# ---- squiggle/base_model.squiggle (slate block) -----------------------------
+# ---- squiggle/base_model.squiggle (three generated blocks) ------------------
+def build_soup_botec_block():
+    """The soup-kitchen worked BOTEC, rendered from the org's `botec` inputs."""
+    org = next(o for o in M.ORGS if o.get("botec"))
+    b = org["botec"]
+    plo, phi = b["people_helped_per_usd"]
+    wlo, whi = b["wellbeing_gain_daly"]
+    cf = b["counterfactual_bank_value"]
+    return "\n".join([
+        f"{botec_var(org)} = {{",
+        f"  peopleHelpedPerUsd = {sq_num(plo)} to {sq_num(phi)}",
+        f"  wellbeingGainDaly = {sq_num(wlo)} to {sq_num(whi)}",
+        f"  counterfactualBankValue = {sq_num(cf)}",
+        f"  peopleHelpedPerUsd * wellbeingGainDaly * (1 - counterfactualBankValue)",
+        f"}}",
+    ])
+
+
 def build_slate_block():
     lines = ["slate = ["]
     for o in M.squiggle_orgs():
         dom = M.DOMAINS[o["domain"]]["squiggle"]
-        lo, hi = o["daly_per_usd"]
+        if o.get("botec"):
+            daly = botec_var(o)
+        else:
+            lo, hi = M.org_daly_per_usd(o)
+            daly = f"{sq_num(lo)} to {sq_num(hi)}"
         lines.append(
             f'  {{ name: "{o["name"]}", domain: "{dom}", '
-            f'daly_per_usd: {sq_num(lo)} to {sq_num(hi)}, neurons: {sq_neurons(o["neurons"])} }},'
+            f'daly_per_usd: {daly}, neurons: {sq_neurons(o["neurons"])} }},'
         )
     lines.append("]")
     return "\n".join(lines)
 
 
+def build_defaults_block():
+    lines = ["export defaults = {"]
+    for k, v in M.COEFF_DEFAULTS.items():
+        lines.append(f"  {k}: {sq_val(v)},")
+    lines.append("}")
+    return "\n".join(lines)
+
+
+REGIONS = [
+    ("// >>> GENERATED SOUP KITCHEN BOTEC", "// <<< GENERATED SOUP KITCHEN BOTEC", build_soup_botec_block),
+    ("// >>> GENERATED SLATE", "// <<< GENERATED SLATE", build_slate_block),
+    ("// >>> GENERATED DEFAULTS", "// <<< GENERATED DEFAULTS", build_defaults_block),
+]
+
+
+def replace_region(lines, start_marker, end_marker, inner):
+    try:
+        i = next(k for k, l in enumerate(lines) if l.startswith(start_marker))
+        j = next(k for k, l in enumerate(lines) if l.startswith(end_marker))
+    except StopIteration:
+        raise SystemExit(f"markers {start_marker!r}/{end_marker!r} not found in {BASE_MODEL}")
+    return lines[:i + 1] + inner.splitlines() + lines[j:]
+
+
 def build_base_model(existing):
     lines = existing.splitlines()
-    try:
-        i = next(k for k, l in enumerate(lines) if l.startswith(SLATE_START))
-        j = next(k for k, l in enumerate(lines) if l.startswith(SLATE_END))
-    except StopIteration:
-        raise SystemExit(f"markers {SLATE_START!r}/{SLATE_END!r} not found in {BASE_MODEL}")
-    out = lines[:i + 1] + build_slate_block().splitlines() + lines[j:]
-    return "\n".join(out) + "\n"
+    for start, end, builder in REGIONS:
+        lines = replace_region(lines, start, end, builder())
+    return "\n".join(lines) + "\n"
 
 
-# ---- squiggle/nodes/*.squiggle ----------------------------------------------
+# ---- squiggle/nodes/*.squiggle (import-chain, one delta per node) -----------
 def build_node(s):
-    w = M.weights_from_circle(s["circle"])
     figs = ", ".join(s["figures"])
     headline = " ".join(s["label"].split("\n"))
     pick = s["top_pick"] + (f' ({s["top_pick_note"]})' if s.get("top_pick_note") else "")
-    weight_line = ", ".join(f"{k}: {v}" for k, v in w.items())
+    parent = s.get("parent")
+    delta = s.get("sets", {})
+    delta_src = "{ " + ", ".join(f"{k}: {sq_val(v)}" for k, v in delta.items()) + " }"
+
+    imports = f'import "hub:{HUB_OWNER}/base_model" as base\n'
+    if parent:
+        imports += f'import "hub:{HUB_OWNER}/{parent}" as parent\n'
+        inherited = "parent.coeffs"
+        inherit_note = f"inherits {parent}"
+    else:
+        inherited = "base.defaults"
+        inherit_note = "starts from base.defaults (the parochial root)"
+
+    if delta:
+        coeffs_line = f"export coeffs = Dict.merge({inherited}, {delta_src})"
+        adds = "adds " + ", ".join(f"{k}={sq_val(v)}" for k, v in delta.items())
+    else:
+        coeffs_line = f"export coeffs = {inherited}"
+        adds = "adds nothing (the root baseline)"
+
     return (
         f"// Stop {s['stop']} ({s['branch']}) - {headline}. Exemplar(s): {figs}.\n"
-        f"// Expected winner: {pick}.\n"
+        f"// This node {inherit_note} and {adds}.\n"
+        f"// Winner (illustrative): {pick}.\n"
         f"// GENERATED from data/model.json by data/generate.py - do not edit by hand.\n"
-        f'import "hub:{HUB_OWNER}/base_model" as base\n'
+        f"{imports}"
         f"\n"
-        f"assumptions = {{\n"
-        f"  {weight_line},\n"
-        f"  neuron_exponent: {sq_num(s['neuron_exponent'])},\n"
-        f"  accept_tiny_prob: {str(s['accept_tiny_prob']).lower()},\n"
-        f"}}\n"
+        f"{coeffs_line}\n"
         f"\n"
-        f"ranking = base.evaluate(assumptions)\n"
+        f"ranking = base.evaluate(coeffs)\n"
     )
 
 

@@ -81,6 +81,7 @@ STOP_STYLE = [
     'fillColor=#f6e0c0;strokeColor=#c9932a;fontColor=#5a3f10;',   # 3 amber (first unstable)
     'fillColor=#f2ccc0;strokeColor=#c96a4a;fontColor=#5a2410;',   # 4 clay
     'fillColor=#eeb3b3;strokeColor=#c0392b;fontColor=#5a1410;',   # 5 red (crazy town)
+    'fillColor=#d7c6e6;strokeColor=#6a3fa0;fontColor=#2c1650;',   # 6 violet (overrides)
 ]
 NODE_BASE = 'rounded=1;whiteSpace=wrap;html=1;fontSize=11;'
 def node_style(n):
@@ -117,7 +118,7 @@ mid = []  # edges
 fg = []   # nodes (front)
 
 # one dotted band per stop, labelled with how far down the train it is
-STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9932a', '#c96a4a', '#c0392b']
+STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9932a', '#c96a4a', '#c0392b', '#6a3fa0']
 for s in stops:
     col = STOP_COL[min(s, len(STOP_COL) - 1)]
     group_box(nodes, set(by_stop[s]), pos, X, Y, f'band_{s}',
