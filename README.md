@@ -147,9 +147,13 @@ Stubbed graph-generation code, mirroring the Graphviz→draw.io setup in
 `morganrivers/iati_webapp` (`docs/diagram/`):
 
 - **`train_tree.json`** — the node/edge graph. Nodes are get-off points (one
-  moral-assumption set each) with a `top_pick` and a **`guesstimate`** slot;
-  edges are crucial-consideration flips. Currently one canonical spine (root →
-  x-risk) plus a `subgraph`-flagged fork point; **branching is TBD** (above).
+  moral-assumption set each) with a `top_pick`, a **`guesstimate`** slot, and a
+  **`figures`** list — the public, famous-ish people who most prominently
+  *articulate* that stop's worldview (Berger, Singer/Bollard, Tomasik,
+  Cotra/Ord, Bostrom/Yudkowsky). These are exemplars of the view, not claims
+  about where each person personally gets off. Edges are crucial-consideration
+  flips. Currently one canonical spine (root → x-risk) plus a `subgraph`-flagged
+  fork point; **branching is TBD** (above).
 - **`graph_common.py`** — shared primitives (Graphviz `dot` run + plain-format
   parse, coordinate transform, node/edge/band/mxfile emission), adapted from
   iati's `drawio_common.py`.
@@ -157,8 +161,13 @@ Stubbed graph-generation code, mirroring the Graphviz→draw.io setup in
   crazy at the top), colours nodes on a craziness gradient by stop, bands each
   stop, and writes an editable `.drawio`. Requires Graphviz `dot` on PATH.
 - **`render_diagram.py`** — stub for `.drawio` → PNG/SVG (defers to iati's
-  `drawio_to_png.py`). **PNG/SVG and the generated `.drawio` are `.gitignore`d —
-  never committed.**
+  `drawio_to_png.py`). **PNG/SVG stay `.gitignore`d — never committed.**
+
+**Public view link.** The repo is public, so the committed `train_tree.drawio`
+is served read-only by draw.io straight from its raw GitHub URL — no account, no
+export. `build_diagram.py` prints the ready-made link on each run
+(`https://viewer.diagrams.net/?...&chrome=0#U<raw .drawio URL>`); override the
+branch/ref with the `DIAGRAM_REF` env var.
 
 **Guesstimate — stubbed, not wired.** Each node will link to its own Guesstimate
 model, all sharing one parameterised template (same donation slate, same

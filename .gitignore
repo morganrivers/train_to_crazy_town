@@ -2,9 +2,9 @@
 *.png
 *.svg
 
-# Generated draw.io (regenerate with diagram/build_diagram.py). Un-ignore this if
-# you decide to hand-edit + version the diagram the way iati_webapp does.
-*.drawio
+# The generated .drawio IS committed: the repo is public, so draw.io serves it
+# read-only from its raw GitHub URL (see the view link build_diagram.py prints).
+# Regenerate with diagram/build_diagram.py.
 
 # Python
 __pycache__/

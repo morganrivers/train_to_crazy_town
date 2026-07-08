@@ -56,11 +56,13 @@ def size(n):
     return w, h
 
 
-# Show the node's argmax donation target under the assumption label, and mark
-# subgraph nodes so it is obvious where a child tree will open.
+# Compose the node label: assumption headline, its argmax donation target, and
+# the public figure(s) who most prominently articulate that stop's worldview.
+# Mark subgraph nodes so it is obvious where a child tree will open.
 for n in nodes:
     tag = '  ▼' if n.get('subgraph') else ''   # ▼ = click to open sub-tree (TBD)
-    n['lbl'] = n['lbl'] + '\n→ ' + n.get('top_pick', '?') + tag
+    figs = ', '.join(n.get('figures', []))
+    n['lbl'] = n['lbl'] + '\n→ ' + n.get('top_pick', '?') + tag + ('\n(' + figs + ')' if figs else '')
     n['w'], n['h'] = size(n)
 
 
@@ -125,3 +127,17 @@ mid = emit_edges(edges, edgepts, X, Y, EBASE, EK)
 xml = wrap_mxfile(bg + mid + fg, 'Train to crazy town', 'train-to-crazy-town')
 open(OUT, 'w').write(xml)
 print('wrote %s: nodes=%d edges=%d bytes=%d' % (OUT, len(pos), len(edges), len(xml)))
+
+
+# ---------- public "anyone can view" draw.io link ---------------------------
+# The repo is public, so draw.io can open the committed .drawio straight from its
+# raw GitHub URL via the #U hash (chrome=0 => read-only viewer, no account). This
+# is the link "auto-populated by repo code": it points at whatever this build
+# just committed. Override the ref via DIAGRAM_REF (defaults to the dev branch).
+# Uses raw refs/heads/<branch> form so branch names containing '/' resolve.
+import urllib.parse
+REPO = 'morganrivers/train_to_crazy_town'
+REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-concept-j2y7pn')
+raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{os.path.basename(OUT)}'
+view = 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
+print('view (read-only, public): ' + view)
