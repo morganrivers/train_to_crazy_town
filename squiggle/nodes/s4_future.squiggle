@@ -1,0 +1,14 @@
+// Stop 4 - Future people count (stop discounting the future). Exemplars: Ajeya
+// Cotra (worldview diversification; coined the metaphor), Toby Ord, Will
+// MacAskill. Global-catastrophic-risk reduction starts to dominate; the
+// fanatical x-risk tail is still refused (accept_tiny_prob: false).
+// Expected winner: ALLFED.
+import "../base_model.squiggle" as base
+
+assumptions = {
+  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 0,
+  neuron_exponent: 0.4,
+  accept_tiny_prob: false,
+}
+
+ranking = base.evaluate(assumptions)

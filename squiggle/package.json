@@ -1,0 +1,13 @@
+{
+  "name": "train-to-crazy-town-squiggle",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared-logic Squiggle models for the train-to-crazy-town worldview tree.",
+  "scripts": {
+    "start": "node run.mjs"
+  },
+  "dependencies": {
+    "@quri/squiggle-lang": "^0.10.0"
+  }
+}

@@ -26,23 +26,31 @@ nodes = [n for n in G['nodes'] if not n.get('id', '').startswith('_')]
 edges = G['edges']
 
 
-# ---------- Guesstimate links (STUB) ----------------------------------------
-# Each node will eventually link to its own Guesstimate model, all sharing one
-# parameterised template (the "shared logic"): the same donation slate and the
-# same E[welfare-adjusted DALY averted / $] formula, with this node's moral
-# assumptions dialled in. For now train_tree.json carries `guesstimate: null` on
-# every node; when the models exist, drop their URLs there (or resolve them from
-# a slug here) and they become the node's clickable target.
-#
-# Open question for the design: is Guesstimate the right tool, or should the
-# shared logic live in Squiggle / a notebook that we snapshot? Left undecided.
-def guesstimate_link(n):
-    """Return the node's Guesstimate model URL, or '' if not wired up yet."""
-    return n.get('guesstimate') or ''  # TODO: point at the shared-logic model per node
+# ---------- per-node model links --------------------------------------------
+# The shared logic now lives in Squiggle (squiggle/base_model.squiggle); each
+# node has its own tiny model in squiggle/nodes/ that imports the base and dials
+# in that node's moral assumptions. train_tree.json points at it via the
+# `squiggle` field. By default the node's clickable target is the raw GitHub URL
+# of that .squiggle file (works today, auto-populated from the repo). Set
+# SQUIGGLE_HUB_OWNER to instead point at a live Squiggle Hub model
+# (https://squigglehub.org/models/<owner>/<node-id>) once you publish them there
+# - a Hub link renders a running, editable model. See squiggle/README.md.
+REPO = 'morganrivers/train_to_crazy_town'
+REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-concept-j2y7pn')
+HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', '')
+
+def model_link(n):
+    """Return the node's Squiggle model URL (Hub if configured, else raw GitHub)."""
+    if n.get('model_url'):                 # explicit override wins
+        return n['model_url']
+    if HUB_OWNER:
+        return f'https://squigglehub.org/models/{HUB_OWNER}/{n["id"]}'
+    path = n.get('squiggle')
+    return f'https://github.com/{REPO}/blob/{REF}/{path}' if path else ''
 
 
 for n in nodes:
-    link = guesstimate_link(n)
+    link = model_link(n)
     if link:
         n['link'] = link
 
@@ -136,8 +144,6 @@ print('wrote %s: nodes=%d edges=%d bytes=%d' % (OUT, len(pos), len(edges), len(x
 # just committed. Override the ref via DIAGRAM_REF (defaults to the dev branch).
 # Uses raw refs/heads/<branch> form so branch names containing '/' resolve.
 import urllib.parse
-REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-concept-j2y7pn')
 raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{os.path.basename(OUT)}'
 view = 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
 print('view (read-only, public): ' + view)

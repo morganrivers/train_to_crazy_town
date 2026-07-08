@@ -1,0 +1,66 @@
+// base_model.squiggle
+// Shared logic for the "train to crazy town" worldview tree. EVERY node imports
+// this file and passes its own `assumptions` record to `evaluate`. The decision
+// rule never changes - each node maximizes the SAME quantity, expected
+// welfare-adjusted DALYs averted per dollar (wDALY/$). Only the moral
+// assumptions change, so the winner changes as you ride down the train.
+//
+// NUMBERS ARE PLACEHOLDER BOTECs (order-of-magnitude, deliberately stubbed).
+// `lo to hi` denotes a lognormal 90% CI. Replace each with sourced estimates
+// (GiveWell CEAs; Rethink Priorities / Fischer welfare ranges; standard
+// invertebrate and x-risk back-of-envelopes) - that is the "existing work" the
+// MVP follows. Do not treat these as claims.
+
+humanNeurons = 8.6e10
+
+// ---- donation slate (fixed across every node) ------------------------------
+// daly_per_usd = direct effect on the target's PRIMARY beneficiary, before any
+// moral weighting. domain drives which assumption knobs apply. neurons is the
+// representative species, used only to scale animal welfare range.
+slate = [
+  { name: "Local Rotary Club",      domain: "local_human",   daly_per_usd: 0.0002 to 0.002, neurons: humanNeurons },
+  { name: "GiveDirectly",           domain: "global_human",  daly_per_usd: 0.005 to 0.02,   neurons: humanNeurons },
+  { name: "GiveWell (AMF)",         domain: "global_human",  daly_per_usd: 0.02 to 0.1,     neurons: humanNeurons },
+  { name: "AIM / Charity Entrep.",  domain: "global_human",  daly_per_usd: 0.05 to 0.3,     neurons: humanNeurons },
+  { name: "The Humane League",      domain: "farmed_animal", daly_per_usd: 1 to 30,         neurons: 2.2e8 },
+  { name: "Shrimp Welfare Project", domain: "invertebrate",  daly_per_usd: 10 to 5000,      neurons: 1e5 },
+  { name: "ALLFED",                 domain: "future_human",  daly_per_usd: 0.01 to 100,     neurons: humanNeurons },
+  { name: "AI safety (x-risk)",     domain: "xrisk_future",  daly_per_usd: 0.001 to 1e6,    neurons: humanNeurons },
+]
+
+// ---- assumptions schema (what each NODE sets) ------------------------------
+// A flat record:
+//   w_local, w_global, w_farmed, w_invert, w_future, w_xrisk : moral weight per
+//       domain (0 = outside this node's moral circle, 1 = fully counted).
+//   neuron_exponent : animal welfare range ~ (neurons/humanNeurons)^exponent
+//       (0 => all animals count like humans; ~1 => neuron-proportional; the
+//       0..2 sweep is what makes the invertebrate stop unstable).
+//   accept_tiny_prob : if false, refuse to take the fanatical fat tail of
+//       tiny-probability / huge-payoff x-risk bets at face value.
+
+domainWeight(row, a) =
+  if row.domain == "local_human" then a.w_local
+  else if row.domain == "global_human" then a.w_global
+  else if row.domain == "farmed_animal" then a.w_farmed
+  else if row.domain == "invertebrate" then a.w_invert
+  else if row.domain == "future_human" then a.w_future
+  else a.w_xrisk
+
+isAnimal(row) = (row.domain == "farmed_animal") || (row.domain == "invertebrate")
+
+welfareRange(row, a) =
+  if isAnimal(row) then (row.neurons / humanNeurons) ^ a.neuron_exponent else 1
+
+// Refusing the fanatical tail: collapse the x-risk upside unless the node
+// explicitly accepts tiny-probability bets. (Illustrative cap, not a truncation.)
+fanaticismFactor(row, a) =
+  if (row.domain == "xrisk_future") && !a.accept_tiny_prob then 1e-6 else 1
+
+// Expected wDALY/$ for one target under this node's assumptions.
+ev(row, a) = mean(row.daly_per_usd) * welfareRange(row, a) * domainWeight(row, a) * fanaticismFactor(row, a)
+
+// Rank the whole slate, best first. This is what a node returns / links to.
+export evaluate(a) = {
+  scored = List.map(slate, {|row| { name: row.name, wdaly_per_usd: ev(row, a) }})
+  List.reverse(List.sortBy(scored, {|x| x.wdaly_per_usd}))
+}

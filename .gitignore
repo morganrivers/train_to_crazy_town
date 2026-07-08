@@ -10,6 +10,10 @@
 diagram/export/
 _site/
 
+# Node / Squiggle
+squiggle/node_modules/
+squiggle/package-lock.json
+
 # Python
 __pycache__/
 *.pyc

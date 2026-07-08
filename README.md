@@ -147,8 +147,8 @@ Stubbed graph-generation code, mirroring the Graphviz→draw.io setup in
 `morganrivers/iati_webapp` (`docs/diagram/`):
 
 - **`train_tree.json`** — the node/edge graph. Nodes are get-off points (one
-  moral-assumption set each) with a `top_pick`, a **`guesstimate`** slot, and a
-  **`figures`** list — the public, famous-ish people who most prominently
+  moral-assumption set each) with a `top_pick`, a **`squiggle`** model path, and
+  a **`figures`** list — the public, famous-ish people who most prominently
   *articulate* that stop's worldview (Berger, Singer/Bollard, Tomasik,
   Cotra/Ord, Bostrom/Yudkowsky). These are exemplars of the view, not claims
   about where each person personally gets off. Edges are crucial-consideration
@@ -184,13 +184,18 @@ The `github-pages` environment is gated to the default branch by default, so the
 public Pages URLs go live after this lands on `main`; on a feature branch the
 same PNG/SVG are still downloadable from the workflow run's **Artifacts**.
 
-**Guesstimate — stubbed, not wired.** Each node will link to its own Guesstimate
-model, all sharing one parameterised template (same donation slate, same
-`E[welfare-adjusted DALY averted / $]` formula, this node's assumptions dialled
-in). For now every node carries `"guesstimate": null`; `build_diagram.guesstimate_link()`
-is the single spot where those URLs plug in and become the node's clickable
-target. *Open question flagged there: is Guesstimate the right home for the
-shared logic, or Squiggle / a snapshotted notebook?*
+**Per-node model = Squiggle (`squiggle/`).** The shared logic lives in
+`squiggle/base_model.squiggle` (fixed slate + `E[wDALY averted/$]` formula +
+`export evaluate(assumptions)`); each node is a tiny model in `squiggle/nodes/`
+that imports the base and dials in its own assumptions. `build_diagram.model_link()`
+turns each node's `squiggle` path into its clickable target — a raw GitHub link
+by default, or a live Squiggle Hub model when `SQUIGGLE_HUB_OWNER` is set. The
+models run and are validated against the Squiggle runtime (`cd squiggle &&
+npm install && node run.mjs`), reproducing the intended winner at every stop
+(Rotary → global health → THL → Shrimp → ALLFED → AI safety). See
+[`squiggle/README.md`](squiggle/README.md). *We chose Squiggle over Guesstimate
+because it's code — one shared `evaluate`, imported everywhere — rather than N
+hand-cloned canvases that drift.*
 
 ## Scope
 
