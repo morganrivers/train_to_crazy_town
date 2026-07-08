@@ -4,6 +4,15 @@ An interactive, zoomable tree of "get-off points" showing how far different
 moral assumptions carry you down the effective-altruism reasoning train, and how
 the ranking destabilizes the further you go.
 
+[![Train to crazy town — worldview tree](diagram/train_tree.png)](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+
+**Open the interactive diagram** (read-only, no account, pan/zoom, clickable
+nodes — each node opens its Squiggle model) — draw.io serves the committed
+`train_tree.drawio` straight from its raw GitHub URL (`build_diagram.py` prints
+this same link):
+
+- [Open in draw.io viewer](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+
 ## The metaphor
 
 The "train to crazy town" is Ajeya Cotra's image (80,000 Hours podcast #90,
@@ -123,10 +132,9 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
   Graphviz (no draw.io app needed). These two images ARE committed and linked
   below via their raw GitHub URLs, so they never depend on GitHub Pages.
 
-![Train to crazy town — worldview tree](diagram/train_tree.png)
-
 The committed `train_tree.drawio` is served read-only by draw.io from its raw
-GitHub URL (`build_diagram.py` prints the link). The rendered images are:
+GitHub URL (the [Open in draw.io viewer](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+link at the top; `build_diagram.py` prints it too). The rendered images are:
 
 - PNG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png
 - SVG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg
