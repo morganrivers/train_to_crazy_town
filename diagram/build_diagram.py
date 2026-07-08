@@ -17,6 +17,7 @@ and are NOT committed.
 import json, sys, os
 from graph_common import (run_dot, transforms, decl, emit_node, emit_edges,
                           group_box, wrap_mxfile, esc)
+from squiggle_playground import playground_url
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), 'train_tree.json')
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(__file__), 'train_tree.drawio')
@@ -27,26 +28,19 @@ edges = G['edges']
 
 
 # ---------- per-node model links --------------------------------------------
-# Each node links to its Squiggle model's SOURCE FILE on GitHub (the .squiggle
-# under squiggle/nodes/). This is the reliable, no-account target: the file
-# always exists in the repo, shows the real model with its comments, and runs
-# locally via `cd squiggle && node run.mjs`. Override the branch with
-# DIAGRAM_REF (defaults to main so the published diagram's links are stable).
+# Each node opens its Squiggle model in a TEMPORARY playground link: clicking a
+# node loads the model live and editable, with no Squiggle Hub account. The
+# link's hash carries a self-contained copy of the model (base_model inlined and
+# the node's parent import chain resolved to a flat coeffs record), so it runs on
+# its own — the on-disk `import "hub:..."` files can't, since those imports only
+# resolve once published to an account. See squiggle_playground.py for the
+# encoding (identical to Squiggle's own playground.ts) and the run.mjs check that
+# the inlined model ranks identically to the Hub-import version.
 REPO = 'morganrivers/train_to_crazy_town'
 REF = os.environ.get('DIAGRAM_REF', 'refs/heads/main')
-SRC_BRANCH = REF.split('refs/heads/', 1)[-1]
-
-def model_link(n):
-    """Return the GitHub source URL of the node's Squiggle model, or None if it
-    has no model (e.g. the soil-animal branch, which has no published BOTEC to
-    copy yet)."""
-    if not n.get('squiggle'):
-        return None
-    return f'https://github.com/{REPO}/blob/{SRC_BRANCH}/{n["squiggle"]}'
-
 
 for n in nodes:
-    link = model_link(n)
+    link = playground_url(n)   # None if the node has no model (soil-animal branch)
     if link:
         n['link'] = link
 

@@ -55,13 +55,17 @@ unchanged. The same linker feeds the `@quri/squiggle-components` React player.
 
 ## Where the diagram links point
 
-Each node in the diagram links to its model's **source file here on GitHub**
-(`squiggle/nodes/<node-id>.squiggle`) — a reliable target that needs no account,
-shows the real model with its comments, and runs locally with `node run.mjs`
-(above).
+Each node in the diagram links to a **temporary Squiggle playground** — clicking
+it opens that node's model live and editable, with no account. The catch: the
+files here `import "hub:morganrivers/..."`, and those imports only resolve once
+published to a Hub account. So `diagram/squiggle_playground.py` builds, per node,
+one *self-contained* source — `base_model` inlined and the parent import chain
+resolved into a flat `coeffs` record — and packs it into the playground URL hash
+(`#code=<deflate+base64>`, byte-for-byte Squiggle's own `playground.ts` encoding).
+The inlined model ranks identically to the Hub-import version; `run.mjs` runs
+either. Nothing is persisted to any account — the whole model travels in the link.
 
-To get the interactive calculator instead, publish the models to
-[Squiggle Hub](https://squigglehub.org) under your own account (`base_model`
-plus one per node id) and repoint the links by setting the hub owner in
-`diagram/build_diagram.py` — the files import `hub:<owner>/base_model`, so they
-publish unchanged.
+For a *persistent* calculator instead, publish the models to
+[Squiggle Hub](https://squigglehub.org) under your own account (`base_model` plus
+one per node id) — the files import `hub:<owner>/base_model`, so they publish
+unchanged.

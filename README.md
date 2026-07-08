@@ -144,10 +144,12 @@ generator still works.
 The shared logic lives in `squiggle/base_model.squiggle` (fixed slate +
 `E[wDALY averted/$]` formula + `export evaluate(assumptions)`). Each node is a
 model in `squiggle/nodes/` that imports the base and sets its own assumptions.
-`build_diagram.py` links each diagram node to its model's source file on GitHub
-(`squiggle/nodes/<node-id>.squiggle`); run them locally with
-`cd squiggle && npm install && node run.mjs`, or publish them to
-[Squiggle Hub](https://squigglehub.org) for the interactive calculator. Numbers are placeholder
+`build_diagram.py` links each diagram node to a **temporary Squiggle playground**:
+clicking a node opens its model live and editable, with no account (the whole
+model rides in the link's `#code=` hash; `diagram/squiggle_playground.py` inlines
+`base_model` and resolves the parent import chain so it runs on its own). You can
+also run them locally with `cd squiggle && npm install && node run.mjs`, or publish
+them to [Squiggle Hub](https://squigglehub.org) for a persistent calculator. Numbers are placeholder
 order-of-magnitude estimates traceable to published work (GiveWell CEAs; Rethink
 Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 [`squiggle/README.md`](squiggle/README.md).
