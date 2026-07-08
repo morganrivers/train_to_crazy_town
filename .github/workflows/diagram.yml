@@ -1,0 +1,92 @@
+name: diagram
+
+# Regenerate the worldview-tree diagram and publish rendered PNG + SVG to GitHub
+# Pages. The images are produced fresh on every run and deployed as a Pages
+# artifact -- they are NOT committed back to the repo (kept untracked on
+# purpose; only the .drawio + generators live in git). The README links to the
+# published URLs below.
+#
+# One-time setup: repo Settings -> Pages -> Build and deployment -> Source =
+# "GitHub Actions". Note: the github-pages environment is gated to the default
+# branch by default, so Pages deploys land once this is on `main` (the build +
+# artifact steps still run on the feature branch so you can download them there).
+
+on:
+  push:
+    branches: [main, "claude/train-crazy-town-concept-j2y7pn"]
+    paths: ["diagram/**", ".github/workflows/diagram.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Graphviz (dot)
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Build .drawio from train_tree.json
+        run: python diagram/build_diagram.py
+
+      - name: Export PNG
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          path: diagram
+          format: png
+          output: export
+          transparent: true
+
+      - name: Export SVG
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          path: diagram
+          format: svg
+          output: export
+
+      - name: Assemble Pages site (untracked artifacts)
+        run: |
+          mkdir -p _site
+          cp "$(find diagram/export -name '*.png' | head -n1)" _site/train_tree.png
+          cp "$(find diagram/export -name '*.svg' | head -n1)" _site/train_tree.svg
+          touch _site/.nojekyll
+          cat > _site/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><title>Train to crazy town - diagram</title>
+          <h1>Train to crazy town</h1>
+          <p><a href="train_tree.svg">SVG</a> &middot; <a href="train_tree.png">PNG</a></p>
+          <img src="train_tree.svg" alt="Worldview tree" style="max-width:100%">
+          HTML
+
+      - name: Upload artifacts (downloadable on any branch's run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagram
+          path: _site/train_tree.*
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

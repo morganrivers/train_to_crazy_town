@@ -169,6 +169,21 @@ export. `build_diagram.py` prints the ready-made link on each run
 (`https://viewer.diagrams.net/?...&chrome=0#U<raw .drawio URL>`); override the
 branch/ref with the `DIAGRAM_REF` env var.
 
+**Rendered PNG / SVG (CI — untracked).** The workflow
+`.github/workflows/diagram.yml` rebuilds the diagram on every push and publishes
+the rendered images to GitHub Pages. **These PNG/SVG are generated fresh in CI
+and deliberately never committed** (they stay `.gitignore`d; only the `.drawio` +
+generators are in git). Once Pages is enabled (Settings → Pages → Source =
+"GitHub Actions") and the workflow has run on the default branch, they live at:
+
+- **SVG:** https://morganrivers.github.io/train_to_crazy_town/train_tree.svg
+- **PNG:** https://morganrivers.github.io/train_to_crazy_town/train_tree.png
+- index: https://morganrivers.github.io/train_to_crazy_town/
+
+The `github-pages` environment is gated to the default branch by default, so the
+public Pages URLs go live after this lands on `main`; on a feature branch the
+same PNG/SVG are still downloadable from the workflow run's **Artifacts**.
+
 **Guesstimate — stubbed, not wired.** Each node will link to its own Guesstimate
 model, all sharing one parameterised template (same donation slate, same
 `E[welfare-adjusted DALY averted / $]` formula, this node's assumptions dialled
