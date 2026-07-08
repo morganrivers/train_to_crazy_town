@@ -113,6 +113,14 @@ order-of-magnitude estimates traceable to published work (GiveWell CEAs; Rethink
 Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 [`squiggle/README.md`](squiggle/README.md).
 
+## Bottom-line allocator (`allocate.py`)
+
+`python3 allocate.py --center C --diversification D` prints each org's expected
+wDALY/$ and its share of a portfolio. A worldview-diversification coefficient
+sets the ordering: `D = 0` funds only the chosen worldview's single best org
+(pure EV-max); higher `D` spreads credence across worldviews and funds the best
+org in each. Slate and worldview vectors mirror the Squiggle models.
+
 ## Sources
 
 - Ajeya Cotra, *Worldview diversification and how big the future could be*,
