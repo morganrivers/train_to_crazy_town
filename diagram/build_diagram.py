@@ -27,19 +27,22 @@ edges = G['edges']
 
 
 # ---------- per-node model links --------------------------------------------
-# Each node links to its Squiggle Hub model,
-# https://squigglehub.org/models/<owner>/<node-id>. Owner defaults to
-# morganrivers; override with SQUIGGLE_HUB_OWNER.
+# Each node links to its Squiggle model's SOURCE FILE on GitHub (the .squiggle
+# under squiggle/nodes/). This is the reliable, no-account target: the file
+# always exists in the repo, shows the real model with its comments, and runs
+# locally via `cd squiggle && node run.mjs`. Override the branch with
+# DIAGRAM_REF (defaults to main so the published diagram's links are stable).
 REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-pr-adangy')
-HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', 'morganrivers')
+REF = os.environ.get('DIAGRAM_REF', 'refs/heads/main')
+SRC_BRANCH = REF.split('refs/heads/', 1)[-1]
 
 def model_link(n):
-    """Return the node's Squiggle Hub model URL, or None if it has no model
-    (e.g. the soil-animal branch, which has no published BOTEC to copy yet)."""
+    """Return the GitHub source URL of the node's Squiggle model, or None if it
+    has no model (e.g. the soil-animal branch, which has no published BOTEC to
+    copy yet)."""
     if not n.get('squiggle'):
         return None
-    return f'https://squigglehub.org/models/{HUB_OWNER}/{n["id"]}'
+    return f'https://github.com/{REPO}/blob/{SRC_BRANCH}/{n["squiggle"]}'
 
 
 for n in nodes:

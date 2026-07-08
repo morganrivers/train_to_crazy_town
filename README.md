@@ -120,9 +120,10 @@ Pages; the images are `.gitignore`d, not committed:
 The shared logic lives in `squiggle/base_model.squiggle` (fixed slate +
 `E[wDALY averted/$]` formula + `export evaluate(assumptions)`). Each node is a
 model in `squiggle/nodes/` that imports the base and sets its own assumptions.
-`build_diagram.py` links each node to its Squiggle Hub model
-(`squigglehub.org/models/morganrivers/<node-id>`). Run locally with
-`cd squiggle && npm install && node run.mjs`. Numbers are placeholder
+`build_diagram.py` links each diagram node to its model's source file on GitHub
+(`squiggle/nodes/<node-id>.squiggle`); run them locally with
+`cd squiggle && npm install && node run.mjs`, or publish them to
+[Squiggle Hub](https://squigglehub.org) for the interactive calculator. Numbers are placeholder
 order-of-magnitude estimates traceable to published work (GiveWell CEAs; Rethink
 Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 [`squiggle/README.md`](squiggle/README.md).
