@@ -3,7 +3,7 @@
 // to ~2 swings shrimp welfare range across ~12 orders of magnitude and flips
 // the ranking. Try editing neuron_exponent below to watch the top pick move.
 // Expected winner (at this exponent): Shrimp Welfare Project.
-import "../base_model.squiggle" as base
+import "hub:morganrivers/base_model" as base
 
 assumptions = {
   w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 0, w_xrisk: 0,

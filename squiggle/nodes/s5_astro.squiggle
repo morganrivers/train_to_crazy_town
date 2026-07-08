@@ -2,7 +2,7 @@
 // tiny-probability / huge-payoff bets at face value). Exemplars: Nick Bostrom,
 // Eliezer Yudkowsky. The last marked stop before fanaticism / Pascal's mugging.
 // Expected winner: AI safety (Redwood Research).
-import "../base_model.squiggle" as base
+import "hub:morganrivers/base_model" as base
 
 assumptions = {
   w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 1,

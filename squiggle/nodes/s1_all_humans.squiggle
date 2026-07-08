@@ -1,7 +1,7 @@
 // Stop 1 - All present humans count equally (drop the nationality discount;
 // Singer's famine argument). Exemplar who gets off here: Alexander Berger.
 // Expected winner: cheap measurable global health / cash (GiveWell / GiveDirectly).
-import "../base_model.squiggle" as base
+import "hub:morganrivers/base_model" as base
 
 assumptions = {
   w_local: 1, w_global: 1, w_farmed: 0, w_invert: 0, w_future: 0, w_xrisk: 0,

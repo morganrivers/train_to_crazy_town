@@ -1,7 +1,7 @@
 // Stop 0 - Parochial (community + nation only). Commonsense pre-EA baseline.
 // Only local humans have moral weight; animals, distant strangers and the
 // future are outside the circle. Expected winner: Local Rotary Club.
-import "../base_model.squiggle" as base
+import "hub:morganrivers/base_model" as base
 
 assumptions = {
   w_local: 1, w_global: 0, w_farmed: 0, w_invert: 0, w_future: 0, w_xrisk: 0,

@@ -1,10 +1,9 @@
 // run.mjs — run every node model straight from this repo and print its ranking.
 //
-// This is the "load Squiggle directly from my repo" path: it feeds a custom
-// linker the local base_model.squiggle so each node's
-// `import "../base_model.squiggle" as base` resolves to the file on disk (no
-// Squiggle Hub, no hosting). The same linker pattern is what you'd hand to the
-// @quri/squiggle-components React player to embed these models in a page.
+// Runs the node models from this repo. A custom linker maps the Hub import name
+// `hub:morganrivers/base_model` to the local base_model.squiggle, so the same
+// files that publish to Squiggle Hub unchanged also run here on disk. The same
+// linker pattern feeds the @quri/squiggle-components React player.
 //
 //   cd squiggle && npm install && node run.mjs
 //   node run.mjs nodes/s3_inverts.squiggle      # just one
@@ -16,7 +15,7 @@ import { dirname, join } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const base = readFileSync(join(HERE, "base_model.squiggle"), "utf8");
-const linker = makeSelfContainedLinker({ "../base_model.squiggle": base });
+const linker = makeSelfContainedLinker({ "hub:morganrivers/base_model": base });
 
 async function rank(file) {
   const code = readFileSync(file, "utf8");

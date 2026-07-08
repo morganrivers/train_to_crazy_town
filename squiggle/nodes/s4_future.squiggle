@@ -3,7 +3,7 @@
 // MacAskill. Global-catastrophic-risk reduction starts to dominate; the
 // fanatical x-risk tail is still refused (accept_tiny_prob: false).
 // Expected winner: ALLFED.
-import "../base_model.squiggle" as base
+import "hub:morganrivers/base_model" as base
 
 assumptions = {
   w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 0,

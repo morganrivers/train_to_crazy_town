@@ -27,26 +27,16 @@ edges = G['edges']
 
 
 # ---------- per-node model links --------------------------------------------
-# The shared logic now lives in Squiggle (squiggle/base_model.squiggle); each
-# node has its own tiny model in squiggle/nodes/ that imports the base and dials
-# in that node's moral assumptions. train_tree.json points at it via the
-# `squiggle` field. By default the node's clickable target is the raw GitHub URL
-# of that .squiggle file (works today, auto-populated from the repo). Set
-# SQUIGGLE_HUB_OWNER to instead point at a live Squiggle Hub model
-# (https://squigglehub.org/models/<owner>/<node-id>) once you publish them there
-# - a Hub link renders a running, editable model. See squiggle/README.md.
+# Each node links to its Squiggle Hub model,
+# https://squigglehub.org/models/<owner>/<node-id>. Owner defaults to
+# morganrivers; override with SQUIGGLE_HUB_OWNER.
 REPO = 'morganrivers/train_to_crazy_town'
 REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-concept-j2y7pn')
-HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', '')
+HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', 'morganrivers')
 
 def model_link(n):
-    """Return the node's Squiggle model URL (Hub if configured, else raw GitHub)."""
-    if n.get('model_url'):                 # explicit override wins
-        return n['model_url']
-    if HUB_OWNER:
-        return f'https://squigglehub.org/models/{HUB_OWNER}/{n["id"]}'
-    path = n.get('squiggle')
-    return f'https://github.com/{REPO}/blob/{REF}/{path}' if path else ''
+    """Return the node's Squiggle Hub model URL."""
+    return f'https://squigglehub.org/models/{HUB_OWNER}/{n["id"]}'
 
 
 for n in nodes:
