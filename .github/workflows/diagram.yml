@@ -92,6 +92,11 @@ jobs:
 
   deploy:
     needs: build
+    # Only publish to Pages from the default branch. On feature branches / PRs
+    # this job is skipped (build still uploads downloadable artifacts). Deploying
+    # elsewhere 404s until Pages is enabled and would only ever serve the default
+    # branch anyway (the github-pages environment is gated to it).
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
