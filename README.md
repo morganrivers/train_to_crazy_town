@@ -115,11 +115,22 @@ Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 
 ## Bottom-line allocator (`allocate.py`)
 
-`python3 allocate.py --center C --diversification D` prints each org's expected
-wDALY/$ and its share of a portfolio. A worldview-diversification coefficient
-sets the ordering: `D = 0` funds only the chosen worldview's single best org
-(pure EV-max); higher `D` spreads credence across worldviews and funds the best
-org in each. Slate and worldview vectors mirror the Squiggle models.
+`python3 allocate.py --center W --diversification D [--animal-weight M]` prints
+each org's cost-effectiveness (as a multiple of GiveWell top charities) and its
+share of a portfolio; `--list` shows the worldviews. The worldview-diversification
+coefficient sets the ordering: `D = 0` funds only the center worldview's single
+best org (pure EV-max); higher `D` spreads credence across worldviews by depth
+and funds the best org in each.
+
+The tree forks after the invertebrate stop into a soil-animal branch — where the
+sign of the effect on ~10¹⁹ nematodes reverses which human charities look good —
+and a longtermist branch. Animal and invertebrate cost-effectiveness figures are
+copied from published EA Forum cost-effectiveness analyses (cited in the file):
+corporate campaigns ≈ 1.51×10³, Shrimp Welfare Project ≈ 6.43×10⁴, and wild-insect
+humane pesticides ≈ 2.37×10⁴ times GiveWell top charities; counting soil animals
+lifts GiveWell's own cropland effect to ≈ 1.11×10⁵× (sign uncertain). Human,
+future and x-risk figures are placeholders. The digital-minds branch is omitted
+for lack of comparable published numbers.
 
 ## Sources
 
