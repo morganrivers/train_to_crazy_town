@@ -43,8 +43,15 @@ node run.mjs nodes/s3_inverts.squiggle   # one node
 Squiggle Hub unchanged and run here on disk. The same linker feeds the
 `@quri/squiggle-components` React player.
 
-## Hub
+## Where the diagram links point
 
-The models live on Squiggle Hub under `morganrivers` (`base_model` and one per
-node id). Each node's diagram link points to
-`https://squigglehub.org/models/morganrivers/<node-id>`.
+Each node in the diagram links to its model's **source file here on GitHub**
+(`squiggle/nodes/<node-id>.squiggle`) — a reliable target that needs no account,
+shows the real model with its comments, and runs locally with `node run.mjs`
+(above).
+
+To get the interactive calculator instead, publish the models to
+[Squiggle Hub](https://squigglehub.org) under your own account (`base_model`
+plus one per node id) and repoint the links by setting the hub owner in
+`diagram/build_diagram.py` — the files import `hub:<owner>/base_model`, so they
+publish unchanged.

@@ -105,24 +105,35 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
 - **`build_diagram.py`** — reads the JSON, lays the tree top→bottom on a
   craziness gradient by stop, bands each stop, writes an editable `.drawio`, and
   prints a read-only draw.io view link. Requires Graphviz `dot` on PATH.
-- **`render_diagram.py`** — renders `.drawio` → PNG/SVG.
+- **`render_diagram.py`** — renders `train_tree.json` → PNG/SVG directly with
+  Graphviz (no draw.io app needed). These two images ARE committed and linked
+  below via their raw GitHub URLs, so they never depend on GitHub Pages.
+
+![Train to crazy town — worldview tree](diagram/train_tree.png)
 
 The committed `train_tree.drawio` is served read-only by draw.io from its raw
-GitHub URL (`build_diagram.py` prints the link). CI
-(`.github/workflows/diagram.yml`) renders PNG/SVG and publishes them to GitHub
-Pages; the images are `.gitignore`d, not committed:
+GitHub URL (`build_diagram.py` prints the link). The rendered images are:
 
-- SVG: https://morganrivers.github.io/train_to_crazy_town/train_tree.svg
-- PNG: https://morganrivers.github.io/train_to_crazy_town/train_tree.png
+- PNG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png
+- SVG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg
+
+These raw URLs work with no repo settings. The same images are also published to
+GitHub Pages once it is enabled (Settings → Pages → Source = "GitHub Actions"):
+`https://morganrivers.github.io/train_to_crazy_town/`.
+
+Regenerate them with `python diagram/render_diagram.py`; CI
+(`.github/workflows/diagram.yml`) re-renders on every change to confirm the
+generator still works.
 
 ## Models (`squiggle/`)
 
 The shared logic lives in `squiggle/base_model.squiggle` (fixed slate +
 `E[wDALY averted/$]` formula + `export evaluate(assumptions)`). Each node is a
 model in `squiggle/nodes/` that imports the base and sets its own assumptions.
-`build_diagram.py` links each node to its Squiggle Hub model
-(`squigglehub.org/models/morganrivers/<node-id>`). Run locally with
-`cd squiggle && npm install && node run.mjs`. Numbers are placeholder
+`build_diagram.py` links each diagram node to its model's source file on GitHub
+(`squiggle/nodes/<node-id>.squiggle`); run them locally with
+`cd squiggle && npm install && node run.mjs`, or publish them to
+[Squiggle Hub](https://squigglehub.org) for the interactive calculator. Numbers are placeholder
 order-of-magnitude estimates traceable to published work (GiveWell CEAs; Rethink
 Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
 [`squiggle/README.md`](squiggle/README.md).
