@@ -31,7 +31,7 @@ edges = G['edges']
 # https://squigglehub.org/models/<owner>/<node-id>. Owner defaults to
 # morganrivers; override with SQUIGGLE_HUB_OWNER.
 REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/claude/train-crazy-town-pr-adangy')
+REF = os.environ.get('DIAGRAM_REF', 'refs/heads/main')
 HUB_OWNER = os.environ.get('SQUIGGLE_HUB_OWNER', 'morganrivers')
 
 def model_link(n):

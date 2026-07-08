@@ -111,8 +111,13 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
 
 ![Train to crazy town — worldview tree](diagram/train_tree.png)
 
-The committed `train_tree.drawio` is served read-only by draw.io from its raw
-GitHub URL (`build_diagram.py` prints the link). The rendered images are:
+**Open the interactive diagram** (read-only, no account, pan/zoom, clickable
+nodes) — draw.io serves the committed `train_tree.drawio` straight from its raw
+GitHub URL (`build_diagram.py` prints this same link):
+
+- [Open in draw.io viewer](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+
+The rendered static images are:
 
 - PNG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png
 - SVG: https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg
