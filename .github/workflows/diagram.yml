@@ -13,7 +13,7 @@ name: diagram
 
 on:
   push:
-    branches: [main, "claude/train-crazy-town-concept-j2y7pn"]
+    branches: [main, "claude/train-crazy-town-pr-adangy"]
     paths: ["diagram/**", ".github/workflows/diagram.yml"]
   workflow_dispatch:
 
