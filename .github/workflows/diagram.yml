@@ -1,20 +1,30 @@
 name: diagram
 
-# Regenerate the worldview-tree diagram and publish rendered PNG + SVG to GitHub
-# Pages. The images are produced fresh on every run and deployed as a Pages
-# artifact -- they are NOT committed back to the repo (kept untracked on
-# purpose; only the .drawio + generators live in git). The README links to the
-# published URLs below.
+# Regenerate the worldview-tree diagram, verify the render pipeline, and (from
+# the default branch) publish it to GitHub Pages.
 #
-# One-time setup: repo Settings -> Pages -> Build and deployment -> Source =
-# "GitHub Actions". Note: the github-pages environment is gated to the default
-# branch by default, so Pages deploys land once this is on `main` (the build +
-# artifact steps still run on the feature branch so you can download them there).
+# Two independent ways the images reach a reader, so neither is a single point of
+# failure:
+#   1. The rendered PNG + SVG are COMMITTED (diagram/train_tree.{png,svg}) and
+#      the README links them via raw.githubusercontent URLs -- these work with no
+#      repo settings at all.
+#   2. This workflow also publishes them to GitHub Pages at
+#      https://<owner>.github.io/train_to_crazy_town/ -- this needs a one-time
+#      setup: repo Settings -> Pages -> Build and deployment -> Source =
+#      "GitHub Actions". Until that is done the `deploy` job (default branch
+#      only) fails fast; the `render` job and the committed raw-URL images are
+#      unaffected.
+#
+# Regenerate locally after changing the diagram:
+#     python diagram/build_diagram.py      # editable .drawio
+#     python diagram/render_diagram.py     # train_tree.png + train_tree.svg
+#     git add diagram/train_tree.*
 
 on:
   push:
-    branches: [main, "claude/train-crazy-town-pr-adangy"]
-    paths: ["diagram/**", ".github/workflows/diagram.yml"]
+    paths: ["diagram/**", "data/model.json", ".github/workflows/diagram.yml"]
+  pull_request:
+    paths: ["diagram/**", "data/model.json", ".github/workflows/diagram.yml"]
   workflow_dispatch:
 
 permissions:
@@ -27,14 +37,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  render:
     runs-on: ubuntu-latest
     steps:
-      # fetch-depth: 0 gives drawio-export-action the full history it needs;
-      # without it the action aborts with "This is a shallow git repository".
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -43,34 +49,27 @@ jobs:
       - name: Install Graphviz (dot)
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
-      - name: Build .drawio from train_tree.json
+      - name: Build editable .drawio from train_tree.json
         run: python diagram/build_diagram.py
 
-      # action-mode: all renders the single diagram on every run instead of only
-      # exporting files that changed since a git reference (the git-diff "auto"
-      # default is what needed full history / broke on the shallow checkout).
-      - name: Export PNG
-        uses: rlespinasse/drawio-export-action@v2
-        with:
-          path: diagram
-          format: png
-          output: export
-          transparent: true
-          action-mode: all
+      - name: Render PNG + SVG from train_tree.json
+        run: python diagram/render_diagram.py
 
-      - name: Export SVG
-        uses: rlespinasse/drawio-export-action@v2
-        with:
-          path: diagram
-          format: svg
-          output: export
-          action-mode: all
+      - name: Assert the render produced non-empty images
+        run: |
+          set -e
+          for f in diagram/train_tree.png diagram/train_tree.svg; do
+            test -s "$f" || { echo "::error::$f is missing or empty"; exit 1; }
+          done
+          file diagram/train_tree.png | grep -q 'PNG image data' \
+            || { echo "::error::train_tree.png is not a valid PNG"; exit 1; }
+          echo "Render OK:"; ls -l diagram/train_tree.png diagram/train_tree.svg
 
-      - name: Assemble Pages site (untracked artifacts)
+      - name: Assemble Pages site
         run: |
           mkdir -p _site
-          cp "$(find diagram/export -name '*.png' | head -n1)" _site/train_tree.png
-          cp "$(find diagram/export -name '*.svg' | head -n1)" _site/train_tree.svg
+          cp diagram/train_tree.png _site/train_tree.png
+          cp diagram/train_tree.svg _site/train_tree.svg
           touch _site/.nojekyll
           cat > _site/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>Train to crazy town - diagram</title>
@@ -79,11 +78,13 @@ jobs:
           <img src="train_tree.svg" alt="Worldview tree" style="max-width:100%">
           HTML
 
-      - name: Upload artifacts (downloadable on any branch's run)
+      - name: Upload rendered diagram (downloadable from any run)
         uses: actions/upload-artifact@v4
         with:
           name: diagram
-          path: _site/train_tree.*
+          path: |
+            diagram/train_tree.png
+            diagram/train_tree.svg
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -91,11 +92,10 @@ jobs:
           path: _site
 
   deploy:
-    needs: build
-    # Only publish to Pages from the default branch. On feature branches / PRs
-    # this job is skipped (build still uploads downloadable artifacts). Deploying
-    # elsewhere 404s until Pages is enabled and would only ever serve the default
-    # branch anyway (the github-pages environment is gated to it).
+    needs: render
+    # Publish to Pages only from the default branch. This job fails until Pages
+    # is enabled (Settings -> Pages -> Source = "GitHub Actions"); the render job
+    # and the committed raw-URL images do not depend on it.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
