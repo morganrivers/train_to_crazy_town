@@ -1,6 +1,6 @@
-// Stop 0 - Parochial (community + nation only). Commonsense pre-EA baseline.
-// Only local humans have moral weight; animals, distant strangers and the
-// future are outside the circle. Expected winner: Local Rotary Club.
+// Stop 0 (trunk) - Parochial community + nation. Exemplar(s): common-sense default.
+// Expected winner: Local Rotary Club.
+// GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
 
 assumptions = {

@@ -13,7 +13,7 @@ name: diagram
 
 on:
   push:
-    branches: [main, "claude/train-crazy-town-concept-j2y7pn"]
+    branches: [main, "claude/train-crazy-town-pr-adangy"]
     paths: ["diagram/**", ".github/workflows/diagram.yml"]
   workflow_dispatch:
 
@@ -30,7 +30,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth: 0 gives drawio-export-action the full history it needs;
+      # without it the action aborts with "This is a shallow git repository".
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -42,6 +46,9 @@ jobs:
       - name: Build .drawio from train_tree.json
         run: python diagram/build_diagram.py
 
+      # action-mode: all renders the single diagram on every run instead of only
+      # exporting files that changed since a git reference (the git-diff "auto"
+      # default is what needed full history / broke on the shallow checkout).
       - name: Export PNG
         uses: rlespinasse/drawio-export-action@v2
         with:
@@ -49,6 +56,7 @@ jobs:
           format: png
           output: export
           transparent: true
+          action-mode: all
 
       - name: Export SVG
         uses: rlespinasse/drawio-export-action@v2
@@ -56,6 +64,7 @@ jobs:
           path: diagram
           format: svg
           output: export
+          action-mode: all
 
       - name: Assemble Pages site (untracked artifacts)
         run: |
@@ -83,6 +92,11 @@ jobs:
 
   deploy:
     needs: build
+    # Only publish to Pages from the default branch. On feature branches / PRs
+    # this job is skipped (build still uploads downloadable artifacts). Deploying
+    # elsewhere 404s until Pages is enabled and would only ever serve the default
+    # branch anyway (the github-pages environment is gated to it).
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

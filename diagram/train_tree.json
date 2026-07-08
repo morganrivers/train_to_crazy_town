@@ -1,69 +1,149 @@
 {
-  "_comment": "Worldview tree for the train to crazy town (metaphor coined by Ajeya Cotra, 80k #90). Nodes are GET-OFF POINTS (a fixed set of moral assumptions); edges are CRUCIAL-CONSIDERATION FLIPS (one step of moral expansion / one more bullet bitten). The decision rule never changes: every node ranks the SAME donation slate by expected welfare-adjusted DALYs averted per dollar. Only the assumptions change, so the winner ('top_pick') changes as you ride down. 'figures' names public, famous-ish people who most prominently ARTICULATE that stop's worldview - they are exemplars of the view, not necessarily people who 'get off' exactly there. This file is one canonical spine; BRANCHING is still TBD (see README).",
-
+  "_comment": "GENERATED from data/model.json by data/generate.py - do not edit by hand. Nodes are get-off points (a fixed set of moral assumptions); edges are crucial-consideration flips. Every node ranks the SAME donation slate; only the assumptions change, so 'top_pick' changes as you ride down. 'figures' names the public people who most prominently articulate that stop's worldview. The tree forks at s3_inverts into a soil-animal branch (A) and a longtermist branch (F).",
   "slate": [
     "Local Rotary Club",
     "GiveDirectly",
-    "GiveWell top charity (AMF / bednets)",
+    "GiveWell top charity (AMF)",
     "AIM / Charity Entrepreneurship",
-    "The Humane League (farm animal welfare)",
+    "The Humane League",
     "Shrimp Welfare Project",
+    "Wild insects (humane pesticides)",
     "ALLFED",
     "AI safety (Redwood Research)"
   ],
-
   "nodes": [
-    {"id": "s0_parochial",  "stop": 0, "file": "Only my community + nation count",
-     "lbl": "Parochial\ncommunity + nation",
-     "top_pick": "Local Rotary Club",
-     "figures": ["common-sense default"],
-     "squiggle": "squiggle/nodes/s0_parochial.squiggle",
-     "desc": "Least-crazy end of the line. Moral weight only on people near me; heavy pure-time discount; humans only; only near-certain, measurable effects count. Under these assumptions distant strangers, animals and the future are discounted to ~0, so the local/civic option wins. The pre-EA commonsense baseline; no single EA figure defends it."},
-
-    {"id": "s1_all_humans", "stop": 1, "file": "All present humans count equally",
-     "lbl": "All present\nhumans",
-     "top_pick": "GiveWell top charity (AMF) / GiveDirectly",
-     "figures": ["Alexander Berger"],
-     "squiggle": "squiggle/nodes/s1_all_humans.squiggle",
-     "desc": "Flip: drop the nationality discount (Peter Singer's famine argument is the origin). A life saved abroad counts like a life saved at home, so cheap, measurable global-health and cash interventions dominate. Alexander Berger is the prominent exemplar of deliberately getting off the train here and staying with robust, evidence-backed global health & wellbeing (GiveWell / Open Phil)."},
-
-    {"id": "s2_animals",    "stop": 2, "file": "Nonhuman animals count (welfare range)",
-     "lbl": "Farmed\nanimals count",
-     "top_pick": "The Humane League",
-     "figures": ["Peter Singer", "Lewis Bollard"],
-     "squiggle": "squiggle/nodes/s2_animals.squiggle",
-     "desc": "Flip: extend the moral circle to farmed vertebrates, weighted by a sentience-adjusted welfare range. Peter Singer (Animal Liberation) is the canonical articulator; Lewis Bollard leads Open Phil's farm-animal-welfare work. Corporate welfare campaigns avert enormous suffering per dollar and overtake human global health under most welfare-range estimates."},
-
-    {"id": "s3_inverts",    "stop": 3, "file": "Invertebrates count (neuron-count exponent)",
-     "lbl": "Invertebrates\ncount",
-     "top_pick": "Shrimp Welfare Project  (UNSTABLE)",
-     "figures": ["Brian Tomasik"],
-     "squiggle": "squiggle/nodes/s3_inverts.squiggle",
-     "subgraph": true,
-     "desc": "Flip: count invertebrates, with welfare range ~ (neuron count)^exponent. Brian Tomasik is the prominent voice on insect / invertebrate suffering. This is the worked example of the train's instability: sweeping the exponent from 0 to 2 swings shrimp welfare range across ~12 orders of magnitude and flips the ranking (edit neuron_exponent in the node's Squiggle model to watch the top pick move). It is the entry point for the soil-animal subgraph - macroarthropods / microarthropods / nematodes, each with its own conditions for whether welfare rises or falls."},
-
-    {"id": "s4_future",     "stop": 4, "file": "Future people count (low/zero time discount)",
-     "lbl": "Future\npeople count",
-     "top_pick": "ALLFED",
-     "figures": ["Ajeya Cotra", "Toby Ord"],
-     "squiggle": "squiggle/nodes/s4_future.squiggle",
-     "desc": "Flip: stop discounting future lives. Toby Ord (The Precipice) and Will MacAskill (What We Owe The Future) are the prominent longtermists; Ajeya Cotra coined the 'train to crazy town' metaphor and rides roughly to here via worldview diversification, taking the future seriously while flagging where it gets uncomfortable. Reducing global-catastrophic risk (e.g. ALLFED's civilisational-resilience work) starts to dominate present-focused giving."},
-
-    {"id": "s5_astro",      "stop": 5, "file": "Astronomical waste + tiny-probability bets count",
-     "lbl": "Astronomical\nstakes",
-     "top_pick": "AI safety (Redwood Research)",
-     "figures": ["Nick Bostrom", "Eliezer Yudkowsky"],
-     "squiggle": "squiggle/nodes/s5_astro.squiggle",
-     "desc": "Last marked stop on this spine: accept Nick Bostrom's astronomical-waste argument and take small-probability / huge-payoff bets at face value; Eliezer Yudkowsky pushes AI-risk reasoning to its stark conclusions. Existential-risk reduction dominates everything. This is the far end Cotra's near-termist deliberately gets off before; ride further and you reach fanaticism / Pascal's-mugging territory."}
+    {
+      "id": "s0_parochial",
+      "stop": 0,
+      "branch": "trunk",
+      "file": "Only my community + nation count",
+      "lbl": "Parochial\ncommunity + nation",
+      "top_pick": "Local Rotary Club",
+      "figures": [
+        "common-sense default"
+      ],
+      "squiggle": "squiggle/nodes/s0_parochial.squiggle",
+      "desc": "Least-crazy end of the line. Moral weight only on people near me; heavy pure-time discount; humans only; only near-certain, measurable effects count. Under these assumptions distant strangers, animals and the future are discounted to ~0, so the local/civic option wins. The pre-EA commonsense baseline; no single EA figure defends it."
+    },
+    {
+      "id": "s1_all_humans",
+      "stop": 1,
+      "branch": "trunk",
+      "file": "All present humans count equally",
+      "lbl": "All present\nhumans",
+      "top_pick": "GiveWell top charity (AMF)",
+      "figures": [
+        "Alexander Berger"
+      ],
+      "squiggle": "squiggle/nodes/s1_all_humans.squiggle",
+      "desc": "Flip: drop the nationality discount (Peter Singer's famine argument is the origin). A life saved abroad counts like a life saved at home, so cheap, measurable global-health and cash interventions dominate. Alexander Berger is the prominent exemplar of deliberately getting off the train here and staying with robust, evidence-backed global health & wellbeing (GiveWell / Open Phil)."
+    },
+    {
+      "id": "s2_animals",
+      "stop": 2,
+      "branch": "trunk",
+      "file": "Nonhuman animals count (welfare range)",
+      "lbl": "Farmed\nanimals count",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Peter Singer",
+        "Lewis Bollard"
+      ],
+      "squiggle": "squiggle/nodes/s2_animals.squiggle",
+      "desc": "Flip: extend the moral circle to farmed vertebrates, weighted by a sentience-adjusted welfare range. Peter Singer (Animal Liberation) is the canonical articulator; Lewis Bollard leads Open Phil's farm-animal-welfare work. Corporate welfare campaigns avert enormous suffering per dollar and overtake human global health under most welfare-range estimates."
+    },
+    {
+      "id": "s3_inverts",
+      "stop": 3,
+      "branch": "trunk",
+      "file": "Invertebrates count (neuron-count exponent)",
+      "lbl": "Invertebrates\ncount",
+      "top_pick": "Shrimp Welfare Project  (UNSTABLE)",
+      "figures": [
+        "Brian Tomasik"
+      ],
+      "squiggle": "squiggle/nodes/s3_inverts.squiggle",
+      "subgraph": true,
+      "desc": "Flip: count invertebrates, with welfare range ~ (neuron count)^exponent. Brian Tomasik is the prominent voice on insect / invertebrate suffering. This is the worked example of the train's instability: sweeping the exponent from 0 to 2 swings shrimp welfare range across ~12 orders of magnitude and flips the ranking (edit neuron_exponent in the node's Squiggle model to watch the top pick move). It is the FORK point: the tree splits here into a soil-animal branch (A) and a longtermist branch (F)."
+    },
+    {
+      "id": "s4_soil",
+      "stop": 4,
+      "branch": "A",
+      "file": "Soil / wild invertebrates count (sign uncertain)",
+      "lbl": "Soil animals\ncount (branch A)",
+      "top_pick": "GiveWell top charity (AMF)  (sign uncertain)",
+      "figures": [
+        "Brian Tomasik"
+      ],
+      "squiggle": null,
+      "desc": "Branch A (biological micro-minds): once you count the ~10^19 soil animals affected by land use, GiveWell top charities' cropland effect works out to ~1.11 kQALY/$ (~1.74x the Shrimp Welfare Project Humane Slaughter Initiative). The 'normal' human charity leaps to ~1.11e5x GiveWell's own direct value - and its SIGN is uncertain (it could be net-negative for soil nematodes). This branch has no Squiggle model yet: there is no comparable published soil-animal BOTEC to copy, so it is not fabricated."
+    },
+    {
+      "id": "s4_future",
+      "stop": 4,
+      "branch": "F",
+      "file": "Future people count (low/zero time discount)",
+      "lbl": "Future\npeople count",
+      "top_pick": "ALLFED",
+      "figures": [
+        "Ajeya Cotra",
+        "Toby Ord"
+      ],
+      "squiggle": "squiggle/nodes/s4_future.squiggle",
+      "desc": "Branch F (longtermist): stop discounting future lives. Toby Ord (The Precipice) and Will MacAskill (What We Owe The Future) are the prominent longtermists; Ajeya Cotra coined the 'train to crazy town' metaphor and rides roughly to here via worldview diversification, taking the future seriously while flagging where it gets uncomfortable. Reducing global-catastrophic risk (e.g. ALLFED's civilisational-resilience work) starts to dominate present-focused giving. The fanatical x-risk tail is still refused here (accept_tiny_prob: false)."
+    },
+    {
+      "id": "s5_astro",
+      "stop": 5,
+      "branch": "F",
+      "file": "Astronomical waste + tiny-probability bets count",
+      "lbl": "Astronomical\nstakes",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Nick Bostrom",
+        "Eliezer Yudkowsky"
+      ],
+      "squiggle": "squiggle/nodes/s5_astro.squiggle",
+      "desc": "Last marked stop on branch F: accept Nick Bostrom's astronomical-waste argument and take small-probability / huge-payoff bets at face value; Eliezer Yudkowsky pushes AI-risk reasoning to its stark conclusions. Existential-risk reduction dominates everything. This is the far end Cotra's near-termist deliberately gets off before; ride further and you reach fanaticism / Pascal's-mugging territory."
+    }
   ],
-
   "edges": [
-    {"from": "s0_parochial",  "to": "s1_all_humans", "label": "drop nationality discount", "kind": "expand"},
-    {"from": "s1_all_humans", "to": "s2_animals",    "label": "add animal welfare range",   "kind": "expand"},
-    {"from": "s2_animals",    "to": "s3_inverts",    "label": "add invertebrate sentience", "kind": "expand"},
-    {"from": "s3_inverts",    "to": "s4_future",     "label": "stop discounting the future","kind": "expand"},
-    {"from": "s4_future",     "to": "s5_astro",      "label": "accept astronomical waste",  "kind": "expand"}
-  ],
-
-  "_branching_TODO": "This is one canonical spine. Real branching (accept/reject a consideration; multi-way settings of a parameter like the neuron-count exponent; alternative orderings) is undecided - see README 'Branching - TBD'. Nodes flagged subgraph:true are where a child tree opens once branching lands."
+    {
+      "from": "s0_parochial",
+      "to": "s1_all_humans",
+      "label": "drop nationality discount",
+      "kind": "expand"
+    },
+    {
+      "from": "s1_all_humans",
+      "to": "s2_animals",
+      "label": "add animal welfare range",
+      "kind": "expand"
+    },
+    {
+      "from": "s2_animals",
+      "to": "s3_inverts",
+      "label": "add invertebrate sentience",
+      "kind": "expand"
+    },
+    {
+      "from": "s3_inverts",
+      "to": "s4_soil",
+      "label": "count soil / wild animals",
+      "kind": "branch"
+    },
+    {
+      "from": "s3_inverts",
+      "to": "s4_future",
+      "label": "stop discounting the future",
+      "kind": "branch"
+    },
+    {
+      "from": "s4_future",
+      "to": "s5_astro",
+      "label": "accept astronomical waste",
+      "kind": "expand"
+    }
+  ]
 }

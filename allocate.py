@@ -6,20 +6,18 @@ Prints, for each donation org: its cost-effectiveness (as a multiple of GiveWell
 top charities) and its share of a portfolio, under a single
 WORLDVIEW-DIVERSIFICATION coefficient.
 
-The tree now forks. A shared trunk (local -> all humans -> farmed animals ->
-invertebrates) splits into:
-  - branch A (biological micro-minds): counting wild animals and soil animals,
-    where the sign of the effect on ~10^19 soil nematodes swamps everything and
-    even reverses which human charities look good;
-  - branch F (longtermist): accepting the astronomical-waste argument and
-    tiny-probability x-risk bets.
-(The digital-minds / AI-sentience branch is intentionally left out: there are no
-comparable published cost-effectiveness estimates to copy, so it is not
-fabricated.)
+The orgs, their cost-effectiveness figures, and the worldview/branch tree are
+NOT defined here - they are read from data/model.json, the single source of
+truth shared with the diagram and the Squiggle models (see data/README.md).
+
+The tree forks after the invertebrate stop into a soil-animal branch (A), where
+the sign of the effect on ~10^19 soil nematodes swamps everything and even
+reverses which human charities look good, and a longtermist branch (F), which
+accepts the astronomical-waste argument and tiny-probability x-risk bets.
 
 Cost-effectiveness numbers for the animal and invertebrate orgs are copied from
-published EA Forum cost-effectiveness analyses (cited inline). Human, future and
-x-risk numbers are illustrative placeholders, marked below.
+published EA Forum cost-effectiveness analyses (cited in data/model.json). Human,
+future and x-risk numbers are illustrative placeholders.
 
   --center W          worldview you lean toward (see --list)
   --diversification D  0 = go all-in on the center worldview's single winner
@@ -30,110 +28,82 @@ x-risk numbers are illustrative placeholders, marked below.
   --list               list the worldviews and exit.
 
   python3 allocate.py
-  python3 allocate.py --center soil_nematodes --diversification 2
+  python3 allocate.py --center soil --diversification 2
 """
 import argparse
 import math
+import os
+import sys
 
-# --- donation slate: cost-effectiveness as a MULTIPLE of GiveWell top charities.
-# Animal / invertebrate figures are copied from published EA Forum analyses:
-#   The Humane League (corporate campaigns for chicken welfare): 1.51e3x
-#     https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken
-#   Shrimp Welfare Project (Humane Slaughter Initiative): 639 DALY/$ = 6.43e4x
-#     https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane
-#   Wild insects (paying farmers to use humane pesticides): 236 DALY/$ = 2.37e4x
-#     https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
-# Human numbers (Rotary, GiveDirectly, AIM) and future/x-risk numbers are
-# illustrative placeholders, not from those analyses.
-# name, domain, x_givewell (multiple of GiveWell top charities), source_tag
-SLATE = [
-    ("Local Rotary Club",               "local",       0.01,    "placeholder"),
-    ("GiveDirectly",                    "global",      0.1,     "placeholder"),
-    ("GiveWell (AMF)",                  "global",      1.0,     "baseline"),
-    ("AIM / Charity Entrep.",           "global",      2.0,     "placeholder"),
-    ("The Humane League",               "farmed",      1.51e3,  "published"),
-    ("Shrimp Welfare Project",          "invert",      6.43e4,  "published"),
-    ("Wild insects (humane pesticides)", "wild_invert", 2.37e4, "published"),
-    ("ALLFED",                          "future",      3.0,     "placeholder"),
-    ("AI safety (Redwood Research)",    "xrisk",       5.0,     "placeholder"),
-]
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"))
+import model as M  # noqa: E402
 
-# Counting soil animals, GiveWell top charities' cropland effect works out to
-# ~1.11 kQALY/$ ~= 1.74x the SWP Humane Slaughter Initiative -- so on branch A
-# the "normal" human charity leaps to ~1.11e5x GiveWell's own direct value, and
-# its SIGN is uncertain (it could be net-negative for soil nematodes).
-#   https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane
-SOIL_X_GIVEWELL = 1.11e5
+ANIMAL_DOMAINS = M.ANIMAL_DOMAINS
+SOIL_X_GIVEWELL = M.CONSTANTS["soil_x_givewell"]
+FANATICAL_MULT = M.CONSTANTS["fanatical_mult"]
+XRISK_REFUSED_MULT = M.CONSTANTS["xrisk_refused_mult"]
 
-ANIMAL_DOMAINS = {"farmed", "invert", "wild_invert"}
-FANATICAL_MULT = 1e6  # placeholder multiplier x-risk claims once tiny-prob bets are accepted
+# Short CLI name per stop (drops the "sN_" ordering prefix), e.g. s4_soil -> soil.
+def short(stop):
+    return stop["id"].split("_", 1)[1]
 
-# worldview -> (depth, branch, in-circle domains, flags)
-WORLDVIEWS = {
-    "parochial":      (0, "trunk", {"local"},                                            {}),
-    "all_humans":     (1, "trunk", {"local", "global"},                                  {}),
-    "farmed":         (2, "trunk", {"local", "global", "farmed"},                        {}),
-    "invertebrates":  (3, "trunk", {"local", "global", "farmed", "invert"},              {}),
-    "soil_nematodes": (4, "A",     {"local", "global", "farmed", "invert", "wild_invert"},
-                       {"count_soil": True}),
-    "astronomical":   (4, "F",     {"local", "global", "farmed", "invert", "wild_invert",
-                                    "future", "xrisk"}, {"accept_tiny_prob": True}),
-}
+STOPS_BY_SHORT = {short(s): s for s in M.STOPS}
 
 
-def cost_effectiveness(worldview, animal_weight):
+def cost_effectiveness(stop, animal_weight):
     """x-GiveWell cost-effectiveness of each org under one worldview."""
-    _, _, circle, flags = WORLDVIEWS[worldview]
+    circle = set(stop["circle"])
     out = {}
-    for name, domain, x, _tag in SLATE:
+    for org in M.ORGS:
+        name, domain, x = org["name"], org["domain"], org["x_givewell"]
         if domain not in circle:
             out[name] = 0.0
             continue
         v = x
         if domain in ANIMAL_DOMAINS:
             v *= animal_weight
-        if name == "GiveWell (AMF)" and flags.get("count_soil"):
+        if org["id"] == "amf" and stop["count_soil"]:
             v = SOIL_X_GIVEWELL          # soil-animal reversal (sign uncertain)
         if domain == "xrisk":
-            v *= FANATICAL_MULT if flags.get("accept_tiny_prob") else 1e-6
+            v *= FANATICAL_MULT if stop["accept_tiny_prob"] else XRISK_REFUSED_MULT
         out[name] = v
     return out
 
 
-def champion(worldview, animal_weight):
-    ce = cost_effectiveness(worldview, animal_weight)
+def champion(stop, animal_weight):
+    ce = cost_effectiveness(stop, animal_weight)
     return max(ce, key=ce.get)
 
 
 def credences(center, diversification):
     """Credence over worldviews, peaked on the center's depth, widened by
     diversification; worldviews at the same depth share that depth's credence."""
-    center_depth = WORLDVIEWS[center][0]
+    center_depth = center["stop"]
     if diversification <= 0:
-        return {w: (1.0 if w == center else 0.0) for w in WORLDVIEWS}
-    raw = {w: math.exp(-abs(WORLDVIEWS[w][0] - center_depth) / diversification)
-           for w in WORLDVIEWS}
+        return {s["id"]: (1.0 if s is center else 0.0) for s in M.STOPS}
+    raw = {s["id"]: math.exp(-abs(s["stop"] - center_depth) / diversification)
+           for s in M.STOPS}
     z = sum(raw.values())
-    return {w: raw[w] / z for w in WORLDVIEWS}
+    return {sid: raw[sid] / z for sid in raw}
 
 
 def allocate(center, diversification, animal_weight):
     cred = credences(center, diversification)
-    alloc = {name: 0.0 for name, *_ in SLATE}
-    for w in WORLDVIEWS:
-        alloc[champion(w, animal_weight)] += cred[w]
-    ew = {name: 0.0 for name, *_ in SLATE}
-    for w in WORLDVIEWS:
-        ce = cost_effectiveness(w, animal_weight)
+    alloc = {org["name"]: 0.0 for org in M.ORGS}
+    for s in M.STOPS:
+        alloc[champion(s, animal_weight)] += cred[s["id"]]
+    ew = {org["name"]: 0.0 for org in M.ORGS}
+    for s in M.STOPS:
+        ce = cost_effectiveness(s, animal_weight)
         for name in ew:
-            ew[name] += cred[w] * ce[name]
+            ew[name] += cred[s["id"]] * ce[name]
     return cred, ew, alloc
 
 
 def main():
     ap = argparse.ArgumentParser(description="Worldview-diversified donation allocator.")
-    ap.add_argument("--center", default="invertebrates", choices=list(WORLDVIEWS),
-                    help="worldview you lean toward (default invertebrates)")
+    ap.add_argument("--center", default="inverts", choices=list(STOPS_BY_SHORT),
+                    help="worldview you lean toward (default inverts)")
     ap.add_argument("--diversification", type=float, default=1.0,
                     help="0 = all-in on the center worldview's winner; higher = diversify across worldviews")
     ap.add_argument("--animal-weight", type=float, default=1.0,
@@ -143,19 +113,21 @@ def main():
 
     if args.list:
         print("\nworldviews (depth / branch -> champion at default animal weight):")
-        for w, (d, b, _c, _f) in WORLDVIEWS.items():
-            print(f"  {w:<15} depth {d} branch {b:<5} -> {champion(w, 1.0)}")
+        for name, s in STOPS_BY_SHORT.items():
+            print(f"  {name:<12} depth {s['stop']} branch {s['branch']:<5} -> {champion(s, 1.0)}")
         print()
         return
 
-    cred, ew, alloc = allocate(args.center, args.diversification, args.animal_weight)
+    center = STOPS_BY_SHORT[args.center]
+    cred, ew, alloc = allocate(center, args.diversification, args.animal_weight)
 
     print(f"\ncenter: {args.center}   diversification: {args.diversification}   "
           f"animal-weight: {args.animal_weight}\n")
     print("credence over worldviews:")
-    for w, (d, b, _c, _f) in WORLDVIEWS.items():
-        bar = "#" * int(round(cred[w] * 40))
-        print(f"  {w:<15} d{d} {b:<5} {cred[w]*100:5.1f}%  {bar}")
+    for name, s in STOPS_BY_SHORT.items():
+        c = cred[s["id"]]
+        bar = "#" * int(round(c * 40))
+        print(f"  {name:<12} d{s['stop']} {s['branch']:<5} {c*100:5.1f}%  {bar}")
 
     print("\n{:<34}{:>16}{:>13}".format("org", "x GiveWell (E)", "allocation"))
     print("-" * 63)

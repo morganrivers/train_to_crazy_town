@@ -17,16 +17,18 @@ humanNeurons = 8.6e10
 // daly_per_usd = direct effect on the target's PRIMARY beneficiary, before any
 // moral weighting. domain drives which assumption knobs apply. neurons is the
 // representative species, used only to scale animal welfare range.
+// >>> GENERATED SLATE (from data/model.json by data/generate.py - do not edit by hand)
 slate = [
-  { name: "Local Rotary Club",      domain: "local_human",   daly_per_usd: 0.0002 to 0.002, neurons: humanNeurons },
-  { name: "GiveDirectly",           domain: "global_human",  daly_per_usd: 0.005 to 0.02,   neurons: humanNeurons },
-  { name: "GiveWell (AMF)",         domain: "global_human",  daly_per_usd: 0.02 to 0.1,     neurons: humanNeurons },
-  { name: "AIM / Charity Entrep.",  domain: "global_human",  daly_per_usd: 0.05 to 0.3,     neurons: humanNeurons },
-  { name: "The Humane League",      domain: "farmed_animal", daly_per_usd: 1 to 30,         neurons: 2.2e8 },
-  { name: "Shrimp Welfare Project", domain: "invertebrate",  daly_per_usd: 10 to 5000,      neurons: 1e5 },
-  { name: "ALLFED",                 domain: "future_human",  daly_per_usd: 0.01 to 100,     neurons: humanNeurons },
-  { name: "AI safety (Redwood Research)", domain: "xrisk_future", daly_per_usd: 0.001 to 1e6, neurons: humanNeurons },
+  { name: "Local Rotary Club", domain: "local_human", daly_per_usd: 0.0002 to 0.002, neurons: humanNeurons },
+  { name: "GiveDirectly", domain: "global_human", daly_per_usd: 0.005 to 0.02, neurons: humanNeurons },
+  { name: "GiveWell top charity (AMF)", domain: "global_human", daly_per_usd: 0.02 to 0.1, neurons: humanNeurons },
+  { name: "AIM / Charity Entrepreneurship", domain: "global_human", daly_per_usd: 0.05 to 0.3, neurons: humanNeurons },
+  { name: "The Humane League", domain: "farmed_animal", daly_per_usd: 1 to 30, neurons: 220000000 },
+  { name: "Shrimp Welfare Project", domain: "invertebrate", daly_per_usd: 10 to 5000, neurons: 100000 },
+  { name: "ALLFED", domain: "future_human", daly_per_usd: 0.01 to 100, neurons: humanNeurons },
+  { name: "AI safety (Redwood Research)", domain: "xrisk_future", daly_per_usd: 0.001 to 1000000, neurons: humanNeurons },
 ]
+// <<< GENERATED SLATE
 
 // ---- assumptions schema (what each NODE sets) ------------------------------
 // A flat record:
