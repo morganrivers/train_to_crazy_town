@@ -1,0 +1,11 @@
+# Rendered diagram artifacts — regenerate with diagram/render_diagram.py, never commit.
+*.png
+*.svg
+
+# Generated draw.io (regenerate with diagram/build_diagram.py). Un-ignore this if
+# you decide to hand-edit + version the diagram the way iati_webapp does.
+*.drawio
+
+# Python
+__pycache__/
+*.pyc

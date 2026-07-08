@@ -141,6 +141,33 @@ My inclination: MVP with **fixed canonical ordering + binary edges** (options 1
 exponent-sensitive invertebrate nodes, where the instability is the whole point.
 Tell me which you want.
 
+## Diagram pipeline (`diagram/`)
+
+Stubbed graph-generation code, mirroring the Graphviz→draw.io setup in
+`morganrivers/iati_webapp` (`docs/diagram/`):
+
+- **`train_tree.json`** — the node/edge graph. Nodes are get-off points (one
+  moral-assumption set each) with a `top_pick` and a **`guesstimate`** slot;
+  edges are crucial-consideration flips. Currently one canonical spine (root →
+  x-risk) plus a `subgraph`-flagged fork point; **branching is TBD** (above).
+- **`graph_common.py`** — shared primitives (Graphviz `dot` run + plain-format
+  parse, coordinate transform, node/edge/band/mxfile emission), adapted from
+  iati's `drawio_common.py`.
+- **`build_diagram.py`** — reads the JSON, lays the tree out top→bottom (least
+  crazy at the top), colours nodes on a craziness gradient by stop, bands each
+  stop, and writes an editable `.drawio`. Requires Graphviz `dot` on PATH.
+- **`render_diagram.py`** — stub for `.drawio` → PNG/SVG (defers to iati's
+  `drawio_to_png.py`). **PNG/SVG and the generated `.drawio` are `.gitignore`d —
+  never committed.**
+
+**Guesstimate — stubbed, not wired.** Each node will link to its own Guesstimate
+model, all sharing one parameterised template (same donation slate, same
+`E[welfare-adjusted DALY averted / $]` formula, this node's assumptions dialled
+in). For now every node carries `"guesstimate": null`; `build_diagram.guesstimate_link()`
+is the single spot where those URLs plug in and become the node's clickable
+target. *Open question flagged there: is Guesstimate the right home for the
+shared logic, or Squiggle / a snapshotted notebook?*
+
 ## Scope
 
 **MVP is a faithful visualizer of existing work — it invents nothing.** Every
