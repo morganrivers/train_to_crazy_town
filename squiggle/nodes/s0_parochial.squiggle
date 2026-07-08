@@ -1,12 +1,9 @@
 // Stop 0 (trunk) - Parochial community + nation. Exemplar(s): common-sense default.
-// Expected winner: Local Rotary Club.
+// This node starts from base.defaults (the parochial root) and adds nothing (the root baseline).
+// Winner (illustrative): Local soup kitchen.
 // GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
 
-assumptions = {
-  w_local: 1, w_global: 0, w_farmed: 0, w_invert: 0, w_future: 0, w_xrisk: 0,
-  neuron_exponent: 0,
-  accept_tiny_prob: false,
-}
+export coeffs = base.defaults
 
-ranking = base.evaluate(assumptions)
+ranking = base.evaluate(coeffs)

@@ -1,12 +1,10 @@
 // Stop 4 (F) - Future people count. Exemplar(s): Ajeya Cotra, Toby Ord.
-// Expected winner: ALLFED.
+// This node inherits s3_inverts and adds w_future=1.
+// Winner (illustrative): ALLFED.
 // GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s3_inverts" as parent
 
-assumptions = {
-  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 0,
-  neuron_exponent: 0.4,
-  accept_tiny_prob: false,
-}
+export coeffs = Dict.merge(parent.coeffs, { w_future: 1 })
 
-ranking = base.evaluate(assumptions)
+ranking = base.evaluate(coeffs)

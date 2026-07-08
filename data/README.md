@@ -6,7 +6,7 @@ they cannot drift apart:
 
 ```
                     data/model.json
-                   (orgs · stops · edges · constants)
+        (orgs · coeff_defaults · stops · edges · constants)
                           │
         ┌─────────────────┼───────────────────────────┐
         │ reads           │ generates                  │ generates
@@ -15,27 +15,51 @@ they cannot drift apart:
    (portfolio)    → build_diagram.py → .drawio  squiggle/nodes/*.squiggle
 ```
 
+## The model is compositional
+
+Every stop carries a `coeffs` record. A stop's resolved coefficients are its
+**parent's** coefficients (`coeff_defaults` at the root) with the one-line delta
+in its `sets` merged on top. The Squiggle side does exactly this — each node
+`import`s its parent node and `Dict.merge`s the same delta — so a branch that
+adds one crucial consideration (a discount rate, a `P(nuclear war)`, an override)
+is *one line different* from its parent. The mimicry down the tree is real and
+deliberate; that is what lets the tree fan out combinatorially without
+duplicating a calculation.
+
+The moral circle is **derived** from the resolved coeffs (a domain is counted iff
+its weight is positive), so it is not stored a second time.
+
 ## Files
 
 - **`model.json`** — canonical data:
+  - `coeff_defaults` — the root coefficient record every node starts from:
+    per-domain weights `w_*`, `neuron_exponent`, `future_discount`,
+    `catastrophe_mult`, `accept_tiny_prob`, `count_soil`, and `override`.
   - `orgs` — the donation slate. Each org has a `domain`, an `x_givewell`
     cost-effectiveness multiple (with a `source` tag and, where published, a
-    `source_url`) for the allocator, and a `daly_per_usd` `[lo, hi]` BOTEC +
-    representative `neurons` for the Squiggle models. Animal/invertebrate
-    `x_givewell` figures are copied from published EA Forum CEAs; human, future
-    and x-risk figures are illustrative placeholders.
-  - `stops` — the worldview/branch tree. Each stop declares its moral `circle`
-    (the list of domains it counts — the Squiggle per-domain weights are derived
-    from this), the `neuron_exponent`, the `accept_tiny_prob` and `count_soil`
-    flags, its `figures`, `label`, `desc`, and the illustrative `top_pick`.
+    `source_url`) for the allocator, and either a `daly_per_usd` `[lo, hi]` BOTEC
+    or a structured `botec` block (the soup kitchen: people helped × wellbeing
+    gain, netted against a bank-account counterfactual) + representative `neurons`
+    for the Squiggle models. Animal/invertebrate `x_givewell` figures are copied
+    from published EA Forum CEAs; human, future and x-risk figures are
+    illustrative placeholders.
+  - `stops` — the worldview/branch tree. Each stop declares its `parent`, the
+    one-line `sets` delta it applies, its `figures`, `label`, `desc`, and the
+    illustrative `top_pick`.
   - `edges` — the crucial-consideration flips. The tree forks at `s3_inverts`
-    into a soil-animal branch (**A**) and a longtermist branch (**F**).
-- **`model.py`** — loader shared by `allocate.py`, `generate.py` and the test.
+    into a soil-animal branch (**A**) and a longtermist branch (**F**); forks
+    again at `s4_future` into discount / nuclear / astronomical siblings; and ends
+    past `s5_astro` in two `override` stops — a Boltzmann brain (**B**, every
+    charity collapses to one equal pleasant thought) and moral anti-realism
+    (**R**, every charity goes negative — better to be selfish).
+- **`model.py`** — loader shared by `allocate.py`, `generate.py` and the test;
+  owns `resolved_coeffs` (the parent chain) and the soup-kitchen BOTEC.
 - **`generate.py`** — regenerates the derived files from `model.json`.
 - **`test_sync.py`** — asserts every derived file is byte-identical to what
   `generate.py` would produce, plus the shared invariants (top-picks reference
-  real orgs; circles only grow down each branch; the allocator uses the same
-  slate). CI runs this on every push and PR (`.github/workflows/sync.yml`).
+  real orgs; circles only grow down each branch; edges agree with declared
+  parents; every stop resolves to the full coeff schema; the allocator uses the
+  same slate). CI runs this on every push and PR (`.github/workflows/sync.yml`).
 
 ## Workflow
 

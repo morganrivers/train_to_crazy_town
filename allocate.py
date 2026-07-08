@@ -51,8 +51,20 @@ STOPS_BY_SHORT = {short(s): s for s in M.STOPS}
 
 
 def cost_effectiveness(stop, animal_weight):
-    """x-GiveWell cost-effectiveness of each org under one worldview."""
-    circle = set(stop["circle"])
+    """x-GiveWell cost-effectiveness of each org under one worldview, applying the
+    stop's RESOLVED coefficients (the same parent-inherited-plus-`sets` record the
+    Squiggle chain builds). Mirrors base_model.squiggle's ev()."""
+    c = M.resolved_coeffs(stop)
+    circle = set(M.circle_from_coeffs(c))
+
+    # Overrides sit at the end of the line and replace every value: a Boltzmann
+    # brain values only its own pleasure (all equal); moral anti-realism makes
+    # any gift a personal loss (all negative, ranking inverted).
+    if c["override"] == "boltzmann":
+        return {org["name"]: 1.0 for org in M.ORGS}
+    if c["override"] == "antirealist":
+        return {org["name"]: -org["x_givewell"] for org in M.ORGS}
+
     out = {}
     for org in M.ORGS:
         name, domain, x = org["name"], org["domain"], org["x_givewell"]
@@ -62,10 +74,13 @@ def cost_effectiveness(stop, animal_weight):
         v = x
         if domain in ANIMAL_DOMAINS:
             v *= animal_weight
-        if org["id"] == "amf" and stop["count_soil"]:
+        if org["id"] == "amf" and c["count_soil"]:
             v = SOIL_X_GIVEWELL          # soil-animal reversal (sign uncertain)
+        if domain == "future":
+            v *= c["future_discount"] * c["catastrophe_mult"]
         if domain == "xrisk":
-            v *= FANATICAL_MULT if stop["accept_tiny_prob"] else XRISK_REFUSED_MULT
+            v *= c["catastrophe_mult"]
+            v *= FANATICAL_MULT if c["accept_tiny_prob"] else XRISK_REFUSED_MULT
         out[name] = v
     return out
 

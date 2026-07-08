@@ -1,12 +1,10 @@
 // Stop 2 (trunk) - Farmed animals count. Exemplar(s): Peter Singer, Lewis Bollard.
-// Expected winner: The Humane League.
+// This node inherits s1_all_humans and adds w_farmed=1, neuron_exponent=0.5.
+// Winner (illustrative): The Humane League.
 // GENERATED from data/model.json by data/generate.py - do not edit by hand.
 import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s1_all_humans" as parent
 
-assumptions = {
-  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 0, w_future: 0, w_xrisk: 0,
-  neuron_exponent: 0.5,
-  accept_tiny_prob: false,
-}
+export coeffs = Dict.merge(parent.coeffs, { w_farmed: 1, neuron_exponent: 0.5 })
 
-ranking = base.evaluate(assumptions)
+ranking = base.evaluate(coeffs)

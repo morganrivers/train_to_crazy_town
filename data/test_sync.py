@@ -52,18 +52,36 @@ def test_allocate_uses_the_canonical_slate():
 
 
 def test_circles_are_monotone_down_each_branch():
-    """A child's moral circle contains its parent's - the circle only grows."""
-    by_id = {s["id"]: s for s in M.STOPS}
+    """A child's moral circle contains its parent's - the circle only grows
+    (until an override stop, which invalidates every assumption but keeps the
+    inherited weights, so it does not shrink the circle either)."""
     for e in M.EDGES:
-        parent, child = set(by_id[e["from"]]["circle"]), set(by_id[e["to"]]["circle"])
+        parent = set(M.circle(e["from"]))
+        child = set(M.circle(e["to"]))
         assert parent <= child, f'{e["to"]} drops a domain its parent {e["from"]} counted'
 
 
-def test_squiggle_stops_have_full_assumptions():
-    """Every stop that claims a Squiggle model has all six domain weights defined."""
-    for s in M.squiggle_stops():
-        w = M.weights_from_circle(s["circle"])
-        assert set(w) == {f"w_{d}" for d in M.SQUIGGLE_WEIGHT_DOMAINS}
+def test_edge_parents_match_stop_parents():
+    """Every edge from->to agrees with the child stop's declared `parent`, so the
+    Squiggle import chain and the diagram edges describe the same tree."""
+    for e in M.EDGES:
+        assert M.stop_by_id(e["to"])["parent"] == e["from"], \
+            f'{e["to"]} parent != edge source {e["from"]}'
+
+
+def test_resolved_coeffs_have_the_full_schema():
+    """Every stop resolves to a coeff record with exactly the default keys, so no
+    `sets` delta introduces an unknown coefficient the base model won't read."""
+    keys = set(M.COEFF_DEFAULTS)
+    for s in M.STOPS:
+        assert set(M.resolved_coeffs(s)) == keys, f'{s["id"]} coeffs != schema'
+
+
+def test_soup_kitchen_botec_is_positive():
+    """The worked soup-kitchen BOTEC nets out positive (its counterfactual bank
+    value is < 1), so the parochial root has a real winner."""
+    lo, hi = M.org_daly_per_usd(M.org_by_name("Local soup kitchen"))
+    assert 0 < lo <= hi
 
 
 def main():

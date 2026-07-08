@@ -32,6 +32,7 @@ STOP_STYLE = [
     ('#f6e0c0', '#c9932a', '#5a3f10'),   # 3 amber (first unstable)
     ('#f2ccc0', '#c96a4a', '#5a2410'),   # 4 clay
     ('#eeb3b3', '#c0392b', '#5a1410'),   # 5 red (crazy town)
+    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 6 violet (off the rails: overrides)
 ]
 
 

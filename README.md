@@ -51,7 +51,7 @@ flip. Ordered by how much moral expansion they reward:
 
 | Target | Cause | Rides to about... |
 |---|---|---|
-| **Local Rotary Club** | Community / civic | the root (parochial) |
+| **Local soup kitchen** | Community / present-generation neighbours | the root (parochial) |
 | **GiveDirectly** | Global poor, direct cash | moral circle = all present humans |
 | **GiveWell top charity (AMF)** | Global health, lives saved | same, DALY-maximizing |
 | **AIM / Charity Entrepreneurship** | Incubation across health, policy, animals | higher-variance, expanding scope |
@@ -63,20 +63,34 @@ flip. Ordered by how much moral expansion they reward:
 
 ## The tree
 
-- **Root** = the least crazy assumptions: only local humans count; heavy
-  time-discounting; only near-certain, measurable effects; humans only. The
-  optimizer favors the local/civic option.
+- **Root** = the least crazy assumptions: only my family and local community
+  count, in the present generation; heavy time-discounting; only near-certain,
+  measurable effects; humans only. The optimizer favors the local soup kitchen —
+  and its value is a worked BOTEC (people made happier per dollar × their
+  wellbeing gain, netted against the counterfactual of the money sitting in a
+  bank, which still does ~30% as much good). **Every node downstream imports that
+  agreed number unchanged.**
 - **Each child flips one crucial consideration** — drop the nationality discount
   → all humans; add animals with a welfare range → farm-animal orgs; add
   invertebrates plus a neuron-count exponent → Shrimp Welfare Project; add future
   people and accept small-probability/large-payoff bets → x-risk. The winner
   changes as you descend.
+- **Nodes compose.** Every node holds a coefficient record; a child's coeffs are
+  its parent's coeffs with **one line changed** (its `sets` delta). So a whole
+  branch that adds a single term — a pure-time discount, a non-negligible
+  `P(nuclear war)`/yr — is nearly identical to its parent, differing by exactly
+  that term. On the Squiggle side each node literally `import`s its parent and
+  `Dict.merge`s the delta.
 - **The tree forks** at the invertebrate stop into a soil-animal branch (**A**),
   where counting ~10¹⁹ soil animals reverses which human charities look good, and
-  a longtermist branch (**F**), future people → astronomical stakes. Further
-  nesting (the soil sub-tree of macroarthropods / microarthropods / nematodes; a
-  digital-minds / x-risk sub-tree) is where a node later expands into its own
-  child tree.
+  a longtermist branch (**F**), future people → astronomical stakes. Branch F
+  forks again into discount / nuclear / astronomical siblings.
+- **Two endpoints sit off the end of the line, where an assumption invalidates
+  all the others.** A **Boltzmann brain** (only your own present pleasure is real)
+  collapses every charity to the same low pleasant-thought level — the ranking
+  goes flat. **Moral anti-realism** (there is no moral fact) sets every charity
+  negative — the ranking inverts and the consistent move is to keep your money.
+  Both are `override` coeffs that replace the whole computation.
 
 ## Single source of truth (`data/`)
 

@@ -1,9 +1,12 @@
 // run.mjs — run every node model straight from this repo and print its ranking.
 //
-// Runs the node models from this repo. A custom linker maps the Hub import name
-// `hub:morganrivers/base_model` to the local base_model.squiggle, so the same
-// files that publish to Squiggle Hub unchanged also run here on disk. The same
-// linker pattern feeds the @quri/squiggle-components React player.
+// Runs the node models from this repo. A custom linker maps every Hub import name
+// (`hub:morganrivers/base_model` and `hub:morganrivers/<node-id>`) to the local
+// file, so the same files that publish to Squiggle Hub unchanged also run here on
+// disk. Node models form an IMPORT CHAIN: each imports its parent node and
+// Dict.merges one coefficient delta, so the linker must resolve those parent
+// imports transitively. The same linker pattern feeds the @quri/squiggle-components
+// React player.
 //
 //   cd squiggle && npm install && node run.mjs
 //   node run.mjs nodes/s3_inverts.squiggle      # just one
@@ -14,8 +17,17 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const base = readFileSync(join(HERE, "base_model.squiggle"), "utf8");
-const linker = makeSelfContainedLinker({ "hub:morganrivers/base_model": base });
+
+// Hub import name -> local source. base_model plus every node, keyed by id so a
+// child's `import "hub:morganrivers/<parent>"` resolves to the parent on disk.
+const sources = {
+  "hub:morganrivers/base_model": readFileSync(join(HERE, "base_model.squiggle"), "utf8"),
+};
+for (const f of readdirSync(join(HERE, "nodes")).filter((f) => f.endsWith(".squiggle"))) {
+  sources[`hub:morganrivers/${f.replace(/\.squiggle$/, "")}`] =
+    readFileSync(join(HERE, "nodes", f), "utf8");
+}
+const linker = makeSelfContainedLinker(sources);
 
 async function rank(file) {
   const code = readFileSync(file, "utf8");

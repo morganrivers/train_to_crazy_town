@@ -1,0 +1,10 @@
+// Stop 5 (F) - Nuclear war non-negligible. Exemplar(s): Carl Sagan, Martin Hellman.
+// This node inherits s4_future and adds catastrophe_mult=50.
+// Winner (illustrative): ALLFED.
+// GENERATED from data/model.json by data/generate.py - do not edit by hand.
+import "hub:morganrivers/base_model" as base
+import "hub:morganrivers/s4_future" as parent
+
+export coeffs = Dict.merge(parent.coeffs, { catastrophe_mult: 50 })
+
+ranking = base.evaluate(coeffs)
