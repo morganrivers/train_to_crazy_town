@@ -1,7 +1,7 @@
 // Stop 5 - Astronomical stakes (accept the astronomical-waste argument and take
 // tiny-probability / huge-payoff bets at face value). Exemplars: Nick Bostrom,
 // Eliezer Yudkowsky. The last marked stop before fanaticism / Pascal's mugging.
-// Expected winner: AI safety (x-risk).
+// Expected winner: AI safety (Redwood Research).
 import "../base_model.squiggle" as base
 
 assumptions = {

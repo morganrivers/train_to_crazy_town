@@ -9,7 +9,7 @@
     "The Humane League (farm animal welfare)",
     "Shrimp Welfare Project",
     "ALLFED",
-    "AI safety (MIRI / MATS / LTFF - slot TBD)"
+    "AI safety (Redwood Research)"
   ],
 
   "nodes": [
@@ -40,7 +40,7 @@
      "figures": ["Brian Tomasik"],
      "squiggle": "squiggle/nodes/s3_inverts.squiggle",
      "subgraph": true,
-     "desc": "Flip: count invertebrates, with welfare range ~ (neuron count)^exponent. Brian Tomasik is the prominent voice on insect / invertebrate suffering. First UNSTABLE stop: sweeping the exponent from 0 to 2 swings shrimp welfare range across ~12 orders of magnitude and the ranking flips. Marked subgraph: clicking here should open the soil-animal sub-tree (macroarthropods / microarthropods / nematodes) - TBD."},
+     "desc": "Flip: count invertebrates, with welfare range ~ (neuron count)^exponent. Brian Tomasik is the prominent voice on insect / invertebrate suffering. This is the worked example of the train's instability: sweeping the exponent from 0 to 2 swings shrimp welfare range across ~12 orders of magnitude and flips the ranking (edit neuron_exponent in the node's Squiggle model to watch the top pick move). It is the entry point for the soil-animal subgraph - macroarthropods / microarthropods / nematodes, each with its own conditions for whether welfare rises or falls."},
 
     {"id": "s4_future",     "stop": 4, "file": "Future people count (low/zero time discount)",
      "lbl": "Future\npeople count",
@@ -51,7 +51,7 @@
 
     {"id": "s5_astro",      "stop": 5, "file": "Astronomical waste + tiny-probability bets count",
      "lbl": "Astronomical\nstakes",
-     "top_pick": "AI safety (x-risk)",
+     "top_pick": "AI safety (Redwood Research)",
      "figures": ["Nick Bostrom", "Eliezer Yudkowsky"],
      "squiggle": "squiggle/nodes/s5_astro.squiggle",
      "desc": "Last marked stop on this spine: accept Nick Bostrom's astronomical-waste argument and take small-probability / huge-payoff bets at face value; Eliezer Yudkowsky pushes AI-risk reasoning to its stark conclusions. Existential-risk reduction dominates everything. This is the far end Cotra's near-termist deliberately gets off before; ride further and you reach fanaticism / Pascal's-mugging territory."}

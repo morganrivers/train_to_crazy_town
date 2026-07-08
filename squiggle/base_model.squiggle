@@ -25,7 +25,7 @@ slate = [
   { name: "The Humane League",      domain: "farmed_animal", daly_per_usd: 1 to 30,         neurons: 2.2e8 },
   { name: "Shrimp Welfare Project", domain: "invertebrate",  daly_per_usd: 10 to 5000,      neurons: 1e5 },
   { name: "ALLFED",                 domain: "future_human",  daly_per_usd: 0.01 to 100,     neurons: humanNeurons },
-  { name: "AI safety (x-risk)",     domain: "xrisk_future",  daly_per_usd: 0.001 to 1e6,    neurons: humanNeurons },
+  { name: "AI safety (Redwood Research)", domain: "xrisk_future", daly_per_usd: 0.001 to 1e6, neurons: humanNeurons },
 ]
 
 // ---- assumptions schema (what each NODE sets) ------------------------------

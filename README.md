@@ -87,13 +87,7 @@ flip. Roughly ordered by how much moral expansion they reward:
 | **Farm animal welfare (The Humane League)** | Farmed vertebrates | moral circle includes animals |
 | **Shrimp Welfare Project** | Invertebrates | the exponent-sensitive stops |
 | **ALLFED** | Global catastrophic risk / resilience | near–far bridge, future people |
-| **AI safety** (MIRI — see note) | Existential risk, astronomical waste | the far end of the line |
-
-**AI-safety "best buy" note.** MIRI is the historical marker but has largely
-pivoted from technical research to communications. If you want a more current,
-still-fundable pick for that slot, candidates include the **Long-Term Future
-Fund**, **MATS**, or **Redwood Research**. This slot is contested and
-fast-moving — flagging it for you to choose rather than baking one in.
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | the far end of the line |
 
 ## The tree
 
