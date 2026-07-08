@@ -19,6 +19,9 @@ Requires Graphviz `dot` on PATH.
 """
 import json, os, subprocess, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from squiggle_playground import playground_url
+
 HERE = os.path.dirname(__file__)
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'train_tree.json')
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'train_tree')
@@ -78,9 +81,13 @@ def main():
         for n in nodes:
             if n['stop'] == s:
                 fill, stroke, font = STOP_STYLE[min(n['stop'], len(STOP_STYLE) - 1)]
+                # Same temporary-playground link the .drawio uses, so the SVG is
+                # clickable too (opens the node's model, editable, no account).
+                url = playground_url(n)
+                href = f' URL="{esc(url)}", target="_blank"' if url else ''
                 dot.append(
                     f'    "{n["id"]}"[label="{esc(node_label(n))}",'
-                    f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"];')
+                    f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"{href}];')
         # keep both stop-4 branch nodes (soil / future) on the same visual band
         same = [n['id'] for n in nodes if n['stop'] == s]
         if len(same) > 1:
