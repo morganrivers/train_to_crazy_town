@@ -1,0 +1,14 @@
+// Stop 3 - Invertebrates count. THE UNSTABLE STOP. Exemplar: Brian Tomasik.
+// Welfare range ~ (neurons)^neuron_exponent; sweeping neuron_exponent from ~0
+// to ~2 swings shrimp welfare range across ~12 orders of magnitude and flips
+// the ranking. Try editing neuron_exponent below to watch the top pick move.
+// Expected winner (at this exponent): Shrimp Welfare Project.
+import "hub:morganrivers/base_model" as base
+
+assumptions = {
+  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 0, w_xrisk: 0,
+  neuron_exponent: 0.4,   // <-- the crucial consideration; the whole stop's (in)stability lives here
+  accept_tiny_prob: false,
+}
+
+ranking = base.evaluate(assumptions)

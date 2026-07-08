@@ -1,0 +1,12 @@
+// Stop 2 - Farmed animals count (moral circle to vertebrates, weighted by a
+// sentience-adjusted welfare range). Exemplars: Peter Singer, Lewis Bollard.
+// Expected winner: The Humane League.
+import "hub:morganrivers/base_model" as base
+
+assumptions = {
+  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 0, w_future: 0, w_xrisk: 0,
+  neuron_exponent: 0.5,   // animals count, scaled sub-linearly by neuron count
+  accept_tiny_prob: false,
+}
+
+ranking = base.evaluate(assumptions)

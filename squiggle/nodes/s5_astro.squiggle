@@ -1,0 +1,13 @@
+// Stop 5 - Astronomical stakes (accept the astronomical-waste argument and take
+// tiny-probability / huge-payoff bets at face value). Exemplars: Nick Bostrom,
+// Eliezer Yudkowsky. The last marked stop before fanaticism / Pascal's mugging.
+// Expected winner: AI safety (Redwood Research).
+import "hub:morganrivers/base_model" as base
+
+assumptions = {
+  w_local: 1, w_global: 1, w_farmed: 1, w_invert: 1, w_future: 1, w_xrisk: 1,
+  neuron_exponent: 0.4,
+  accept_tiny_prob: true,   // <-- the fanaticism switch; flip to false to get off before the last stop
+}
+
+ranking = base.evaluate(assumptions)
