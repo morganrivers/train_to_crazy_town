@@ -289,9 +289,10 @@ def squiggle_prelude():
                 factors.append(f)
     if not factors:
         return []
-    lines = ["// Uncertain moral parameters this chain applies (`lo to hi` = lognormal",
-             "// 90% CI). Factors are independent, so each org's E[wDALY/$] below",
-             "// factorises exactly into the product of the means."]
+    lines = ["// Uncertain moral parameters this chain applies. Sym.lognormal({p5, p95})",
+             "// is a 90% CI; Sym.beta is a probability, bounded to [0, 1]. Factors are",
+             "// independent, so each org's E[wDALY/$] below factorises exactly into the",
+             "// product of the means."]
     for f in factors:
         lines.append(f"{f['name']} = {f['dist']}  // {f['comment']}")
     lines.append("")
