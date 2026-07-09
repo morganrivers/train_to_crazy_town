@@ -4,10 +4,11 @@ Bringing a human into the world (or keeping one alive, or making one richer)
 carries a hidden cost: over a lifetime that person eats animals, and factory
 farming those animals causes suffering. So a human-welfare dollar buys human
 DALYs AND a stream of farmed-animal life-years. This assumption ADDS the
-empirical externality functions and REDEFINES the base `externality` hook to
-charge every present-human org for the factory farming its beneficiaries'
-diets cause — an ADDITIVE negative term, not just a haircut, so a human charity
-can come out net-negative once animals carry enough weight.
+empirical externality functions and REDEFINES the base `externality_coefficient`
+hook to charge every present-human org for the factory farming its
+beneficiaries' diets cause — an ADDITIVE negative term per direct DALY, not
+just a haircut, so a human charity can come out net-negative once animals
+carry enough weight.
 
 Requires `animals_somewhat`: the meat only counts against you once animals are
 in the moral circle at all.
@@ -63,14 +64,16 @@ def _representative_farmed():
     return next(o for o in SLATE if o["domain"] == "farmed_animal")  # noqa: F821
 
 
-def externality(org):
+def externality_coefficient(org):
     """REDEFINED: present-human orgs pay for the factory farming their
-    beneficiaries' diets cause (negative = harm), scaled by however much the
-    chain weights a farmed animal."""
+    beneficiaries' diets cause (negative = harm), PER direct human DALY they
+    buy — the penalty rides the org's own uncertain direct-effect
+    distribution, since more DALYs delivered means more meat-eating
+    beneficiaries — scaled by however much the chain weights a farmed animal."""
     if org["domain"] not in _MEAT_EATING_DOMAINS:
         return 0.0
     farmed = _representative_farmed()
     animal_value = (farmed_suffering_per_life_year()
                     * welfare_range(farmed)              # noqa: F821
                     * moral_weight("farmed_animal"))     # noqa: F821
-    return -direct_daly_per_usd(org) * FARMED_LIFE_YEARS_PER_HUMAN_DALY * animal_value  # noqa: F821
+    return -FARMED_LIFE_YEARS_PER_HUMAN_DALY * animal_value

@@ -14,8 +14,9 @@ firmly net-negative — the "GiveWell may have made harmful grants" conclusion.
 This assumption does two things:
   1. it WRAPS `coefficient` to boost wild-invertebrate work, the slate's proxy
      for interventions acting on the vast soil-animal population; and
-  2. it WRAPS `externality` to charge cropland-expanding human orgs for the
-     soil-animal suffering their beneficiaries' extra food demand causes.
+  2. it WRAPS `externality_coefficient` to charge cropland-expanding human orgs
+     for the soil-animal suffering their beneficiaries' extra food demand
+     causes.
 
 Requires `animals_matter_a_lot`: soil animals only enter once invertebrates are
 already in the moral circle with real welfare ranges.
@@ -53,7 +54,7 @@ _MEAT_EATING_DOMAINS = ("local_human", "global_human")
 SOIL_SCALE_BOOST = 5.0
 
 _pre_soil_coefficient = coefficient  # noqa: F821
-_pre_soil_externality = externality  # noqa: F821
+_pre_soil_externality_coefficient = externality_coefficient  # noqa: F821
 
 
 def coefficient(org):
@@ -65,10 +66,13 @@ def coefficient(org):
     return c
 
 
-def externality(org):
+def externality_coefficient(org):
     """WRAPPED: cropland-expanding human orgs are charged for the net-negative
-    soil-animal welfare their beneficiaries' extra food demand causes."""
-    ext = _pre_soil_externality(org)
+    soil-animal welfare their beneficiaries' extra food demand causes, PER
+    direct human DALY — the charge rides the org's own uncertain direct-effect
+    distribution (Grilo's accounting is itself proportional to the human
+    benefit delivered)."""
+    ext = _pre_soil_externality_coefficient(org)
     if org["domain"] in _MEAT_EATING_DOMAINS:
-        ext -= direct_daly_per_usd(org) * SOIL_WELFARE_PER_HUMAN_DALY  # noqa: F821
+        ext -= SOIL_WELFARE_PER_HUMAN_DALY
     return ext

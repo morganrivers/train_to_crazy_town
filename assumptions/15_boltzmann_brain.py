@@ -43,3 +43,9 @@ def squiggle_prelude():
 def value_expression(org):
     """REDEFINED: nothing matters except how this moment happens to feel."""
     return "boltzmannLevel"
+
+
+def dist_expression(org):
+    """REDEFINED: the same fleeting constant — there is no uncertainty left to
+    have a distribution over."""
+    return "boltzmannLevel"

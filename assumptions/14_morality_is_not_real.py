@@ -33,3 +33,8 @@ def coefficient(org):
 def value_expression(org):
     """REDEFINED: sets all DALYs to 0."""
     return "0"
+
+
+def dist_expression(org):
+    """REDEFINED: no moral facts, no distribution over moral value either."""
+    return "0"

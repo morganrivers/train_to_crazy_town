@@ -45,6 +45,11 @@ _AI_SAFETY = "AI safety (Redwood Research)"
 
 _prev_expected_values = expected_values  # noqa: F821
 _prev_value_expression = value_expression  # noqa: F821
+_prev_dist_expression = dist_expression  # noqa: F821
+
+
+def _redwood():
+    return next(o for o in SLATE if o["id"] == "redwood")  # noqa: F821
 
 
 def expected_values():
@@ -58,6 +63,13 @@ def value_expression(org):
     """REDEFINED for ALLFED: render it as a multiple of AI safety's expression so
     the standalone Squiggle model matches the Python ranking."""
     if org["id"] == "allfed":
-        redwood = next(o for o in SLATE if o["id"] == "redwood")  # noqa: F821
-        return f"{RESILIENT_FOODS_VS_AGI:g} * ({_prev_value_expression(redwood)})"
+        return f"{RESILIENT_FOODS_VS_AGI:g} * ({_prev_value_expression(_redwood())})"
     return _prev_value_expression(org)
+
+
+def dist_expression(org):
+    """REDEFINED for ALLFED: the same multiple, applied to AI safety's full
+    distribution."""
+    if org["id"] == "allfed":
+        return f"{RESILIENT_FOODS_VS_AGI:g} * ({_prev_dist_expression(_redwood())})"
+    return _prev_dist_expression(org)

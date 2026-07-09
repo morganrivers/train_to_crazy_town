@@ -155,25 +155,69 @@ def welfare_range(org):
     return 1.0
 
 
+def uncertain_factors(org):
+    """The multiplicative UNCERTAIN moral parameters this worldview applies to
+    an org, beyond the structural circle (moral_weight × welfare_range). Each
+    factor is a dict:
+      name    — Squiggle variable name (defined once in the model's prelude)
+      mean    — exact E[factor], used by the Python-side ranking
+      dist    — Squiggle source for the factor's distribution
+      point   — True when the assumption PINS the value (no uncertainty left)
+      comment — one-line justification and source, rendered into the model
+    Assumptions that introduce an uncertain magnitude (a discount, a
+    probability, a multiplier) WRAP this instead of baking a point estimate
+    into `coefficient`: the generated model then carries the full distribution,
+    while the ranking uses the exact expectation. Factors are independent by
+    construction, so E[product] = product of E[each] — the Python point math
+    and the Squiggle model agree exactly. None at the root."""
+    return []
+
+
+def lognormal_factor(name, lo, hi, comment):
+    """An uncertain factor whose two-sided 90% CI is [lo, hi] (rendered
+    symbolically so its mean stays analytic), or a pinned point when lo == hi."""
+    return {"name": name, "mean": lognormal_mean(lo, hi), "point": lo == hi,
+            "dist": _sq_num(lo) if lo == hi else _sym_lognormal(lo, hi),
+            "comment": comment}
+
+
+def beta_factor(name, a, b, comment):
+    """An uncertain PROBABILITY factor, beta(a, b) — properly bounded to [0, 1]
+    where a lognormal would leak past 1. Mean is exactly a/(a+b)."""
+    return {"name": name, "mean": a / (a + b), "point": False,
+            "dist": f"Sym.beta({_sq_num(a)}, {_sq_num(b)})", "comment": comment}
+
+
 def coefficient(org):
-    """The whole moral coefficient this worldview puts on an org: every later
-    assumption changes the answer by redefining or wrapping the functions this
+    """The whole moral coefficient this worldview puts on an org: the
+    structural circle (who counts, and how much one counted individual counts)
+    times the expectation of every registered uncertain factor. Later
+    assumptions change the answer by redefining or wrapping the functions this
     multiplies together (or `coefficient` itself)."""
-    return moral_weight(org["domain"]) * welfare_range(org)
+    c = moral_weight(org["domain"]) * welfare_range(org)
+    for f in uncertain_factors(org):
+        c *= f["mean"]
+    return c
 
 
-def externality(org):
-    """Additive wDALY/$ term beyond the org's direct effect × coefficient — a
-    downstream SIDE EFFECT of funding it. Zero at the root; the meat-eater
-    problem redefines this to charge human-welfare orgs for the factory farming
-    their beneficiaries' diets cause."""
+def externality_coefficient(org):
+    """Additive term alongside `coefficient`, PER UNIT of the org's direct
+    effect — a downstream SIDE EFFECT of funding it that scales with how much
+    the org actually achieves (more DALYs bought means more beneficiaries,
+    means more side effect), so the org's value is
+    direct × (coefficient + externality_coefficient) and the generated model
+    keeps the side effect correlated with the same uncertain direct-effect
+    distribution. Zero at the root; the meat-eater problem redefines this to
+    charge human-welfare orgs for the factory farming their beneficiaries'
+    diets cause (negative = harm)."""
     return 0.0
 
 
 def expected_values():
     """{org name: E[wDALY averted per $]} under this worldview — the Python-side
     twin of the generated Squiggle model's `scored` list."""
-    return {org["name"]: direct_daly_per_usd(org) * coefficient(org) + externality(org)
+    return {org["name"]: direct_daly_per_usd(org)
+            * (coefficient(org) + externality_coefficient(org))
             for org in SLATE}
 
 
@@ -196,36 +240,100 @@ def squiggle_var(org):
     return _camel(org["id"]) + "DalyPerUsd"
 
 
-def squiggle_dist(org):
-    """Squiggle source for the org's direct-effect distribution."""
+def _sym_lognormal(lo, hi):
+    """Squiggle source for the lognormal whose two-sided 90% CI is [lo, hi].
+    The SYMBOLIC constructor, not `lo to hi`: the runtime samples `to`-built
+    distributions even inside mean(), and with order-of-magnitude CIs the
+    sampled mean of the heavy upper tail is biased low by several-fold. The
+    symbolic form keeps every mean() analytic, so the generated model's
+    numbers equal the Python ranking's exactly."""
+    return f"Sym.lognormal({{p5: {_sq_num(lo)}, p95: {_sq_num(hi)}}})"
+
+
+def squiggle_dist_lines(org):
+    """Squiggle lines defining the org's direct-effect distribution."""
+    var = squiggle_var(org)
     if "botec" in org:
-        b = org["botec"]
-        return "\n".join([
-            "{",
-            f"  peopleHelpedPerUsd = {_sq_num(b['people_helped_per_usd'][0])} to {_sq_num(b['people_helped_per_usd'][1])}",
-            f"  wellbeingGainDaly = {_sq_num(b['wellbeing_gain_daly'][0])} to {_sq_num(b['wellbeing_gain_daly'][1])}",
-            f"  counterfactualBankValue = {_sq_num(b['counterfactual_bank_value'])}",
-            "  peopleHelpedPerUsd * wellbeingGainDaly * (1 - counterfactualBankValue)",
-            "}",
-        ])
-    lo, hi = org["daly_per_usd"]
-    return f"{_sq_num(lo)} to {_sq_num(hi)}"
+        b, p = org["botec"], _camel(org["id"])
+        return [
+            f"{p}PeopleHelpedPerUsd = {_sym_lognormal(*b['people_helped_per_usd'])}",
+            f"{p}WellbeingGainDaly = {_sym_lognormal(*b['wellbeing_gain_daly'])}",
+            f"{p}CounterfactualBankValue = {_sq_num(b['counterfactual_bank_value'])}",
+            f"{var} = {p}PeopleHelpedPerUsd * {p}WellbeingGainDaly"
+            f" * (1 - {p}CounterfactualBankValue)",
+        ]
+    return [f"{var} = {_sym_lognormal(*org['daly_per_usd'])}"]
+
+
+def squiggle_mean_expr(org):
+    """Exact E[direct effect] as Squiggle source. mean() of a symbolic
+    distribution is analytic; a product's mean factorises over its independent
+    terms, so the BOTEC's expectation is the product of component means —
+    the same computation direct_daly_per_usd performs in Python."""
+    if "botec" in org:
+        p = _camel(org["id"])
+        return (f"(mean({p}PeopleHelpedPerUsd) * mean({p}WellbeingGainDaly)"
+                f" * (1 - {p}CounterfactualBankValue))")
+    return f"mean({squiggle_var(org)})"
 
 
 def squiggle_prelude():
-    """Extra Squiggle lines an assumption needs before the slate (none yet)."""
-    return []
+    """Squiggle lines before the slate: one named distribution per uncertain
+    moral parameter the chain has registered (deduplicated, in chain order),
+    so the model shows every parameter as a distribution, not a baked point."""
+    factors, names = [], set()
+    for org in SLATE:
+        for f in uncertain_factors(org):
+            if f["name"] not in names:
+                names.add(f["name"])
+                factors.append(f)
+    if not factors:
+        return []
+    lines = ["// Uncertain moral parameters this chain applies (`lo to hi` = lognormal",
+             "// 90% CI). Factors are independent, so each org's E[wDALY/$] below",
+             "// factorises exactly into the product of the means."]
+    for f in factors:
+        lines.append(f"{f['name']} = {f['dist']}  // {f['comment']}")
+    lines.append("")
+    return lines
+
+
+def _value_expr(org, expectation):
+    """Assemble the org's Squiggle expression:
+    direct × (structural coefficient × factors + externality).
+    With expectation=True every distribution is wrapped in mean(...) — the
+    exact analytic expectation the ranking sorts by (factors are independent,
+    so the expectation factorises; no sampling noise can reorder heavy-tailed
+    orgs between runs). With expectation=False the same expression is left as
+    a full distribution, so the playground shows the spread and the tails."""
+    head = squiggle_mean_expr(org) if expectation else squiggle_var(org)
+    factors = uncertain_factors(org)
+    structural = coefficient(org)
+    for f in factors:
+        structural /= f["mean"]
+    if structural == 0:
+        factors = []  # outside the circle: no factor can rescue a zero weight
+    core = f"{structural:.6g}"
+    for f in factors:
+        ref = f["name"] if (f["point"] or not expectation) else f"mean({f['name']})"
+        core += f" * {ref}"
+    ext = externality_coefficient(org)
+    if ext:
+        return f"{head} * ({core} + ({ext:.6g}))"
+    return f"{head} * {core}"
 
 
 def value_expression(org):
-    """Squiggle expression for the org's E[wDALY/$] under this worldview: its
-    direct effect times the moral coefficient, plus any additive externality.
+    """Squiggle expression for the org's exact E[wDALY/$] under this worldview.
     The override assumptions at the end of the line redefine this wholesale."""
-    expr = f"mean({squiggle_var(org)}) * {coefficient(org):.6g}"
-    ext = externality(org)
-    if ext:
-        expr += f" + ({ext:.6g})"
-    return expr
+    return _value_expr(org, expectation=True)
+
+
+def dist_expression(org):
+    """Squiggle expression for the org's full wDALY/$ DISTRIBUTION under this
+    worldview — the same product as `value_expression`, with every uncertain
+    term left as a distribution."""
+    return _value_expr(org, expectation=False)
 
 
 def squiggle(header=""):
@@ -235,15 +343,23 @@ def squiggle(header=""):
         lines += [header.rstrip("\n"), ""]
     lines += squiggle_prelude()
     lines += ["// Direct effect on each org's primary beneficiary, BEFORE moral",
-              "// weighting. `lo to hi` is a lognormal 90% CI (order-of-magnitude BOTEC)."]
+              "// weighting. Sym.lognormal({p5, p95}) is the lognormal whose two-sided",
+              "// 90% CI is [p5, p95] — an order-of-magnitude BOTEC, symbolic so every",
+              "// mean() below is analytic rather than sampled. Each org's figure is",
+              "// grounded in the source cited on it."]
     for org in SLATE:
-        lines.append(f"{squiggle_var(org)} = {squiggle_dist(org)}")
+        if org.get("source_url"):
+            lines.append(f"// {org['source_url']}")
+        lines += squiggle_dist_lines(org)
     lines += ["",
-              "// E[wDALY averted per $]: each org's direct effect times the moral",
-              "// coefficient this worldview's assumption chain puts on it.",
+              "// Each org: `dist` is its full wDALY/$ distribution under this worldview",
+              "// (direct effect × moral coefficient, externalities correlated with the",
+              "// same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of",
+              "// `dist`, which is what the ranking sorts by.",
               "scored = ["]
     for org in SLATE:
-        lines.append(f'  {{ name: "{org["name"]}", wdalyPerUsd: {value_expression(org)} }},')
+        lines.append(f'  {{ name: "{org["name"]}", dist: {dist_expression(org)}, '
+                     f"wdalyPerUsd: {value_expression(org)} }},")
     lines += ["]",
               "",
               "ranking = List.reverse(List.sortBy(scored, {|x| x.wdalyPerUsd}))",
