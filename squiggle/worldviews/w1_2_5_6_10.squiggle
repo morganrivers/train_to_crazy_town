@@ -37,9 +37,9 @@ swpDalyPerUsd = Sym.lognormal({p5: 1200, p95: 74000})
 // https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
 wildbugsDalyPerUsd = Sym.lognormal({p5: 1600, p95: 82000})
 // https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176
-allfedDalyPerUsd = Sym.lognormal({p5: 0.002, p95: 0.5})
+allfedDalyPerUsd = Sym.lognormal({p5: 0.002, p95: 0.1})
 // https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
-redwoodDalyPerUsd = Sym.lognormal({p5: 0.2, p95: 20000})
+redwoodDalyPerUsd = Sym.lognormal({p5: 0.07, p95: 7000})
 
 // Each org: `dist` is its full wDALY/$ distribution under this worldview
 // (direct effect × moral coefficient, externalities correlated with the

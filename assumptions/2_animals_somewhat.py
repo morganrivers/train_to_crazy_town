@@ -27,7 +27,20 @@ _humans_only_moral_weight = moral_weight  # noqa: F821
 
 
 def neuron_count_exponent():
-    """NEW parameter: how fast moral weight falls off with brain size."""
+    """NEW parameter: how fast moral weight falls off with brain size.
+
+    0.5 (square-root weighting) sits between linear neuron-count weighting
+    (exponent 1) and species egalitarianism (exponent 0): a chicken at
+    (2.2e8 / 8.6e10)^0.5 ~ 0.05 of a human. Neuron counts as a welfare proxy
+    are discussed (and criticised) in Open Philanthropy's 2017 report on
+    consciousness and moral patienthood
+    (https://www.openphilanthropy.org/research/2017-report-on-consciousness-and-moral-patienthood/)
+    and Rethink Priorities' "Why Neuron Counts Shouldn't Be Used as Proxies
+    for Moral Weight"
+    (https://rethinkpriorities.org/publications/why-neuron-counts-shouldnt-be-used-as-proxies-for-moral-weight);
+    the exponent is a MODELLING KNOB, not an empirical estimate — sweeping it
+    0..1 swings animal welfare ranges across orders of magnitude, and
+    assumption 5 replaces the proxy with RP's welfare ranges outright."""
     return 0.5
 
 

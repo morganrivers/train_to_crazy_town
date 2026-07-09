@@ -69,12 +69,14 @@ SLATE = [
                "counterfactual_bank_value": [0.1, 0.5]}},
     {"id": "gd", "name": "GiveDirectly", "domain": "global_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "GiveWell cash benchmark; ~1/10 of top charities per $",
+     "source": "GiveWell cash benchmark; ~1/10 of top charities per $ "
+               "(CI mean 0.00101 DALY/$ = 0.10x the AMF entry's mean)",
      "source_url": "https://www.givewell.org/international/technical/programs/cash-transfers",
      "daly_per_usd": [0.0004, 0.002]},
     {"id": "amf", "name": "GiveWell top charity (AMF)", "domain": "global_human",
      "animal": False, "averts_intense_suffering": True, "neurons": 8.6e10,
-     "source": "GiveWell CEA; mean ~0.00994 DALY/$ (Grilo's GiveWell baseline)",
+     "source": "GiveWell CEA; CI mean 0.00994 DALY/$ reproduces Grilo's GiveWell "
+               "baseline exactly — the 1x every other multiple is read against",
      "source_url": "https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models",
      "daly_per_usd": [0.0035, 0.021]},
     {"id": "aim", "name": "AIM / Charity Entrepreneurship", "domain": "global_human",
@@ -85,35 +87,42 @@ SLATE = [
      "daly_per_usd": [0.001, 0.025]},
     {"id": "thl", "name": "The Humane League", "domain": "farmed_animal",
      "animal": True, "averts_intense_suffering": True, "neurons": 2.2e8,
-     "source": "Saulius 9-120 chicken-years/$ x welfare improvement; Grilo ~1.67-14.3 DALY/$; "
-               "at RP chicken welfare range 0.332 reproduces ~4.6 DALY/$ (~460x GiveWell)",
+     "source": "Saulius 9-120 chicken-years/$ x the welfare delta of a reform; this "
+               "chicken-DALY CI x RP welfare range 0.332 spans [0.4, 15.6], bracketing "
+               "Grilo's published 1.67-14.3 human-equivalent DALY/$; CI mean 14.0 x "
+               "0.332 = 4.6 DALY/$ = ~460x GiveWell, his central multiple",
      "source_url": "https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken",
      "daly_per_usd": [1.2, 47]},
     {"id": "swp", "name": "Shrimp Welfare Project", "domain": "invertebrate",
      "animal": True, "averts_intense_suffering": True, "neurons": 1e5,
-     "source": "Grilo HSI 639 DALY/$ = 64.3k x GiveWell; at RP shrimp welfare range 0.031 "
-               "this direct figure reproduces that human-equivalent number",
+     "source": "Grilo HSI 639 DALY/$ = 64.3k x GiveWell; CI mean 20668 x RP shrimp "
+               "welfare range 0.031 = 641 DALY/$, reproducing his figure",
      "source_url": "https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane",
      "daly_per_usd": [1200, 74000]},
     {"id": "wildbugs", "name": "Wild insects (humane pesticides)", "domain": "wild_invertebrate",
      "animal": True, "averts_intense_suffering": True, "neurons": 1e5,
-     "source": "Grilo 236 DALY/$ = 23.7k x GiveWell (5.74M insects/$); at an insect welfare "
-               "range ~0.01 this direct figure reproduces that human-equivalent number",
+     "source": "Grilo 236 DALY/$ = 23.7k x GiveWell (5.74M insects/$); CI mean 23427 "
+               "x insect welfare range 0.01 = 234 DALY/$, reproducing his figure",
      "source_url": "https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane",
      "daly_per_usd": [1600, 82000]},
     {"id": "allfed", "name": "ALLFED", "domain": "future_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
      "source": "Resilient foods for global catastrophes; NEAR-TERM cost-effectiveness "
-               "~$400-20000 per life (Denkenberger & Pearce). Its astronomical far-future "
-               "upside is unlocked only by the resilient_foods_beat_agi assumption.",
+               "~$400-20000 per life saved (Denkenberger & Pearce) = ~0.002-0.1 DALY/$ "
+               "at ~40 DALYs per life saved, which is this CI. Its astronomical "
+               "far-future upside is unlocked only by resilient_foods_beat_agi.",
      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176",
-     "daly_per_usd": [0.002, 0.5]},
+     "daly_per_usd": [0.002, 0.1]},
     {"id": "redwood", "name": "AI safety (Redwood Research)", "domain": "xrisk_future",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "Linch's ~$100M per 0.01% x-risk reduction (~1e-12/$) x the undiscounted "
-               "future at stake (Bostrom astronomical waste; Cotra AI timelines/takeover)",
+     "source": "Linch's ~$100M per 0.01% x-risk reduction (~1e-12/$) x Bostrom's "
+               "conservative ~1e16 biological life-years at stake ('Astronomical "
+               "Waste') = ~1e4 undiscounted DALY/$ central; the CI is calibrated so "
+               "its lognormal mean reproduces that 1e4, and its ~5-OOM spread runs "
+               "from Thorstad-style skepticism (persistent hazard, small tractable "
+               "share) up to fuller Bostromian stakes (Cotra timelines/takeover)",
      "source_url": "https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01",
-     "daly_per_usd": [0.2, 20000]},
+     "daly_per_usd": [0.07, 7000]},
 ]
 
 
