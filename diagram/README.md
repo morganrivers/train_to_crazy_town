@@ -16,7 +16,7 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
   parse, coordinate transform, node/edge/band/mxfile emission.
 - **`build_diagram.py`** — reads the JSON, lays the tree top→bottom with
   Graphviz (root = least crazy, at the top), bands each stop (a node's band =
-  its craziest accepted assumption, STOP 0–9, on a 10-colour craziness
+  its craziest accepted assumption, STOP 0–11, on a 12-colour craziness
   gradient), writes the editable `train_tree.drawio`, and prints the public
   read-only draw.io view link. Requires Graphviz `dot` on PATH.
 - **`render_diagram.py`** — renders `train_tree.json` → `train_tree.png` +

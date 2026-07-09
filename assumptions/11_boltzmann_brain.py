@@ -1,4 +1,4 @@
-"""Assumption 9 — you are probably a Boltzmann brain.
+"""Assumption 11 — you are probably a Boltzmann brain.
 
 The last stop: if you are more likely a fleeting thermal fluctuation than an
 embodied agent, nothing matters except the brief moments of how you happen to

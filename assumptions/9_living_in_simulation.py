@@ -1,4 +1,4 @@
-"""Assumption 7 — we are probably living in a simulation.
+"""Assumption 9 — we are probably living in a simulation.
 
 Bostrom's simulation argument, taken seriously. This assumption ADDS a new
 function `simulation_continuation_prob` and WRAPS `coefficient`: the

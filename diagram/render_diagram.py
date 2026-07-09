@@ -37,9 +37,11 @@ STOP_STYLE = [
     ('#f6e0c0', '#c9932a', '#5a3f10'),   # 4 amber (no discounting)
     ('#f5d3b8', '#cc7a33', '#5a300e'),   # 5 orange (RP animals)
     ('#f2ccc0', '#c96a4a', '#5a2410'),   # 6 clay (suffering)
-    ('#eeb3b3', '#c0392b', '#5a1410'),   # 7 red (simulation)
-    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 8 violet (anti-realism)
-    ('#c9b3dd', '#4a2a78', '#201040'),   # 9 dark violet (Boltzmann)
+    ('#eec2a8', '#c65a2e', '#5a2a10'),   # 7 terracotta (meat-eater)
+    ('#e9b0a0', '#b8402a', '#511810'),   # 8 rust (net-negative lives)
+    ('#eeb3b3', '#c0392b', '#5a1410'),   # 9 red (simulation)
+    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 10 violet (anti-realism)
+    ('#c9b3dd', '#4a2a78', '#201040'),   # 11 dark violet (Boltzmann)
 ]
 
 

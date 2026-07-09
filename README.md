@@ -43,7 +43,7 @@ one.
   tag), with the donation target that worldview ranks first and the public
   figures who most prominently articulate its latest assumption.
 - **An edge accepts exactly one more assumption.**
-- **A band (STOP 0–9) is how far down the line a worldview rides** — its
+- **A band (STOP 0–11) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
   violet at the bottom.
 - **The decision rule never changes.** Every worldview maximizes expected
@@ -64,19 +64,24 @@ a soup kitchen wins. Each numbered assumption modifies the worldview before it:
 5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates,
    the ~10^19 soil animals → wild-insect welfare
 6. **suffering-focused ethics** — averting suffering beats creating happiness
-7. **living in a simulation** — the far future only counts if it keeps running
-8. **morality is not real** — every value goes to 0; keep your money
-9. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+7. **the meat-eater problem** — a saved human eats animals for a lifetime, so
+   human charities are charged for the factory farming they cause
+8. **net-negative animal lives** — farmed and wild lives aren't worth living;
+   with the meat-eater problem, human charities come out net-harmful
+9. **living in a simulation** — the far future only counts if it keeps running
+10. **morality is not real** — every value goes to 0; keep your money
+11. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
 
 Not every combination is a coherent person — an animals person won't think only
-their own community matters — so compatibility rules prune 512 possible chains
-to **23 worldviews**. The ladder, the rules, and how chains compose are
+their own community matters, and the near-term meat-eater bookkeeping is moot
+once astronomical stakes dominate — so compatibility rules prune 2,048 possible
+chains to **39 worldviews**. The ladder, the rules, and how chains compose are
 documented in [`assumptions/README.md`](assumptions/README.md).
 
 ## What's in the repo
 
 - **[`assumptions/`](assumptions/README.md)** — the single source of truth: ten
-  numbered Python assumption files that compose into the 23 worldviews.
+  numbered Python assumption files that compose into the 39 worldviews.
 - **[`squiggle/`](squiggle/README.md)** — one standalone Squiggle model per
   worldview (generated), each exporting its ranking and `worldviewEv`, the
   expected value of that worldview. Runnable locally, in the playground links,
@@ -109,6 +114,10 @@ documented in [`assumptions/README.md`](assumptions/README.md).
   https://forum.effectivealtruism.org/posts/feejxTPvBJY2cfXRp/when-to-get-off-the-train-to-crazy-town
 - Rethink Priorities, *Welfare range estimates* —
   https://rethinkpriorities.org/research-area/welfare-range-estimates/
+- *The meat-eater problem* — EA Forum topic —
+  https://forum.effectivealtruism.org/topics/meat-eater-problem
+- Brian Tomasik, *The Importance of Wild-Animal Suffering* —
+  https://reducing-suffering.org/the-importance-of-wild-animal-suffering/
 - *Cost-effectiveness of corporate campaigns for chicken welfare* — EA Forum —
   https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken
 - *Cost-effectiveness of the Shrimp Welfare Project's Humane Slaughter

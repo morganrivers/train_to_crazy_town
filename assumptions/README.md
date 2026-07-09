@@ -86,32 +86,40 @@ number unchanged.
 
 | # | assumption | what it does to the chain |
 |---|---|---|
-| 0 | `parochial` | the base: slate, `moral_weight` = "people near me", `squiggle()` |
+| 0 | `parochial` | the base: slate, the `moral_weight`/`welfare_range`/`coefficient`/`externality` hooks, `squiggle()` |
 | 1 | `far_away_humans` | redefines `moral_weight`: all present humans |
 | 2 | `animals_somewhat` | adds `neuron_count_exponent()`; redefines `welfare_range` |
 | 3 | `future_humans_matter_with_discounting` | adds `future_discount()` (= 0.01); wraps `coefficient` |
 | 4 | `no_discounting_future_humans` | re-parameterises `future_discount()` → 1.0; x-risk enters the circle |
 | 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges; invertebrates + nematode weight |
 | 6 | `suffering_focused` | adds `suffering_multiplier(org)`; wraps `coefficient` |
-| 7 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value |
-| 8 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything |
-| 9 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+| 7 | `meat_eater_problem` | redefines the `externality` hook: charges human orgs for the meat their beneficiaries eat |
+| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering penalty; wraps `coefficient` to boost suffering-reduction |
+| 9 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value |
+| 10 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything |
+| 11 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
 
 ## Limiting the combinatorial explosion
 
-Ten assumptions would naively give 2⁹ = 512 chains. Metadata on each file
-limits combinations to what one person could plausibly hold at once:
+Twelve assumptions would naively give 2¹¹ = 2,048 chains (the parochial base is
+always present). Metadata on each file limits combinations to what one person
+could plausibly hold at once:
 
 - **`REQUIRES`** — an animals person won't think only people in their community
   matter, so `2` requires `1`; `4` modifies the discount `3` introduced, so it
-  requires `3`; `5` upgrades `2`; `7` only makes sense to someone already
-  reasoning expected-value-style about the undiscounted far future (`4`).
-- **`EXCLUDES`** — the two overrides (`8`, `9`) can't be held together.
+  requires `3`; `5` upgrades `2`; `7` (meat-eater) needs animals in the circle
+  (`2`); `8` (net-negative lives) presupposes counting wild/invertebrate
+  animals (`5`); `9` (simulation) only makes sense to someone already reasoning
+  expected-value-style about the undiscounted far future (`4`).
+- **`EXCLUDES`** — the two overrides (`10`, `11`) can't be held together; and
+  the near-term animal-vs-human stops `7`/`8` are not combined with
+  astronomical-stakes longtermism (`4`), where x-risk swamps the meat
+  bookkeeping — a different get-off point.
 - **`TERMINAL`** — an override invalidates every assumption before it, so it is
   generated only on its minimal `REQUIRES`-closure chain; any larger chain
   would produce a byte-identical all-flat model.
 
-That leaves **23 worldviews**. Every worldview's parent is the same chain minus
+That leaves **39 worldviews**. Every worldview's parent is the same chain minus
 its craziest assumption, so the graph is a tree and every edge adds exactly one
 assumption.
 

@@ -77,9 +77,11 @@ STOP_STYLE = [
     'fillColor=#f6e0c0;strokeColor=#c9932a;fontColor=#5a3f10;',   # 4 amber (no discounting)
     'fillColor=#f5d3b8;strokeColor=#cc7a33;fontColor=#5a300e;',   # 5 orange (RP animals)
     'fillColor=#f2ccc0;strokeColor=#c96a4a;fontColor=#5a2410;',   # 6 clay (suffering)
-    'fillColor=#eeb3b3;strokeColor=#c0392b;fontColor=#5a1410;',   # 7 red (simulation)
-    'fillColor=#d7c6e6;strokeColor=#6a3fa0;fontColor=#2c1650;',   # 8 violet (anti-realism)
-    'fillColor=#c9b3dd;strokeColor=#4a2a78;fontColor=#201040;',   # 9 dark violet (Boltzmann)
+    'fillColor=#eec2a8;strokeColor=#c65a2e;fontColor=#5a2a10;',   # 7 terracotta (meat-eater)
+    'fillColor=#e9b0a0;strokeColor=#b8402a;fontColor=#511810;',   # 8 rust (net-negative lives)
+    'fillColor=#eeb3b3;strokeColor=#c0392b;fontColor=#5a1410;',   # 9 red (simulation)
+    'fillColor=#d7c6e6;strokeColor=#6a3fa0;fontColor=#2c1650;',   # 10 violet (anti-realism)
+    'fillColor=#c9b3dd;strokeColor=#4a2a78;fontColor=#201040;',   # 11 dark violet (Boltzmann)
 ]
 NODE_BASE = 'rounded=1;whiteSpace=wrap;html=1;fontSize=11;'
 def node_style(n):
@@ -116,8 +118,8 @@ mid = []  # edges
 fg = []   # nodes (front)
 
 # one dotted band per stop, labelled with how far down the train it is
-STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9a72a', '#c9932a',
-            '#cc7a33', '#c96a4a', '#c0392b', '#6a3fa0', '#4a2a78']
+STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9a72a', '#c9932a', '#cc7a33',
+            '#c96a4a', '#c65a2e', '#b8402a', '#c0392b', '#6a3fa0', '#4a2a78']
 for s in stops:
     col = STOP_COL[min(s, len(STOP_COL) - 1)]
     group_box(nodes, set(by_stop[s]), pos, X, Y, f'band_{s}',

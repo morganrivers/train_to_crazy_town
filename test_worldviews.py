@@ -45,7 +45,7 @@ def test_generated_files_are_current():
 def test_numbering_is_linear():
     """Assumption files are numbered 0..N with no doubling and no gaps
     (load_assumptions raises otherwise; assert the expected ladder here)."""
-    assert sorted(W.ASSUMPTIONS) == list(range(10))
+    assert sorted(W.ASSUMPTIONS) == list(range(12))
 
 
 def test_each_edge_adds_exactly_one_assumption():
@@ -61,13 +61,16 @@ def test_each_edge_adds_exactly_one_assumption():
 
 
 def test_combination_rules_limit_the_explosion():
-    """REQUIRES/EXCLUDES/TERMINAL cut 2^9 subsets down to a plausible few."""
-    assert len(VIEWS) == 23, f"expected 23 worldviews, got {len(VIEWS)}"
+    """REQUIRES/EXCLUDES/TERMINAL cut 2^11 subsets down to a plausible few."""
+    assert len(VIEWS) == 39, f"expected 39 worldviews, got {len(VIEWS)}"
     assert not W.is_valid({2}), "animals person must also count far-away humans"
     assert not W.is_valid({1, 4}), "no-discounting requires the discounting stop first"
-    assert not W.is_valid({1, 3, 4, 7, 8, 9}), "the two overrides exclude each other"
-    assert not W.is_valid({1, 2, 3, 4, 7, 8}), "overrides only ride their minimal chain"
-    assert W.is_valid({1, 3, 4, 7, 8})
+    assert not W.is_valid({1, 2, 7, 8}), "net-negative lives requires animals_matter_a_lot"
+    assert not W.is_valid({1, 2, 3, 4, 5, 7}), \
+        "the meat-eater problem is a near-term stop, not combined with no-discounting"
+    assert not W.is_valid({1, 3, 4, 9, 10, 11}), "the two overrides exclude each other"
+    assert not W.is_valid({1, 2, 3, 4, 5, 9, 10}), "overrides only ride their minimal chain"
+    assert W.is_valid({1, 3, 4, 9, 10})
 
 
 def test_moral_circle_only_grows():
@@ -105,8 +108,22 @@ def test_the_train_actually_moves():
 def test_overrides_go_flat():
     """The end of the line: anti-realism sets every value to 0; the Boltzmann
     brain collapses everything to one equal pleasant thought."""
-    assert set(BY_ID["w1_3_4_7_8"]["evs"].values()) == {0.0}
-    assert set(BY_ID["w1_3_4_7_9"]["evs"].values()) == {1e-6}
+    assert set(BY_ID["w1_3_4_9_10"]["evs"].values()) == {0.0}
+    assert set(BY_ID["w1_3_4_9_11"]["evs"].values()) == {1e-6}
+
+
+def test_meat_eater_and_net_negative_lives():
+    """The two animal-side externality assumptions. The meat-eater problem
+    charges human orgs for their beneficiaries' diets; net-negative lives has no
+    meat channel of its own but amplifies that penalty into net-harmful territory."""
+    amf = "GiveWell top charity (AMF)"
+    # meat-eater alone shaves human value but (under neuron weights) keeps it positive
+    assert 0 < BY_ID["w1_2_7"]["evs"][amf] < BY_ID["w1_2"]["evs"][amf]
+    # net-negative lives alone touches no human org (it only boosts animal work)
+    assert BY_ID["w1_2_5_8"]["evs"][amf] == BY_ID["w1_2_5"]["evs"][amf]
+    # both together, under heavy animal weight, drive human charities net-negative
+    assert BY_ID["w1_2_5_7_8"]["evs"][amf] < 0
+    assert BY_ID["w1_2_5_7_8"]["evs"]["Local soup kitchen"] < 0
 
 
 def test_playground_links_roundtrip():
