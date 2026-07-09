@@ -1,7 +1,23 @@
 # `assumptions/` — the single source of truth
 
 Every worldview on the train is composed from the numbered Python **assumption
-files** in this directory. An assumption modifies, in a simple way, the chain
+files** in this directory, and every derived representation is generated from
+them; nothing lives twice:
+
+```
+                 assumptions/*.py  (0_parochial … 9_boltzmann_brain)
+                          │  composed per worldview by worldviews.py
+                          │  (exec the chain, in craziness order, in one namespace)
+        ┌─────────────────┼───────────────────────────┐
+        │ reads           │ generate.py writes         │ generate.py writes
+        ▼                 ▼                            ▼
+   allocate.py    diagram/train_tree.json      squiggle/worldviews/*.squiggle
+   (portfolio)    → build_diagram.py → .drawio  (one standalone model per node)
+```
+
+Edit an assumption file, run `python3 generate.py`, and the graph JSON and
+every Squiggle model move together; `python3 test_worldviews.py` (run in CI,
+`.github/workflows/sync.yml`) fails if any generated copy drifts. An assumption modifies, in a simple way, the chain
 of assumptions before it — each file does one (or more) of exactly three
 things:
 
@@ -36,6 +52,35 @@ The composed namespace ends with two products:
 The numbered files are deliberately *not* importable modules (their names start
 with the craziness digit); only `worldviews.py` runs them, always in order,
 always on top of `0_parochial.py`.
+
+## The metric and the slate
+
+The unit every worldview optimizes is **expected welfare-adjusted DALYs averted
+per dollar** (`wDALY/$`): the native unit of global-health cost-effectiveness
+(WHO/GBD, GiveWell-adjacent), generalized by scaling a DALY by a species'
+sentience-adjusted welfare range (Rethink Priorities / Bob Fischer) so one unit
+covers human health, animals, and future minds. One human DALY = 1 wDALY.
+
+The donation slate is fixed across every worldview and lives once, on
+`0_parochial.py`, each org with its direct-effect BOTEC and source URL. Only
+the coefficients change as assumptions accumulate:
+
+| Target | Cause | Rides to about... |
+|---|---|---|
+| **Local soup kitchen** | Community / present-generation neighbours | the root (parochial) |
+| **GiveDirectly** | Global poor, direct cash | assumption 1 (all present humans) |
+| **GiveWell top charity (AMF)** | Global health, lives saved | same, DALY-maximizing |
+| **AIM / Charity Entrepreneurship** | Incubation, higher variance | same |
+| **The Humane League** | Farmed vertebrates | assumption 2 (animals, neuron-weighted) |
+| **Shrimp Welfare Project** | Invertebrates | assumption 5 (RP welfare ranges) |
+| **Wild insects (humane pesticides)** | Wild / soil invertebrates | assumption 5 (nematode weight) |
+| **ALLFED** | Global catastrophic risk / resilience | assumption 3–4 (future people) |
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | assumption 4 (no discounting) |
+
+The parochial root's soup-kitchen value is a worked BOTEC — people made happier
+per dollar × their wellbeing gain, netted against the counterfactual of the
+money sitting in a bank — and every worldview downstream carries that agreed
+number unchanged.
 
 ## The ladder (ordered by how crazy they are)
 
