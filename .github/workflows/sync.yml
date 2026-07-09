@@ -1,13 +1,15 @@
 name: sync
 
-# Enforce the single source of truth: data/model.json drives allocate.py, the
-# diagram graph (diagram/train_tree.json) and the Squiggle models. This job
-# regenerates the derived files and fails if any committed copy has drifted, so
-# a number can never be edited in one representation without the others.
+# Enforce the single source of truth: the assumption chains in assumptions/
+# drive allocate.py, the diagram graph (diagram/train_tree.json) and the
+# generated Squiggle worldview models. This job composes every worldview by
+# running its assumption chain and fails if any committed generated copy has
+# drifted, so a number can never be edited in one representation without the
+# others.
 
 on:
   push:
-    branches: [main, "claude/train-crazy-town-pr-adangy"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -19,5 +21,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Assert generated files are in sync with data/model.json
-        run: python3 data/test_sync.py
+      - name: Assert generated files are in sync with assumptions/
+        run: python3 test_worldviews.py

@@ -17,111 +17,140 @@ The "train to crazy town" is Ajeya Cotra's image (80,000 Hours podcast #90,
 Each stop is a point where accepting one more individually-plausible premise
 carries you to a more counterintuitive conclusion, and you are free to get off
 at any stop. Near-termists get off early (measurable global health);
-longtermists ride further (animals → invertebrates → future people → x-risk). A
-later stop can retroactively reframe an earlier one.
+longtermists ride further. A later stop can retroactively reframe an earlier
+one.
 
 ## What this is
 
-- **The decision rule never changes.** Every node maximizes expected value.
-- **What changes is the moral-parameter vector** — the crucial considerations:
-  who counts (nation → all humans → animals → invertebrates → future minds), how
-  much each counts (welfare ranges, neuron-count exponents), and how time and
-  uncertainty are treated.
-- **A node** = a fixed set of those assumptions. Getting off at a node =
-  endorsing its assumptions and donating to whatever it ranks first.
-- **An edge** = flipping one crucial consideration.
+- **The decision rule never changes.** Every worldview maximizes expected
+  value.
+- **What changes is the chain of assumptions behind it.** Each **assumption**
+  is a numbered Python file in [`assumptions/`](assumptions/) — the number is
+  how crazy it is (`1_far_away_humans` … `9_boltzmann_brain`). An assumption
+  modifies, in a simple way, the chain before it: it **adds new functions**,
+  **redefines functions**, or **changes parameters to functions** (a discount
+  rate, a welfare-range table, a suffering multiplier).
+- **A worldview** (a node in the tree) = a chain of assumptions, composed by
+  running the assumption files in order in one shared Python namespace.
+  Getting off at a node = endorsing exactly those assumptions and donating to
+  whatever they rank first.
+- **An edge** = accepting one more assumption (the child's craziest one).
 
-The same optimizer returns different winners as the assumptions change.
+The same optimizer returns different winners as the assumptions accumulate.
 
 ## The metric: expected welfare-adjusted DALYs per dollar
 
 The unit is DALYs averted per dollar, the native unit of global-health
 cost-effectiveness (WHO/GBD, GiveWell-adjacent). It generalizes to a
 welfare-adjusted DALY (`wDALY`): a DALY scaled by a species' sentience-adjusted
-welfare range (Rethink Priorities / Bob Fischer). One human DALY = 1 wDALY; a
-shrimp-DALY is worth its welfare range, which spans ~10⁻¹² to ~1× a human's
-under a neuron-count exponent from 0 to 2. One unit covers human health, animals,
-and future minds. Each node reports `E[wDALY averted per $]` per target and ranks
-them.
+welfare range (Rethink Priorities / Bob Fischer). One human DALY = 1 wDALY. One
+unit covers human health, animals, and future minds. Each worldview's Python
+chain renders a Squiggle model reporting `E[wDALY averted per $]` per target,
+ranking them, and exporting `worldviewEv` — **the expected value of that
+worldview** (what its best buy achieves per dollar).
 
-## The donation slate (fixed across all nodes)
+## The donation slate (fixed across all worldviews)
 
-The same candidates appear at every stop; only their EV changes as assumptions
-flip. Ordered by how much moral expansion they reward:
+The same candidates appear at every stop; only their coefficients change as
+assumptions accumulate. Ordered by how much moral expansion they reward:
 
 | Target | Cause | Rides to about... |
 |---|---|---|
 | **Local soup kitchen** | Community / present-generation neighbours | the root (parochial) |
-| **GiveDirectly** | Global poor, direct cash | moral circle = all present humans |
+| **GiveDirectly** | Global poor, direct cash | assumption 1 (all present humans) |
 | **GiveWell top charity (AMF)** | Global health, lives saved | same, DALY-maximizing |
-| **AIM / Charity Entrepreneurship** | Incubation across health, policy, animals | higher-variance, expanding scope |
-| **The Humane League** | Farmed vertebrates | moral circle includes animals |
-| **Shrimp Welfare Project** | Invertebrates | the exponent-sensitive stops |
-| **Wild insects (humane pesticides)** | Wild / soil invertebrates | the soil-animal branch (A) |
-| **ALLFED** | Global catastrophic risk / resilience | near–far bridge, future people |
-| **AI safety (Redwood Research)** | Existential risk, astronomical waste | the far end of the line |
+| **AIM / Charity Entrepreneurship** | Incubation, higher variance | same |
+| **The Humane League** | Farmed vertebrates | assumption 2 (animals, neuron-weighted) |
+| **Shrimp Welfare Project** | Invertebrates | assumption 5 (RP welfare ranges) |
+| **Wild insects (humane pesticides)** | Wild / soil invertebrates | assumption 5 (nematode weight) |
+| **ALLFED** | Global catastrophic risk / resilience | assumption 3–4 (future people) |
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | assumption 4 (no discounting) |
 
-## The tree
+## The assumptions (ordered by how crazy they are)
 
-- **Root** = the least crazy assumptions: only my family and local community
-  count, in the present generation; heavy time-discounting; only near-certain,
-  measurable effects; humans only. The optimizer favors the local soup kitchen —
-  and its value is a worked BOTEC (people made happier per dollar × their
-  wellbeing gain, netted against the counterfactual of the money sitting in a
-  bank, which still does ~30% as much good). **Every node downstream imports that
-  agreed number unchanged.**
-- **Each child flips one crucial consideration** — drop the nationality discount
-  → all humans; add animals with a welfare range → farm-animal orgs; add
-  invertebrates plus a neuron-count exponent → Shrimp Welfare Project; add future
-  people and accept small-probability/large-payoff bets → x-risk. The winner
-  changes as you descend.
-- **Nodes compose.** Every node holds a coefficient record; a child's coeffs are
-  its parent's coeffs with **one line changed** (its `sets` delta). So a whole
-  branch that adds a single term — a pure-time discount, a non-negligible
-  `P(nuclear war)`/yr — is nearly identical to its parent, differing by exactly
-  that term. On the Squiggle side each node literally `import`s its parent and
-  `Dict.merge`s the delta.
-- **The tree forks** at the invertebrate stop into a soil-animal branch (**A**),
-  where counting ~10¹⁹ soil animals reverses which human charities look good, and
-  a longtermist branch (**F**), future people → astronomical stakes. Branch F
-  forks again into discount / nuclear / astronomical siblings.
-- **Two endpoints sit off the end of the line, where an assumption invalidates
-  all the others.** A **Boltzmann brain** (only your own present pleasure is real)
-  collapses every charity to the same low pleasant-thought level — the ranking
-  goes flat. **Moral anti-realism** (there is no moral fact) sets every charity
-  negative — the ranking inverts and the consistent move is to keep your money.
-  Both are `override` coeffs that replace the whole computation.
+The root, `0_parochial`, has no real reusable functions — `moral_weight` says
+"people near me", and that is the whole theory. It also owns the slate and the
+worked soup-kitchen BOTEC (people made happier per dollar × their wellbeing
+gain, netted against the money sitting in a bank), whose agreed value **every
+worldview downstream carries unchanged**. Then, in craziness order:
 
-## Single source of truth (`data/`)
+1. **`far_away_humans`** — redefines `moral_weight`: distance is not morally
+   relevant (Singer's famine argument; Berger gets off here).
+2. **`animals_somewhat`** — adds a neuron-count exponent; redefines
+   `welfare_range`: farmed animals count in proportion to brain size.
+3. **`future_humans_matter_with_discounting`** — adds `future_discount()`
+   (= 0.01) and wraps `coefficient`: future people count, heavily discounted.
+4. **`no_discounting_future_humans`** — changes one parameter:
+   `future_discount()` → 1.0. Astronomical stakes follow; x-risk work enters
+   the circle (Ord, Bostrom).
+5. **`animals_matter_a_lot`** — throws away the neuron proxy and redefines
+   `welfare_range` with Rethink Priorities welfare ranges; invertebrates and
+   the ~10^19 soil animals (significant nematode weight) enter the circle.
+6. **`suffering_focused`** — adds `suffering_multiplier(org)`: averting intense
+   suffering outweighs creating happiness (Tomasik, Pearce).
+7. **`living_in_simulation`** — adds `simulation_continuation_prob()`: the
+   astronomical future only pays off if the simulation keeps running (Bostrom).
+8. **`morality_is_not_real`** — override: no moral facts, so every value is set
+   to 0 and the ranking goes flat (Mackie). Keep your money.
+9. **`boltzmann_brain`** — override: nothing matters except the brief moments
+   of how you happen to feel; every charity collapses to one equal pleasant
+   thought (the ranking goes flat).
 
-Every number lives once, in **[`data/model.json`](data/model.json)**: the orgs
-(with sourced cost-effectiveness figures), the worldview/branch tree, and the
-assumption knobs. `allocate.py` reads it directly; `diagram/train_tree.json` and
-the Squiggle models are **generated** from it by `data/generate.py`; and
-`data/test_sync.py` (run in CI) fails if any generated copy drifts. Edit
-`model.json`, run `python3 data/generate.py`, and all three representations move
-together. See [`data/README.md`](data/README.md).
+## Limiting the combinatorial explosion
+
+Chains are only generated if one person could plausibly hold them: each
+assumption declares `REQUIRES` (an animals person won't think only people in
+their community matter, so 2 requires 1; 4 re-parameterises the discount 3
+introduced; 7 needs 4's expected-value-over-the-far-future style), `EXCLUDES`
+(the two overrides are mutually exclusive), and `TERMINAL` (an override
+invalidates everything before it, so it only rides its minimal chain). That
+cuts 2⁹ = 512 possible chains down to **23 worldviews**. Every worldview's
+parent is the same chain minus its craziest assumption, so the graph is a tree
+and each edge adds exactly one assumption. See
+[`assumptions/README.md`](assumptions/README.md).
+
+## Single source of truth (`assumptions/`)
+
+Everything is composed from the assumption files; nothing lives twice:
+
+```
+                 assumptions/*.py  (0_parochial … 9_boltzmann_brain)
+                          │  composed per worldview by assumptions/worldviews.py
+                          │  (exec the chain, in craziness order, in one namespace)
+        ┌─────────────────┼───────────────────────────┐
+        │ reads           │ generate.py writes         │ generate.py writes
+        ▼                 ▼                            ▼
+   allocate.py    diagram/train_tree.json      squiggle/worldviews/*.squiggle
+   (portfolio)    → build_diagram.py → .drawio  (one standalone model per node)
+```
+
+Edit an assumption file, run `python3 generate.py`, and the graph JSON and
+every Squiggle model move together; `python3 test_worldviews.py` (run in CI,
+`.github/workflows/sync.yml`) fails if any generated copy drifts.
 
 ## Diagram pipeline (`diagram/`)
 
 Graph-generation code mirroring the Graphviz→draw.io setup in
 `morganrivers/iati_webapp` (`docs/diagram/`):
 
-- **`train_tree.json`** — the node/edge graph, **generated from
-  `data/model.json`** (do not hand-edit). Nodes are get-off points with a
-  `top_pick`, a `squiggle` model path, and a `figures` list — the public figures
-  who most prominently articulate that stop's worldview (Berger; Singer /
-  Bollard; Tomasik; Cotra / Ord; Bostrom / Yudkowsky). Edges are
-  crucial-consideration flips.
+- **`train_tree.json`** — the worldview graph, **generated from
+  `assumptions/`** (do not hand-edit). Nodes are worldviews with a `top_pick`,
+  a `squiggle` model path, their accepted assumption numbers, and the public
+  `figures` who most prominently articulate the latest assumption. Edges add
+  one assumption each.
 - **`graph_common.py`** — shared primitives (Graphviz `dot` run + plain-format
-  parse, coordinate transform, node/edge/band/mxfile emission), adapted from
-  iati's `drawio_common.py`.
+  parse, coordinate transform, node/edge/band/mxfile emission).
 - **`build_diagram.py`** — reads the JSON, lays the tree top→bottom on a
-  craziness gradient by stop, bands each stop, writes an editable `.drawio`, and
-  prints a read-only draw.io view link. Requires Graphviz `dot` on PATH.
+  craziness gradient (a node's band = its craziest accepted assumption, STOP
+  0–9), writes an editable `.drawio`, and prints a read-only draw.io view
+  link. Requires Graphviz `dot` on PATH.
 - **`render_diagram.py`** — renders `train_tree.json` → PNG/SVG directly with
-  Graphviz (no draw.io app needed). These two images ARE committed and linked
-  below via their raw GitHub URLs, so they never depend on GitHub Pages.
+  Graphviz. These two images ARE committed and linked below via their raw
+  GitHub URLs.
+
+The GitHub Action (`.github/workflows/diagram.yml`) looks at the
+`assumptions/` layout, runs the Python chain for each worldview
+(`generate.py --check`), rebuilds the diagram, and publishes it.
 
 ![Train to crazy town — worldview tree](diagram/train_tree.png)
 
@@ -135,45 +164,32 @@ These raw URLs work with no repo settings. The same images are also published to
 GitHub Pages once it is enabled (Settings → Pages → Source = "GitHub Actions"):
 `https://morganrivers.github.io/train_to_crazy_town/`.
 
-Regenerate them with `python diagram/render_diagram.py`; CI
-(`.github/workflows/diagram.yml`) re-renders on every change to confirm the
-generator still works.
-
 ## Models (`squiggle/`)
 
-The shared logic lives in `squiggle/base_model.squiggle` (fixed slate +
-`E[wDALY averted/$]` formula + `export evaluate(assumptions)`). Each node is a
-model in `squiggle/nodes/` that imports the base and sets its own assumptions.
-`build_diagram.py` links each diagram node to a **temporary Squiggle playground**:
-clicking a node opens its model live and editable, with no account (the whole
-model rides in the link's `#code=` hash; `diagram/squiggle_playground.py` inlines
-`base_model` and resolves the parent import chain so it runs on its own). You can
-also run them locally with `cd squiggle && npm install && node run.mjs`, or publish
-them to [Squiggle Hub](https://squigglehub.org) for a persistent calculator. Numbers are placeholder
-order-of-magnitude estimates traceable to published work (GiveWell CEAs; Rethink
-Priorities / Fischer welfare ranges; invertebrate and x-risk estimates). See
+Each worldview's composed chain renders **one standalone Squiggle model** in
+`squiggle/worldviews/` — no imports, no shared base file, because the
+composition already happened in Python. Clicking a node in the diagram opens
+its model in a **temporary Squiggle playground**, live and editable, with no
+account (the whole model rides in the link's `#code=` hash;
+`diagram/squiggle_playground.py` does the encoding). Run them locally with
+`cd squiggle && npm install && node run.mjs`. Numbers are placeholder
+order-of-magnitude estimates traceable to published work (GiveWell CEAs;
+Rethink Priorities / Fischer welfare ranges; invertebrate and x-risk
+estimates), with source URLs on each org in `assumptions/0_parochial.py`. See
 [`squiggle/README.md`](squiggle/README.md).
 
 ## Bottom-line allocator (`allocate.py`)
 
 `python3 allocate.py --center W --diversification D [--animal-weight M]` prints
-each org's cost-effectiveness (as a multiple of GiveWell top charities) and its
-share of a portfolio; `--list` shows the worldviews (`parochial`, `all_humans`,
-`animals`, `inverts`, `soil`, `future`, `astro`). The worldview-diversification
-coefficient sets the ordering: `D = 0` funds only the center worldview's single
-best org (pure EV-max); higher `D` spreads credence across worldviews by depth
-and funds the best org in each. The orgs, their figures and the worldview tree
-are read from `data/model.json` (nothing is hard-coded here).
-
-The tree forks after the invertebrate stop into a soil-animal branch — where the
-sign of the effect on ~10¹⁹ nematodes reverses which human charities look good —
-and a longtermist branch. Animal and invertebrate cost-effectiveness figures are
-copied from published EA Forum cost-effectiveness analyses (cited in the file):
-corporate campaigns ≈ 1.51×10³, Shrimp Welfare Project ≈ 6.43×10⁴, and wild-insect
-humane pesticides ≈ 2.37×10⁴ times GiveWell top charities; counting soil animals
-lifts GiveWell's own cropland effect to ≈ 1.11×10⁵× (sign uncertain). Human,
-future and x-risk figures are placeholders. The digital-minds branch is omitted
-for lack of comparable published numbers.
+each org's expected cost-effectiveness (as a multiple of GiveWell top
+charities) and its share of a portfolio; `--list` shows the 23 worldviews by
+id (`w0`, `w1_2`, `w1_2_5`, …). The worldview-diversification coefficient sets
+the spread: `D = 0` funds only the center worldview's single best org (pure
+EV-max); higher `D` spreads credence across worldviews by how many assumptions
+they disagree about, funding the best org in each. The flat override
+worldviews put their credence share on "— nothing (ranking flat)". The orgs
+and the worldview tree are composed from `assumptions/` (nothing is hard-coded
+here).
 
 ## Sources
 
@@ -185,3 +201,5 @@ for lack of comparable published numbers.
   https://80000hours.org/podcast/episodes/alexander-berger-improving-global-health-wellbeing-clear-direct-ways/
 - *When to get off the train to crazy town?* — EA Forum —
   https://forum.effectivealtruism.org/posts/feejxTPvBJY2cfXRp/when-to-get-off-the-train-to-crazy-town
+- Rethink Priorities, *Welfare range estimates* —
+  https://rethinkpriorities.org/research-area/welfare-range-estimates/

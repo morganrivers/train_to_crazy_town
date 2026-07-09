@@ -1,9 +1,0 @@
-// Stop 0 (trunk) - Parochial community + nation. Exemplar(s): common-sense default.
-// This node starts from base.defaults (the parochial root) and adds nothing (the root baseline).
-// Winner (illustrative): Local soup kitchen.
-// GENERATED from data/model.json by data/generate.py - do not edit by hand.
-import "hub:morganrivers/base_model" as base
-
-export coeffs = base.defaults
-
-ranking = base.evaluate(coeffs)
