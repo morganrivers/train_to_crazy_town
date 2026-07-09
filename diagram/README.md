@@ -42,7 +42,10 @@ python3 render_diagram.py        # train_tree.png + train_tree.svg
 
 The committed `.drawio` is served read-only by draw.io straight from its raw
 GitHub URL (the `#U` hash link `build_diagram.py` prints); override the git ref
-in the link with `DIAGRAM_REF=refs/heads/<branch>`.
+in the link with `DIAGRAM_REF=<branch>`. Keep the ref a plain branch name —
+draw.io re-parses `raw.githubusercontent.com/<user>/<repo>/<branch>/<path>`
+URLs into its GitHub handler, and a `refs/heads/` prefix makes that parse fail
+with "File not found".
 
 ## CI (`.github/workflows/diagram.yml`)
 

@@ -83,8 +83,14 @@ jobs:
           cat > _site/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>Train to crazy town - diagram</title>
           <h1>Train to crazy town</h1>
-          <p><a href="train_tree.svg">SVG</a> &middot; <a href="train_tree.png">PNG</a></p>
-          <img src="train_tree.svg" alt="Worldview tree" style="max-width:100%">
+          <p>Every node is a worldview; click one to open its Squiggle model in a
+          live playground.
+          <a href="https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio">draw.io viewer</a>
+          &middot; <a href="train_tree.svg">SVG</a> &middot; <a href="train_tree.png">PNG</a></p>
+          <!-- <object>, not <img>: keeps the SVG's clickable node links working -->
+          <object data="train_tree.svg" type="image/svg+xml" style="max-width:100%">
+            <img src="train_tree.png" alt="Worldview tree" style="max-width:100%">
+          </object>
           HTML
 
       - name: Upload rendered diagram (downloadable from any run)

@@ -35,8 +35,12 @@ edges = G['edges']
 # Python before the Squiggle is rendered), so the whole file rides in the link's
 # #code= hash. See squiggle_playground.py for the encoding (identical to
 # Squiggle's own playground.ts).
+# NOTE: keep REF a plain branch name (no refs/heads/ prefix). draw.io's viewer
+# recognises raw.githubusercontent.com/<user>/<repo>/<branch>/<path> URLs and
+# re-parses them into its GitHub handler; extra path segments make it read the
+# branch as "refs" and fail with "File not found".
 REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/main')
+REF = os.environ.get('DIAGRAM_REF', 'main')
 
 for n in nodes:
     link = playground_url(n)
@@ -133,8 +137,7 @@ print('wrote %s: nodes=%d edges=%d bytes=%d' % (OUT, len(pos), len(edges), len(x
 # The repo is public, so draw.io can open the committed .drawio straight from its
 # raw GitHub URL via the #U hash (chrome=0 => read-only viewer, no account). This
 # is the link "auto-populated by repo code": it points at whatever this build
-# just committed. Override the ref via DIAGRAM_REF (defaults to the dev branch).
-# Uses raw refs/heads/<branch> form so branch names containing '/' resolve.
+# just committed. Override the ref via DIAGRAM_REF (defaults to main).
 import urllib.parse
 raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{os.path.basename(OUT)}'
 view = 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')

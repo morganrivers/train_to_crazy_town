@@ -31,7 +31,7 @@ one.
 
 ![Train to crazy town — worldview tree](diagram/train_tree.png)
 
-**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
+**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
 (read-only draw.io viewer; hover a node for its story, click it for its live
 model). Also available as
 [PNG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png)
