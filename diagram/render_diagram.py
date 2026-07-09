@@ -27,15 +27,19 @@ SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'train_tree.json'
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'train_tree')
 
 # (fill, stroke/border, font) per stop — the craziness gradient shared with
-# build_diagram.py (calm slate at the top → hot red at crazy town).
+# build_diagram.py (calm slate at the top → hot red → override violet). A
+# worldview's stop is its craziest accepted assumption, 0..9.
 STOP_STYLE = [
-    ('#dfe7ef', '#6b7f96', '#1b2733'),   # 0 slate
-    ('#cfe6cf', '#5a9367', '#1e3a24'),   # 1 green
-    ('#e6e2c0', '#b0a04a', '#3a3410'),   # 2 olive
-    ('#f6e0c0', '#c9932a', '#5a3f10'),   # 3 amber (first unstable)
-    ('#f2ccc0', '#c96a4a', '#5a2410'),   # 4 clay
-    ('#eeb3b3', '#c0392b', '#5a1410'),   # 5 red (crazy town)
-    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 6 violet (off the rails: overrides)
+    ('#dfe7ef', '#6b7f96', '#1b2733'),   # 0 slate (parochial)
+    ('#cfe6cf', '#5a9367', '#1e3a24'),   # 1 green (all humans)
+    ('#e6e2c0', '#b0a04a', '#3a3410'),   # 2 olive (animals)
+    ('#f2e3b3', '#c9a72a', '#57450e'),   # 3 gold (future, discounted)
+    ('#f6e0c0', '#c9932a', '#5a3f10'),   # 4 amber (no discounting)
+    ('#f5d3b8', '#cc7a33', '#5a300e'),   # 5 orange (RP animals)
+    ('#f2ccc0', '#c96a4a', '#5a2410'),   # 6 clay (suffering)
+    ('#eeb3b3', '#c0392b', '#5a1410'),   # 7 red (simulation)
+    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 8 violet (anti-realism)
+    ('#c9b3dd', '#4a2a78', '#201040'),   # 9 dark violet (Boltzmann)
 ]
 
 
@@ -45,11 +49,11 @@ def esc(s):
 
 
 def node_label(n):
-    """Assumption headline, its argmax donation target, and the figure(s) who
-    articulate that stop — same composition build_diagram.py bakes into draw.io."""
-    tag = '  ▼' if n.get('subgraph') else ''      # ▼ = fork / sub-tree opens here
+    """Worldview headline (latest assumption + accepted chain), its argmax
+    donation target, and the figure(s) who articulate the latest assumption —
+    same composition build_diagram.py bakes into draw.io."""
     figs = ', '.join(n.get('figures', []))
-    label = n['lbl'] + '\n→ ' + n.get('top_pick', '?') + tag
+    label = n['lbl'] + '\n→ ' + n.get('top_pick', '?')
     if figs:
         label += '\n(' + figs + ')'
     return label
@@ -88,15 +92,15 @@ def main():
                 dot.append(
                     f'    "{n["id"]}"[label="{esc(node_label(n))}",'
                     f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"{href}];')
-        # keep both stop-4 branch nodes (soil / future) on the same visual band
+        # keep every worldview that rides to the same stop on one visual band
         same = [n['id'] for n in nodes if n['stop'] == s]
         if len(same) > 1:
             dot.append('    {rank=same; ' + ' '.join(f'"{i}"' for i in same) + ';}')
         dot.append('  }')
 
     for e in edges:
-        style = 'dashed' if e.get('kind') == 'branch' else 'solid'
-        color = '#c0392b' if e.get('kind') == 'branch' else '#9aa6b3'
+        style = 'dashed' if e.get('kind') == 'override' else 'solid'
+        color = '#c0392b' if e.get('kind') == 'override' else '#9aa6b3'
         label = f', label="{esc(e["label"])}"' if e.get('label') else ''
         dot.append(f'  "{e["from"]}" -> "{e["to"]}"'
                    f'[style={style}, color="{color}"{label}];')

@@ -1,71 +1,55 @@
-# Squiggle models — the shared logic per node
+# Squiggle models — one standalone model per worldview
 
-Each get-off point links to a [Squiggle](https://www.squiggle-language.com)
-model. They share one base model; a node sets its own moral assumptions. The
-decision rule never changes — every node ranks the same donation slate by
-expected welfare-adjusted DALYs averted per dollar (`wDALY/$`). Only the
-assumptions change, so the winner changes down the train.
+Each node of the tree links to a [Squiggle](https://www.squiggle-language.com)
+model. The decision rule never changes — every worldview ranks the same donation
+slate by expected welfare-adjusted DALYs averted per dollar (`wDALY/$`). What
+changes is the chain of assumptions behind it, and the models here are that
+chain's *output*.
 
 ## Layout
 
-- **`base_model.squiggle`** — the shared logic. Defines the fixed slate, the root
-  coefficient record (`export defaults`), the soup-kitchen worked BOTEC, and
-  `export evaluate(c)`, which ranks the slate under a coefficient record `c`.
-  Three blocks (between the `GENERATED SOUP KITCHEN BOTEC`, `GENERATED SLATE` and
-  `GENERATED DEFAULTS` markers) are generated from
-  [`../data/model.json`](../data/model.json); the `evaluate` logic around them is
-  hand-written.
-- **`nodes/*.squiggle`** — one model per stop, **generated** from
-  `../data/model.json`, forming an **import chain**. Each node does
-  `import "hub:morganrivers/base_model" as base` **and** imports its parent node
-  (`import "hub:morganrivers/<parent-id>" as parent`), then builds its own
-  coefficients by merging a one-line delta onto the parent's:
-  `export coeffs = Dict.merge(parent.coeffs, { w_farmed: 1 })`. The root starts
-  from `base.defaults`. Finally `ranking = base.evaluate(coeffs)`.
+- **`worldviews/*.squiggle`** — one model per worldview, **generated** by
+  running the Python assumption chain in [`../assumptions/`](../assumptions/)
+  (`python3 ../generate.py`). A worldview `w1_2_5` is the composition of
+  assumption files `1_far_away_humans.py`, `2_animals_somewhat.py` and
+  `5_animals_matter_a_lot.py` on top of the parochial base; the composed
+  chain's `squiggle()` renders the model. Each file is **standalone** — no
+  imports, no base model — because the composition already happened in Python.
+  Every model exports:
+  - `scored` — each org's `E[wDALY/$]`: its direct-effect BOTEC times the moral
+    coefficient the assumption chain puts on it;
+  - `ranking` — the slate, best first;
+  - `worldviewEv` — **the expected value of that worldview**: what its best buy
+    achieves per dollar.
 
-So a branch that adds one crucial consideration is one `Dict.merge` line
-different from its parent. The `override` coefficient replaces the whole result:
-`"boltzmann"` sets every charity to one equal pleasant thought, `"antirealist"`
-makes every charity negative.
-
-These files are generated: edit `../data/model.json` and run
-`python3 ../data/generate.py`, don't hand-edit the `.squiggle` files. Changing
-one number (e.g. `neuron_exponent` in the `s3_inverts` `sets`) flips the
-ranking — the instability the project shows. `../data/test_sync.py` fails if a
-generated file drifts from the model.
+These files are generated: edit the assumption files and run
+`python3 ../generate.py`, don't hand-edit the `.squiggle` files.
+`../test_worldviews.py` (run in CI) fails if a generated file drifts.
 
 Numbers are placeholder order-of-magnitude estimates (`lo to hi` = lognormal 90%
 CI) traceable to published work: GiveWell CEAs; Rethink Priorities / Fischer
-welfare ranges; invertebrate and x-risk estimates. The soup kitchen is a worked
-BOTEC whose agreed value is imported unchanged by every node below the root.
+welfare ranges; invertebrate and x-risk estimates (source URLs sit on each org
+in `../assumptions/0_parochial.py`). The soup kitchen is a worked BOTEC whose
+agreed value is carried unchanged into every worldview.
 
 ## Run
 
 ```bash
 cd squiggle
 npm install
-node run.mjs                             # every node
-node run.mjs nodes/s3_inverts.squiggle   # one node
+node run.mjs                              # every worldview
+node run.mjs worldviews/w1_2_5.squiggle   # one worldview
 ```
 
-`run.mjs` maps every Hub import name (`hub:morganrivers/base_model` and
-`hub:morganrivers/<node-id>`) to the local file through a custom linker, so the
-import chain resolves on disk and the same files publish to Squiggle Hub
-unchanged. The same linker feeds the `@quri/squiggle-components` React player.
+Because the models are standalone, `run.mjs` needs no import linker — and the
+same files can be pasted into the playground or published to
+[Squiggle Hub](https://squigglehub.org) unchanged.
 
 ## Where the diagram links point
 
 Each node in the diagram links to a **temporary Squiggle playground** — clicking
-it opens that node's model live and editable, with no account. The catch: the
-files here `import "hub:morganrivers/..."`, and those imports only resolve once
-published to a Hub account. So `diagram/squiggle_playground.py` builds, per node,
-one *self-contained* source — `base_model` inlined and the parent import chain
-resolved into a flat `coeffs` record — and packs it into the playground URL hash
-(`#code=<deflate+base64>`, byte-for-byte Squiggle's own `playground.ts` encoding).
-The inlined model ranks identically to the Hub-import version; `run.mjs` runs
-either. Nothing is persisted to any account — the whole model travels in the link.
-
-For a *persistent* calculator instead, publish the models to
-[Squiggle Hub](https://squigglehub.org) under your own account (`base_model` plus
-one per node id) — the files import `hub:<owner>/base_model`, so they publish
-unchanged.
+it opens that worldview's model live and editable, with no account.
+`diagram/squiggle_playground.py` packs the model file into the playground URL
+hash (`#code=<deflate+base64>`, byte-for-byte Squiggle's own `playground.ts`
+encoding). Nothing is persisted to any account — the whole model travels in the
+link.
