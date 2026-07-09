@@ -11,6 +11,16 @@ model opens in a live, editable [Squiggle](https://www.squiggle-language.com)
 playground — no account needed — so you can change any number and watch the
 ranking re-rank.
 
+[![Train to crazy town — worldview tree](diagram/train_tree.png)](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+
+**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
+(read-only draw.io viewer, no account, pan/zoom; hover a node for its story,
+click it for its live model — draw.io serves the committed `train_tree.drawio`
+straight from its raw GitHub URL). Also available as
+[PNG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png)
+/ [SVG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg)
+(the SVG is clickable too).
+
 ## The metaphor
 
 The "train to crazy town" is Ajeya Cotra's image (80,000 Hours podcast #90,
@@ -27,24 +37,13 @@ at any stop. Near-termists get off early (measurable global health);
 longtermists ride further. A later stop can retroactively reframe an earlier
 one.
 
-## The tree
-
-![Train to crazy town — worldview tree](diagram/train_tree.png)
-
-**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Frefs%2Fheads%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
-(read-only draw.io viewer; hover a node for its story, click it for its live
-model). Also available as
-[PNG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png)
-/ [SVG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg)
-(the SVG is clickable too).
-
-How to read it:
+## How to read the tree
 
 - **A node is a worldview** — a chain of numbered assumptions (the `[1+2+5]`
   tag), with the donation target that worldview ranks first and the public
   figures who most prominently articulate its latest assumption.
 - **An edge accepts exactly one more assumption.**
-- **A band (STOP 0–9) is how far down the line a worldview rides** — its
+- **A band (STOP 0–15) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
   violet at the bottom.
 - **The decision rule never changes.** Every worldview maximizes expected
@@ -52,6 +51,11 @@ How to read it:
   species' welfare range, so one unit covers human health, animals, and future
   minds). Only the assumptions change; the same optimizer returns different
   winners.
+- **The tree is too big for one screen, so it's split into pages.** A branch
+  large enough to deserve its own page is collapsed on its parent to a
+  `▼ N more worldviews` node (dashed double border); click it to open that
+  subtree's own page. The image above is the top page — the rest are one click
+  in.
 
 ## The assumptions (ordered by how crazy they are)
 
@@ -62,22 +66,35 @@ a soup kitchen wins. Each numbered assumption modifies the worldview before it:
 2. **animals count, somewhat** — neuron-weighted welfare → corporate campaigns
 3. **future humans matter, discounted** — heavily discounted → global health holds
 4. **no discounting the future** — astronomical stakes → AI safety
-5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates,
-   the ~10^19 soil animals → wild-insect welfare
+5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
+   shrimp welfare (this worldview reproduces Grilo's published numbers)
 6. **suffering-focused ethics** — averting suffering beats creating happiness
-7. **living in a simulation** — the far future only counts if it keeps running
-8. **morality is not real** — every value goes to 0; keep your money
-9. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+7. **the meat-eater problem** — a saved human eats animals for a lifetime, so
+   human charities are charged for the factory farming they cause (Grilo)
+8. **net-negative animal lives** — farmed and wild lives aren't worth living;
+   with the meat-eater problem, human charities come out net-harmful
+9. **living in a simulation** — the far future only counts if it keeps running
+10. **two-envelope welfare skepticism** — RP invertebrate ranges are inflated;
+    Bayesian-shrink them → chicken campaigns retake the top (Nuño Sempere)
+11. **person-affecting view** — making happy people is neutral, so the
+    astronomical case for x-risk collapses (Narveson)
+12. **resilient foods beat AGI safety** — on the margin, ALLFED does more
+    far-future good than AI safety (Denkenberger & Pearce)
+13. **count soil animals** — ~10^19 soil nematodes/mites dominate; global health
+    expands cropland and comes out net-harmful (Grilo)
+14. **morality is not real** — every value goes to 0; keep your money
+15. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
 
 Not every combination is a coherent person — an animals person won't think only
-their own community matters — so compatibility rules prune 512 possible chains
-to **23 worldviews**. The ladder, the rules, and how chains compose are
+their own community matters, and the near-term meat-eater bookkeeping is moot
+once astronomical stakes dominate — so compatibility rules prune 32,768 possible
+chains to **125 worldviews**. The ladder, the rules, and how chains compose are
 documented in [`assumptions/README.md`](assumptions/README.md).
 
 ## What's in the repo
 
-- **[`assumptions/`](assumptions/README.md)** — the single source of truth: ten
-  numbered Python assumption files that compose into the 23 worldviews.
+- **[`assumptions/`](assumptions/README.md)** — the single source of truth:
+  sixteen numbered Python assumption files that compose into the 125 worldviews.
 - **[`squiggle/`](squiggle/README.md)** — one standalone Squiggle model per
   worldview (generated), each exporting its ranking and `worldviewEv`, the
   expected value of that worldview. Runnable locally, in the playground links,
@@ -92,7 +109,7 @@ documented in [`assumptions/README.md`](assumptions/README.md).
 
   prints each org's expected cost-effectiveness (as a multiple of GiveWell top
   charities) and its share of a portfolio. `--center` is the worldview you lean
-  toward (`--list` shows all 23); `--diversification 0` goes all-in on its
+  toward (`--list` shows all 125); `--diversification 0` goes all-in on its
   single winner, higher values spread credence across nearby worldviews and
   fund the best org in each.
 - **`generate.py` / `test_worldviews.py`** — regenerate every derived file from
@@ -108,13 +125,36 @@ documented in [`assumptions/README.md`](assumptions/README.md).
   https://80000hours.org/podcast/episodes/alexander-berger-improving-global-health-wellbeing-clear-direct-ways/
 - *When to get off the train to crazy town?* — EA Forum —
   https://forum.effectivealtruism.org/posts/feejxTPvBJY2cfXRp/when-to-get-off-the-train-to-crazy-town
-- Rethink Priorities, *Welfare range estimates* —
+- Rethink Priorities, *Welfare range estimates* (Fischer et al.) —
   https://rethinkpriorities.org/research-area/welfare-range-estimates/
-- *Cost-effectiveness of corporate campaigns for chicken welfare* — EA Forum —
+- *The meat-eater problem* — EA Forum topic —
+  https://forum.effectivealtruism.org/topics/meat-eater-problem
+- Brian Tomasik, *The Importance of Wild-Animal Suffering* —
+  https://reducing-suffering.org/the-importance-of-wild-animal-suffering/
+- Vasco Grilo, *Cost-effectiveness of corporate campaigns for chicken welfare*
+  (~1.67–14.3 DALY/$, ~168–1,440× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken
-- *Cost-effectiveness of the Shrimp Welfare Project's Humane Slaughter
-  Initiative* — EA Forum —
+- Saulius Šimčikas, *Corporate campaigns affect 9 to 120 years of chicken life
+  per dollar spent* — Rethink Priorities —
+  https://rethinkpriorities.org/research-area/corporate-campaigns-affect-9-to-120-years-of-chicken-life-per-dollar-spent/
+- Vasco Grilo, *Cost-effectiveness of the Shrimp Welfare Project's Humane
+  Slaughter Initiative* (639 DALY/$, ~64k× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane
-- *Cost-effectiveness of paying farmers to use more humane pesticides* — EA
-  Forum —
+- Vasco Grilo, *Cost-effectiveness of paying farmers to use more humane
+  pesticides* (236 DALY/$, ~24k× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
+- Vasco Grilo, *GiveWell may have made 1 billion dollars of harmful grants...*
+  (meat-eater / soil-animal accounting) — EA Forum —
+  https://forum.effectivealtruism.org/posts/FqioYEr97eoCQMxhk/givewell-may-have-made-1-billion-dollars-of-harmful-grants
+- Nuño Sempere, *A Bayesian Adjustment to Rethink Priorities' Welfare Range
+  Estimates* —
+  https://nunosempere.com/blog/2023/02/19/bayesian-adjustment-to-rethink-priorities-welfare-range-estimates/
+- David Denkenberger & Joshua Pearce, *Long-term cost-effectiveness of resilient
+  foods for global catastrophes compared to AGI safety* —
+  https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176
+- Linch Zhang, *How many EA 2021 $s would you trade off against a 0.01% chance
+  of existential catastrophe?* — EA Forum —
+  https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
+- Nick Bostrom, *Astronomical Waste* — https://www.nickbostrom.com/astronomical/waste.html
+- Ajeya Cotra, *Forecasting transformative AI: the "biological anchors" method* —
+  https://www.cold-takes.com/forecasting-transformative-ai-the-biological-anchors-method-in-a-nutshell/

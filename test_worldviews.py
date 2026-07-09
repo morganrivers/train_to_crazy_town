@@ -45,7 +45,7 @@ def test_generated_files_are_current():
 def test_numbering_is_linear():
     """Assumption files are numbered 0..N with no doubling and no gaps
     (load_assumptions raises otherwise; assert the expected ladder here)."""
-    assert sorted(W.ASSUMPTIONS) == list(range(10))
+    assert sorted(W.ASSUMPTIONS) == list(range(16))
 
 
 def test_each_edge_adds_exactly_one_assumption():
@@ -61,13 +61,21 @@ def test_each_edge_adds_exactly_one_assumption():
 
 
 def test_combination_rules_limit_the_explosion():
-    """REQUIRES/EXCLUDES/TERMINAL cut 2^9 subsets down to a plausible few."""
-    assert len(VIEWS) == 23, f"expected 23 worldviews, got {len(VIEWS)}"
+    """REQUIRES/EXCLUDES/TERMINAL cut 2^15 subsets down to a plausible few."""
+    assert len(VIEWS) == 125, f"expected 125 worldviews, got {len(VIEWS)}"
     assert not W.is_valid({2}), "animals person must also count far-away humans"
     assert not W.is_valid({1, 4}), "no-discounting requires the discounting stop first"
-    assert not W.is_valid({1, 3, 4, 7, 8, 9}), "the two overrides exclude each other"
-    assert not W.is_valid({1, 2, 3, 4, 7, 8}), "overrides only ride their minimal chain"
-    assert W.is_valid({1, 3, 4, 7, 8})
+    assert not W.is_valid({1, 2, 7, 8}), "net-negative lives requires animals_matter_a_lot"
+    assert not W.is_valid({1, 2, 3, 4, 5, 7}), \
+        "the meat-eater problem is a near-term stop, not combined with no-discounting"
+    assert not W.is_valid({1, 2, 5, 8, 10}), \
+        "two-envelope skepticism excludes net-negative lives (opposite bets on invertebrates)"
+    assert not W.is_valid({1, 2, 5, 10, 13}), \
+        "two-envelope skepticism excludes counting ~10^19 soil animals"
+    assert not W.is_valid({1, 2, 12}), "resilient-foods-beat-AGI requires no-discounting"
+    assert not W.is_valid({1, 3, 4, 9, 14, 15}), "the two overrides exclude each other"
+    assert not W.is_valid({1, 2, 3, 4, 5, 9, 14}), "overrides only ride their minimal chain"
+    assert W.is_valid({1, 3, 4, 9, 14})
 
 
 def test_moral_circle_only_grows():
@@ -99,14 +107,51 @@ def test_the_train_actually_moves():
     assert BY_ID["w1_2"]["top_pick"] == "The Humane League"
     assert BY_ID["w1_3"]["top_pick"] == "GiveWell top charity (AMF)"
     assert BY_ID["w1_3_4"]["top_pick"] == "AI safety (Redwood Research)"
-    assert BY_ID["w1_2_5"]["top_pick"] == "Wild insects (humane pesticides)"
+    assert BY_ID["w1_2_5"]["top_pick"] == "Shrimp Welfare Project"
+
+
+def test_new_assumptions_flip_the_ranking():
+    """Each added assumption changes the best buy in the intended direction, and
+    the animals-matter worldview reproduces Grilo's published multiples."""
+    amf = "GiveWell top charity (AMF)"
+    # two-envelope skepticism: invertebrates fall, chicken campaigns retake top
+    assert BY_ID["w1_2_5"]["top_pick"] == "Shrimp Welfare Project"
+    assert BY_ID["w1_2_5_10"]["top_pick"] == "The Humane League"
+    # soil animals: wild/soil invertebrates dominate and human orgs go net-negative
+    assert BY_ID["w1_2_5_13"]["top_pick"] == "Wild insects (humane pesticides)"
+    assert BY_ID["w1_2_5_13"]["evs"][amf] < 0
+    # resilient foods beat AGI safety on the margin: longtermist winner flips
+    assert BY_ID["w1_3_4"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_3_4_12"]["top_pick"] == "ALLFED"
+    # person-affecting view collapses the astronomical case; animal-inclusive
+    # longtermism flips off AI safety
+    assert BY_ID["w1_2_3_4_5"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_2_3_4_5_11"]["top_pick"] == "Shrimp Welfare Project"
+    # the mirror: at RP welfare ranges, SWP reproduces Grilo's ~64k x GiveWell
+    gw = BY_ID["w1_2_5"]["evs"][amf]
+    swp = BY_ID["w1_2_5"]["evs"]["Shrimp Welfare Project"]
+    assert 4e4 < swp / gw < 9e4, f"SWP is {swp/gw:.0f}x GiveWell, expected ~64k"
 
 
 def test_overrides_go_flat():
     """The end of the line: anti-realism sets every value to 0; the Boltzmann
     brain collapses everything to one equal pleasant thought."""
-    assert set(BY_ID["w1_3_4_7_8"]["evs"].values()) == {0.0}
-    assert set(BY_ID["w1_3_4_7_9"]["evs"].values()) == {1e-6}
+    assert set(BY_ID["w1_3_4_9_14"]["evs"].values()) == {0.0}
+    assert set(BY_ID["w1_3_4_9_15"]["evs"].values()) == {1e-6}
+
+
+def test_meat_eater_and_net_negative_lives():
+    """The two animal-side externality assumptions. The meat-eater problem
+    charges human orgs for their beneficiaries' diets; net-negative lives has no
+    meat channel of its own but amplifies that penalty into net-harmful territory."""
+    amf = "GiveWell top charity (AMF)"
+    # meat-eater alone shaves human value but (under neuron weights) keeps it positive
+    assert 0 < BY_ID["w1_2_7"]["evs"][amf] < BY_ID["w1_2"]["evs"][amf]
+    # net-negative lives alone touches no human org (it only boosts animal work)
+    assert BY_ID["w1_2_5_8"]["evs"][amf] == BY_ID["w1_2_5"]["evs"][amf]
+    # both together, under heavy animal weight, drive human charities net-negative
+    assert BY_ID["w1_2_5_7_8"]["evs"][amf] < 0
+    assert BY_ID["w1_2_5_7_8"]["evs"]["Local soup kitchen"] < 0
 
 
 def test_playground_links_roundtrip():
@@ -115,6 +160,35 @@ def test_playground_links_roundtrip():
     from squiggle_playground import encode_playground_url, decode_playground_url
     src = BY_ID["w1_2_5"]["squiggle_source"]
     assert decode_playground_url(encode_playground_url(src)) == src
+
+
+def test_diagram_pages_are_bounded_and_cover_the_tree():
+    """The render layout cuts the tree into bounded, clickable pages: every
+    worldview is expanded on exactly one page, no page exceeds the cap, no
+    split-off subtree is tiny, and every collapse stub points to a real page
+    rooted at that stub."""
+    import json
+    sys.path.insert(0, os.path.join(ROOT, "diagram"))
+    from partition import DEFAULT_MAX_PAGE, DEFAULT_MIN_PAGE
+    tree = json.load(open(os.path.join(ROOT, "diagram", "train_tree.json")))
+    pages = tree["pages"]
+    by_page = {p["id"]: p for p in pages}
+
+    roots = [p for p in pages if p["is_root"]]
+    assert len(roots) == 1 and roots[0]["id"] == "train_tree"
+
+    # each worldview is the expanded (non-stub) node on exactly one page
+    expanded = [i for p in pages for i in p["nodes"] if i not in p["collapsed"]]
+    assert sorted(expanded) == sorted(n["id"] for n in tree["nodes"])
+
+    for p in pages:
+        assert len(p["nodes"]) <= DEFAULT_MAX_PAGE, f'{p["id"]} exceeds the page cap'
+        if not p["is_root"]:
+            assert len(p["nodes"]) >= DEFAULT_MIN_PAGE, f'{p["id"]} is a tiny subtree'
+        for boundary, meta in p["collapsed"].items():
+            child = by_page.get(meta["child"])
+            assert child and child["root"] == boundary and boundary in child["nodes"], \
+                f'{boundary} stub does not point at its expanded page'
 
 
 def test_allocate_uses_the_canonical_slate():

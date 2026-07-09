@@ -21,6 +21,12 @@ DESC = (
     "animals_somewhat."
 )
 
+# The asymmetry magnitude (suffering-reduction weighted ~10x above
+# happiness-creation here) follows the suffering-focused tradition — Tomasik's
+# and Vinding's case that intense suffering is not offsettable by comparable
+# pleasure (https://reducing-suffering.org , Vinding, "Suffering-Focused
+# Ethics", 2020). The specific 3.0 / 0.3 split is an order-of-magnitude stand-in
+# for that strong-but-not-lexical asymmetry.
 _symmetric_coefficient = coefficient  # noqa: F821
 
 

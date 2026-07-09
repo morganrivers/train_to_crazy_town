@@ -22,10 +22,13 @@ DESC = (
     "significant aggregate (nematode) weight, so invertebrate work dominates."
 )
 
-# Rethink Priorities-style median welfare ranges (fraction of a human's),
-# https://rethinkpriorities.org/research-area/welfare-range-estimates/ —
-# chickens ~0.332, shrimp ~0.031; the insect/soil figure is an illustrative
-# nematode-weighted placeholder in the published spirit.
+# Rethink Priorities median welfare ranges (fraction of a human's), from the
+# Moral Weight Project (Fischer et al.):
+# https://rethinkpriorities.org/research-area/welfare-range-estimates/
+#   chickens 0.332, shrimp 0.031; RP's published insect medians bracket the
+#   wild-insect entry — black soldier flies 0.013, silkworms 0.002, bees 0.044 —
+#   so ~0.01 is a defensible representative insect welfare range (not a soil
+#   nematode figure; assumption 13 handles soil animals explicitly).
 RP_WELFARE_RANGE = {
     "thl": 0.332,
     "swp": 0.031,

@@ -1,5 +1,5 @@
 {
-  "_comment": "GENERATED from assumptions/*.py by generate.py - do not edit by hand. Each node is a WORLDVIEW: a chain of numbered assumptions, composed by exec-ing the assumption files in craziness order. Each edge adds exactly ONE assumption (the child's highest-numbered one). 'stop' is the craziest assumption the worldview accepts - how far down the line it rides; 'depth' is how many assumptions it holds. Every worldview ranks the SAME donation slate; 'top_pick' is the Python-side argmax, matching the generated Squiggle model. REQUIRES/EXCLUDES/TERMINAL metadata on the assumptions limits which chains a real person could plausibly hold, so the combinatorial explosion stays small.",
+  "_comment": "GENERATED from assumptions/*.py by generate.py - do not edit by hand. Each node is a WORLDVIEW: a chain of numbered assumptions, composed by exec-ing the assumption files in craziness order. Each edge adds exactly ONE assumption (the child's highest-numbered one). 'stop' is the craziest assumption the worldview accepts - how far down the line it rides; 'depth' is how many assumptions it holds. Every worldview ranks the SAME donation slate; 'top_pick' is the Python-side argmax, matching the generated Squiggle model. REQUIRES/EXCLUDES/TERMINAL metadata on the assumptions limits which chains a real person could plausibly hold, so the combinatorial explosion stays small. 'pages' is the render layout: the tree is cut into bounded, clickable diagram pages (diagram/partition.py), each a subtree; a subtree big enough for its own page is COLLAPSED on its parent page to a boundary node linking to it.",
   "slate": [
     "Local soup kitchen",
     "GiveDirectly",
@@ -156,7 +156,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot",
       "lbl": "Animals matter a lot\n(RP welfare ranges)\n[1+2+5]",
-      "top_pick": "Wild insects (humane pesticides)",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "Bob Fischer",
         "Brian Tomasik"
@@ -177,7 +177,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot",
       "lbl": "Animals matter a lot\n(RP welfare ranges)\n[1+2+3+5]",
-      "top_pick": "Wild insects (humane pesticides)",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "Bob Fischer",
         "Brian Tomasik"
@@ -261,7 +261,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+5+6]",
-      "top_pick": "Wild insects (humane pesticides)",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -305,7 +305,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+5+6]",
-      "top_pick": "Wild insects (humane pesticides)",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -337,28 +337,380 @@
       "desc": "Asymmetry: averting intense suffering takes priority over creating happiness. Factory farming, malaria and the worst wild-animal conditions weigh up; speculative future-flourishing bets weigh down. Arises most naturally from taking animal suffering seriously, so it requires animals_somewhat. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused"
     },
     {
-      "id": "w1_3_4_7",
+      "id": "w1_2_7",
       "stop": 7,
+      "depth": 3,
+      "parent": "w1_2",
+      "assumptions": [
+        1,
+        2,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+7]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_3_7",
+      "stop": 7,
+      "depth": 4,
+      "parent": "w1_2_3",
+      "assumptions": [
+        1,
+        2,
+        3,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+7]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_5_7",
+      "stop": 7,
+      "depth": 4,
+      "parent": "w1_2_5",
+      "assumptions": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+5+7]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_6_7",
+      "stop": 7,
+      "depth": 4,
+      "parent": "w1_2_6",
+      "assumptions": [
+        1,
+        2,
+        6,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + suffering_focused + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+6+7]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_6_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 6 suffering_focused → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_3_5_7",
+      "stop": 7,
+      "depth": 5,
+      "parent": "w1_2_3_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+5+7]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_3_6_7",
+      "stop": 7,
+      "depth": 5,
+      "parent": "w1_2_3_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + suffering_focused + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+6+7]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_6_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 6 suffering_focused → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_5_6_7",
+      "stop": 7,
+      "depth": 5,
+      "parent": "w1_2_5_6",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+5+6+7]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_3_5_6_7",
+      "stop": 7,
+      "depth": 6,
+      "parent": "w1_2_3_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem",
+      "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+5+6+7]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Michael Dickens",
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_7.squiggle",
+      "desc": "The meat-eater problem: a dollar of human global health also buys decades of that person's meat consumption, and factory farming it causes suffering the animal circle now counts. Each present-human org is charged an additive penalty — farmed-animal life-years caused per human DALY, times the suffering per factory-farmed life-year, times the animal's welfare range. Under a heavy animal welfare range the penalty can exceed the human benefit, so saving human lives looks net-harmful. Only bites once animals count, so it requires animals_somewhat; and it is a near-term human-vs-animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans), where x-risk dominates and the meat bookkeeping is moot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem"
+    },
+    {
+      "id": "w1_2_5_8",
+      "stop": 8,
+      "depth": 4,
+      "parent": "w1_2_5",
+      "assumptions": [
+        1,
+        2,
+        5,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_3_5_8",
+      "stop": 8,
+      "depth": 5,
+      "parent": "w1_2_3_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_5_6_8",
+      "stop": 8,
+      "depth": 5,
+      "parent": "w1_2_5_6",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+6+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_5_7_8",
+      "stop": 8,
+      "depth": 5,
+      "parent": "w1_2_5_7",
+      "assumptions": [
+        1,
+        2,
+        5,
+        7,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+7+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_7_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 7 meat_eater_problem → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_3_5_6_8",
+      "stop": 8,
+      "depth": 6,
+      "parent": "w1_2_3_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+6+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_3_5_7_8",
+      "stop": 8,
+      "depth": 6,
+      "parent": "w1_2_3_5_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        7,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+7+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_7_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 7 meat_eater_problem → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_5_6_7_8",
+      "stop": 8,
+      "depth": 6,
+      "parent": "w1_2_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+6+7+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_7_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_2_3_5_6_7_8",
+      "stop": 8,
+      "depth": 7,
+      "parent": "w1_2_3_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives",
+      "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+6+7+8]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Brian Tomasik",
+        "David Benatar"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_7_8.squiggle",
+      "desc": "The net-negative-lives hypothesis: factory-farmed and wild animals endure more suffering than wellbeing, so their lives are not worth living. Reducing that suffering is worth more per dollar (you are mitigating a catastrophe, not improving a good life), most of all for the astronomical wild-invertebrate populations. Combined with the meat-eater problem it drives human charities firmly net-negative — every human sustained means more net-negative farmed lives. Presupposes counting wild/invertebrate animals, so it requires animals_matter_a_lot; and like the meat-eater problem it is a near-term animal get-off point, not combined with astronomical-stakes longtermism (no_discounting_future_humans). || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 8 net_negative_animal_lives"
+    },
+    {
+      "id": "w1_3_4_9",
+      "stop": 9,
       "depth": 4,
       "parent": "w1_3_4",
       "assumptions": [
         1,
         3,
         4,
-        7
+        9
       ],
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation",
-      "lbl": "Living in\na simulation\n[1+3+4+7]",
+      "lbl": "Living in\na simulation\n[1+3+4+9]",
       "top_pick": "AI safety (Redwood Research)",
       "figures": [
         "Nick Bostrom"
       ],
-      "squiggle": "squiggle/worldviews/w1_3_4_7.squiggle",
-      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 7 living_in_simulation"
+      "squiggle": "squiggle/worldviews/w1_3_4_9.squiggle",
+      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation"
     },
     {
-      "id": "w1_2_3_4_7",
-      "stop": 7,
+      "id": "w1_2_3_4_9",
+      "stop": 9,
       "depth": 5,
       "parent": "w1_2_3_4",
       "assumptions": [
@@ -366,20 +718,20 @@
         2,
         3,
         4,
-        7
+        9
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation",
-      "lbl": "Living in\na simulation\n[1+2+3+4+7]",
+      "lbl": "Living in\na simulation\n[1+2+3+4+9]",
       "top_pick": "AI safety (Redwood Research)",
       "figures": [
         "Nick Bostrom"
       ],
-      "squiggle": "squiggle/worldviews/w1_2_3_4_7.squiggle",
-      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 7 living_in_simulation"
+      "squiggle": "squiggle/worldviews/w1_2_3_4_9.squiggle",
+      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation"
     },
     {
-      "id": "w1_2_3_4_5_7",
-      "stop": 7,
+      "id": "w1_2_3_4_5_9",
+      "stop": 9,
       "depth": 6,
       "parent": "w1_2_3_4_5",
       "assumptions": [
@@ -388,20 +740,20 @@
         3,
         4,
         5,
-        7
+        9
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation",
-      "lbl": "Living in\na simulation\n[1+2+3+4+5+7]",
+      "lbl": "Living in\na simulation\n[1+2+3+4+5+9]",
       "top_pick": "AI safety (Redwood Research)",
       "figures": [
         "Nick Bostrom"
       ],
-      "squiggle": "squiggle/worldviews/w1_2_3_4_5_7.squiggle",
-      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 7 living_in_simulation"
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9.squiggle",
+      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation"
     },
     {
-      "id": "w1_2_3_4_6_7",
-      "stop": 7,
+      "id": "w1_2_3_4_6_9",
+      "stop": 9,
       "depth": 6,
       "parent": "w1_2_3_4_6",
       "assumptions": [
@@ -410,20 +762,20 @@
         3,
         4,
         6,
-        7
+        9
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation",
-      "lbl": "Living in\na simulation\n[1+2+3+4+6+7]",
+      "lbl": "Living in\na simulation\n[1+2+3+4+6+9]",
       "top_pick": "AI safety (Redwood Research)",
       "figures": [
         "Nick Bostrom"
       ],
-      "squiggle": "squiggle/worldviews/w1_2_3_4_6_7.squiggle",
-      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 7 living_in_simulation"
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_9.squiggle",
+      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 9 living_in_simulation"
     },
     {
-      "id": "w1_2_3_4_5_6_7",
-      "stop": 7,
+      "id": "w1_2_3_4_5_6_9",
+      "stop": 9,
       "depth": 7,
       "parent": "w1_2_3_4_5_6",
       "assumptions": [
@@ -433,58 +785,2065 @@
         4,
         5,
         6,
-        7
+        9
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation",
-      "lbl": "Living in\na simulation\n[1+2+3+4+5+6+7]",
-      "top_pick": "AI safety (Redwood Research)",
+      "lbl": "Living in\na simulation\n[1+2+3+4+5+6+9]",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "Nick Bostrom"
       ],
-      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_7.squiggle",
-      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 7 living_in_simulation"
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9.squiggle",
+      "desc": "If most observers like us are simulated, the astronomical future that justified x-risk work probably gets switched off long before it happens. The same expected-value reasoning that bought astronomical stakes now attenuates them: future-facing value is multiplied by the probability the simulation keeps running, and the ranking slides back toward the present. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation"
     },
     {
-      "id": "w1_3_4_7_8",
-      "stop": 8,
+      "id": "w1_2_5_10",
+      "stop": 10,
+      "depth": 4,
+      "parent": "w1_2_5",
+      "assumptions": [
+        1,
+        2,
+        5,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+5+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_5_10",
+      "stop": 10,
       "depth": 5,
-      "parent": "w1_3_4_7",
+      "parent": "w1_2_3_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+5+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_5_6_10",
+      "stop": 10,
+      "depth": 5,
+      "parent": "w1_2_5_6",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+5+6+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_5_7_10",
+      "stop": 10,
+      "depth": 5,
+      "parent": "w1_2_5_7",
+      "assumptions": [
+        1,
+        2,
+        5,
+        7,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+5+7+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_7_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 7 meat_eater_problem → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_4_5_10",
+      "stop": 10,
+      "depth": 6,
+      "parent": "w1_2_3_4_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+4+5+10]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_5_6_10",
+      "stop": 10,
+      "depth": 6,
+      "parent": "w1_2_3_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+5+6+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_5_7_10",
+      "stop": 10,
+      "depth": 6,
+      "parent": "w1_2_3_5_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        7,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+5+7+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_7_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 7 meat_eater_problem → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_5_6_7_10",
+      "stop": 10,
+      "depth": 6,
+      "parent": "w1_2_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+5+6+7+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_7_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_4_5_6_10",
+      "stop": 10,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+4+5+6+10]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_4_5_9_10",
+      "stop": 10,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+4+5+9+10]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_5_6_7_10",
+      "stop": 10,
+      "depth": 7,
+      "parent": "w1_2_3_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+5+6+7+10]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_7_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_10",
+      "stop": 10,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + two_envelope_welfare_skepticism",
+      "lbl": "Two-envelope welfare\nskepticism\n[1+2+3+4+5+6+9+10]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Nuno Sempere"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_10.squiggle",
+      "desc": "Rethink Priorities' mainline welfare ranges are expectations over deep sentience uncertainty, and cross-species welfare comparisons hit the two-envelope problem. Nuno Sempere's Bayesian adjustment shrinks the smallest animals' welfare ranges by one to two orders of magnitude. Chickens are barely affected; shrimp and insects fall far enough that corporate chicken campaigns retake the top of the animal slate. Only bites once the RP welfare ranges are in play, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 10 two_envelope_welfare_skepticism"
+    },
+    {
+      "id": "w1_3_4_11",
+      "stop": 11,
+      "depth": 4,
+      "parent": "w1_3_4",
       "assumptions": [
         1,
         3,
         4,
+        11
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+3+4+11]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_11",
+      "stop": 11,
+      "depth": 5,
+      "parent": "w1_2_3_4",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+11]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_3_4_9_11",
+      "stop": 11,
+      "depth": 5,
+      "parent": "w1_3_4_9",
+      "assumptions": [
+        1,
+        3,
+        4,
+        9,
+        11
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+3+4+9+11]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_9_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_11",
+      "stop": 11,
+      "depth": 6,
+      "parent": "w1_2_3_4_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+11]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_6_11",
+      "stop": 11,
+      "depth": 6,
+      "parent": "w1_2_3_4_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+6+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_9_11",
+      "stop": 11,
+      "depth": 6,
+      "parent": "w1_2_3_4_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+9+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_9_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_10_11",
+      "stop": 11,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + two_envelope_welfare_skepticism + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+10+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_10_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_6_11",
+      "stop": 11,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+11]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_9_11",
+      "stop": 11,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+9+11]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_6_9_11",
+      "stop": 11,
+      "depth": 7,
+      "parent": "w1_2_3_4_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        9,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+6+9+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_9_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_6_10_11",
+      "stop": 11,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+10+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_10_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_11",
+      "stop": 11,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+9+11]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_9_10_11",
+      "stop": 11,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_9_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + two_envelope_welfare_skepticism + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+9+10+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_10_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_10_11",
+      "stop": 11,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_9_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        10,
+        11
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + two_envelope_welfare_skepticism + person_affecting_view",
+      "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+9+10+11]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "Jan Narveson",
+        "Melinda Roberts"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_10_11.squiggle",
+      "desc": "Person-affecting population ethics: making happy people is neutral, so the astronomical case for x-risk reduction — which rests on the sheer number of extra future lives saved from extinction — loses almost all its force. Only the harm to people who exist regardless still counts. This is the standard premise longtermism's critics deny (discussed as the key objection in Greaves & MacAskill's 'The Case for Strong Longtermism'). It requires no_discounting_future_humans, the astronomical-stakes move it pushes back on. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 11 person_affecting_view"
+    },
+    {
+      "id": "w1_3_4_12",
+      "stop": 12,
+      "depth": 4,
+      "parent": "w1_3_4",
+      "assumptions": [
+        1,
+        3,
+        4,
+        12
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+3+4+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_12",
+      "stop": 12,
+      "depth": 5,
+      "parent": "w1_2_3_4",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_3_4_11_12",
+      "stop": 12,
+      "depth": 5,
+      "parent": "w1_3_4_11",
+      "assumptions": [
+        1,
+        3,
+        4,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+3+4+11+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_3_4_9_12",
+      "stop": 12,
+      "depth": 5,
+      "parent": "w1_3_4_9",
+      "assumptions": [
+        1,
+        3,
+        4,
+        9,
+        12
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+3+4+9+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_9_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_11_12",
+      "stop": 12,
+      "depth": 6,
+      "parent": "w1_2_3_4_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+11+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_12",
+      "stop": 12,
+      "depth": 6,
+      "parent": "w1_2_3_4_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_6_12",
+      "stop": 12,
+      "depth": 6,
+      "parent": "w1_2_3_4_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+6+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_9_12",
+      "stop": 12,
+      "depth": 6,
+      "parent": "w1_2_3_4_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+9+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_9_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_3_4_9_11_12",
+      "stop": 12,
+      "depth": 6,
+      "parent": "w1_3_4_9_11",
+      "assumptions": [
+        1,
+        3,
+        4,
+        9,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+3+4+9+11+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_3_4_9_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_10_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + two_envelope_welfare_skepticism + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+10+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_10_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_11_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+11+12]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_9_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+9+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_6_11_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_6_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+6+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_6_9_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        9,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+6+9+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_9_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 9 living_in_simulation → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_9_11_12",
+      "stop": 12,
+      "depth": 7,
+      "parent": "w1_2_3_4_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+9+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_9_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_10_11_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_10_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + two_envelope_welfare_skepticism + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+10+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_10_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 10 two_envelope_welfare_skepticism → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_10_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+10+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_10_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_11_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+11+12]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+9+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_9_10_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_9_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + two_envelope_welfare_skepticism + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+9+10+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_10_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_9_11_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+9+11+12]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_6_9_11_12",
+      "stop": 12,
+      "depth": 8,
+      "parent": "w1_2_3_4_6_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        9,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+6+9+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_6_9_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_10_11_12",
+      "stop": 12,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_10_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        10,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + two_envelope_welfare_skepticism + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+10+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_10_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 10 two_envelope_welfare_skepticism → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_10_12",
+      "stop": 12,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_9_10",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        10,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + two_envelope_welfare_skepticism + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+9+10+12]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_10_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_11_12",
+      "stop": 12,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+9+11+12]",
+      "top_pick": "Shrimp Welfare Project",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_9_10_11_12",
+      "stop": 12,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_9_10_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + two_envelope_welfare_skepticism + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+9+10+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_10_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_10_11_12",
+      "stop": 12,
+      "depth": 10,
+      "parent": "w1_2_3_4_5_6_9_10_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        10,
+        11,
+        12
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + two_envelope_welfare_skepticism + person_affecting_view + resilient_foods_beat_agi",
+      "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+9+10+11+12]",
+      "top_pick": "The Humane League",
+      "figures": [
+        "David Denkenberger",
+        "Joshua Pearce"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_10_11_12.squiggle",
+      "desc": "Denkenberger & Pearce estimate ~98-99% confidence that marginal funding for resilient foods (feeding everyone through nuclear winter or an abrupt sunlight-reduction catastrophe) does more far-future good than marginal AGI-safety funding — it is more neglected and more tractable while buying the same astronomical future. The longtermist winner flips from AI safety to ALLFED. A within-longtermism reallocation, so it requires no_discounting_future_humans. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 10 two_envelope_welfare_skepticism → 11 person_affecting_view → 12 resilient_foods_beat_agi"
+    },
+    {
+      "id": "w1_2_5_13",
+      "stop": 13,
+      "depth": 4,
+      "parent": "w1_2_5",
+      "assumptions": [
+        1,
+        2,
+        5,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_13",
+      "stop": 13,
+      "depth": 5,
+      "parent": "w1_2_3_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_6_13",
+      "stop": 13,
+      "depth": 5,
+      "parent": "w1_2_5_6",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_7_13",
+      "stop": 13,
+      "depth": 5,
+      "parent": "w1_2_5_7",
+      "assumptions": [
+        1,
+        2,
+        5,
         7,
-        8
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+7+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_7_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 7 meat_eater_problem → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_8_13",
+      "stop": 13,
+      "depth": 5,
+      "parent": "w1_2_5_8",
+      "assumptions": [
+        1,
+        2,
+        5,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_3_4_5",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+13]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_6_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_3_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_7_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_3_5_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        7,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+7+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_7_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 7 meat_eater_problem → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_8_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_3_5_8",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_6_7_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+7+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_7_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_6_8_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_5_6_8",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_7_8_13",
+      "stop": 13,
+      "depth": 6,
+      "parent": "w1_2_5_7_8",
+      "assumptions": [
+        1,
+        2,
+        5,
+        7,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+7+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_7_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 7 meat_eater_problem → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_11_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+11+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_11_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 11 person_affecting_view → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_12_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+12+13]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_6",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+13]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_9_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_4_5_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+13]",
+      "top_pick": "AI safety (Redwood Research)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_6_7_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_5_6_7",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+7+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_7_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_6_8_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_5_6_8",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_7_8_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_3_5_7_8",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        7,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+7+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_7_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 7 meat_eater_problem → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_5_6_7_8_13",
+      "stop": 13,
+      "depth": 7,
+      "parent": "w1_2_5_6_7_8",
+      "assumptions": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+7+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_5_6_7_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_11_12_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_11_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+11+12+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_11_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 11 person_affecting_view → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_11_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+11+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_11_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 11 person_affecting_view → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_12_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+12+13]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_6_9",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_9_11_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        11,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+11+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_11_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 11 person_affecting_view → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_9_12_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_4_5_9_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+12+13]",
+      "top_pick": "ALLFED",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_5_6_7_8_13",
+      "stop": 13,
+      "depth": 8,
+      "parent": "w1_2_3_5_6_7_8",
+      "assumptions": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+7+8+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_5_6_7_8_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 5 animals_matter_a_lot → 6 suffering_focused → 7 meat_eater_problem → 8 net_negative_animal_lives → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_11_12_13",
+      "stop": 13,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_11_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+11+12+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_11_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 11 person_affecting_view → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_11_13",
+      "stop": 13,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_9_11",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+11+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_11_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_12_13",
+      "stop": 13,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_6_9_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+12+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_9_11_12_13",
+      "stop": 13,
+      "depth": 9,
+      "parent": "w1_2_3_4_5_9_11_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        11,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+11+12+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_9_11_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_2_3_4_5_6_9_11_12_13",
+      "stop": 13,
+      "depth": 10,
+      "parent": "w1_2_3_4_5_6_9_11_12",
+      "assumptions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        11,
+        12,
+        13
+      ],
+      "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view + resilient_foods_beat_agi + soil_animals",
+      "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+11+12+13]",
+      "top_pick": "Wild insects (humane pesticides)",
+      "figures": [
+        "Vasco Grilo"
+      ],
+      "squiggle": "squiggle/worldviews/w1_2_3_4_5_6_9_11_12_13.squiggle",
+      "desc": "Grilo's soil-animal accounting: ~10^19 soil nematodes, mites and springtails dominate the welfare effects of almost anything. Global-health charities raise food demand and cropland (~137 m^2-yr/$ for GiveWell top charities, ~1.11 kQALY/$ of soil-animal welfare change); with soil lives net-negative, that makes GiveWell's top charities net-harmful, and soil/wild-invertebrate work dominates the slate. Only enters once invertebrates already count, so it requires animals_matter_a_lot. || Chain: 0 parochial → 1 far_away_humans → 2 animals_somewhat → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 5 animals_matter_a_lot → 6 suffering_focused → 9 living_in_simulation → 11 person_affecting_view → 12 resilient_foods_beat_agi → 13 soil_animals"
+    },
+    {
+      "id": "w1_3_4_9_14",
+      "stop": 14,
+      "depth": 5,
+      "parent": "w1_3_4_9",
+      "assumptions": [
+        1,
+        3,
+        4,
+        9,
+        14
       ],
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + morality_is_not_real",
-      "lbl": "Morality is not real\n(anti-realism)\n[1+3+4+7+8]",
+      "lbl": "Morality is not real\n(anti-realism)\n[1+3+4+9+14]",
       "top_pick": "nothing — ranking flat",
       "figures": [
         "J. L. Mackie"
       ],
-      "squiggle": "squiggle/worldviews/w1_3_4_7_8.squiggle",
-      "desc": "Off the end of the line: if moral realism is false there is no stance-independent reason to help anyone. Every DALY is set to 0 — the moral circle, welfare ranges, discounting and simulation probabilities all stop mattering, and the ranking goes flat. The consistent recommendation is to keep the money. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 7 living_in_simulation → 8 morality_is_not_real"
+      "squiggle": "squiggle/worldviews/w1_3_4_9_14.squiggle",
+      "desc": "Off the end of the line: if moral realism is false there is no stance-independent reason to help anyone. Every DALY is set to 0 — the moral circle, welfare ranges, discounting and simulation probabilities all stop mattering, and the ranking goes flat. The consistent recommendation is to keep the money. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 14 morality_is_not_real"
     },
     {
-      "id": "w1_3_4_7_9",
-      "stop": 9,
+      "id": "w1_3_4_9_15",
+      "stop": 15,
       "depth": 5,
-      "parent": "w1_3_4_7",
+      "parent": "w1_3_4_9",
       "assumptions": [
         1,
         3,
         4,
-        7,
-        9
+        9,
+        15
       ],
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + boltzmann_brain",
-      "lbl": "Boltzmann brain\n(hedonic solipsism)\n[1+3+4+7+9]",
+      "lbl": "Boltzmann brain\n(hedonic solipsism)\n[1+3+4+9+15]",
       "top_pick": "nothing — ranking flat",
       "figures": [
         "Ludwig Boltzmann"
       ],
-      "squiggle": "squiggle/worldviews/w1_3_4_7_9.squiggle",
-      "desc": "If you are more likely a momentary Boltzmann brain than a person with a past and a future, the only thing that registers is whatever you happen to feel right now. Every charity collapses to the same low pleasant-thought level of value; the ranking goes flat and no donation beats any other. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 7 living_in_simulation → 9 boltzmann_brain"
+      "squiggle": "squiggle/worldviews/w1_3_4_9_15.squiggle",
+      "desc": "If you are more likely a momentary Boltzmann brain than a person with a past and a future, the only thing that registers is whatever you happen to feel right now. Every charity collapses to the same low pleasant-thought level of value; the ranking goes flat and no donation beats any other. || Chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 15 boltzmann_brain"
     }
   ],
   "edges": [
@@ -579,46 +2938,875 @@
       "kind": "expand"
     },
     {
+      "from": "w1_2",
+      "to": "w1_2_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3",
+      "to": "w1_2_3_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5",
+      "to": "w1_2_5_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_6",
+      "to": "w1_2_6_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5",
+      "to": "w1_2_3_5_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_6",
+      "to": "w1_2_3_6_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6",
+      "to": "w1_2_5_6_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6",
+      "to": "w1_2_3_5_6_7",
+      "label": "charge humans for the meat they eat",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5",
+      "to": "w1_2_5_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5",
+      "to": "w1_2_3_5_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6",
+      "to": "w1_2_5_6_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_7",
+      "to": "w1_2_5_7_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6",
+      "to": "w1_2_3_5_6_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_7",
+      "to": "w1_2_3_5_7_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6_7",
+      "to": "w1_2_5_6_7_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6_7",
+      "to": "w1_2_3_5_6_7_8",
+      "label": "hold that animal lives aren't worth living",
+      "kind": "expand"
+    },
+    {
       "from": "w1_3_4",
-      "to": "w1_3_4_7",
+      "to": "w1_3_4_9",
       "label": "take the simulation argument seriously",
       "kind": "expand"
     },
     {
       "from": "w1_2_3_4",
-      "to": "w1_2_3_4_7",
+      "to": "w1_2_3_4_9",
       "label": "take the simulation argument seriously",
       "kind": "expand"
     },
     {
       "from": "w1_2_3_4_5",
-      "to": "w1_2_3_4_5_7",
+      "to": "w1_2_3_4_5_9",
       "label": "take the simulation argument seriously",
       "kind": "expand"
     },
     {
       "from": "w1_2_3_4_6",
-      "to": "w1_2_3_4_6_7",
+      "to": "w1_2_3_4_6_9",
       "label": "take the simulation argument seriously",
       "kind": "expand"
     },
     {
       "from": "w1_2_3_4_5_6",
-      "to": "w1_2_3_4_5_6_7",
+      "to": "w1_2_3_4_5_6_9",
       "label": "take the simulation argument seriously",
       "kind": "expand"
     },
     {
-      "from": "w1_3_4_7",
-      "to": "w1_3_4_7_8",
+      "from": "w1_2_5",
+      "to": "w1_2_5_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5",
+      "to": "w1_2_3_5_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6",
+      "to": "w1_2_5_6_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_7",
+      "to": "w1_2_5_7_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5",
+      "to": "w1_2_3_4_5_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6",
+      "to": "w1_2_3_5_6_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_7",
+      "to": "w1_2_3_5_7_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6_7",
+      "to": "w1_2_5_6_7_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6",
+      "to": "w1_2_3_4_5_6_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9",
+      "to": "w1_2_3_4_5_9_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6_7",
+      "to": "w1_2_3_5_6_7_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9",
+      "to": "w1_2_3_4_5_6_9_10",
+      "label": "Bayesian-shrink invertebrate welfare ranges",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4",
+      "to": "w1_3_4_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4",
+      "to": "w1_2_3_4_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4_9",
+      "to": "w1_3_4_9_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5",
+      "to": "w1_2_3_4_5_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6",
+      "to": "w1_2_3_4_6_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_9",
+      "to": "w1_2_3_4_9_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_10",
+      "to": "w1_2_3_4_5_10_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6",
+      "to": "w1_2_3_4_5_6_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9",
+      "to": "w1_2_3_4_5_9_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6_9",
+      "to": "w1_2_3_4_6_9_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_10",
+      "to": "w1_2_3_4_5_6_10_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9",
+      "to": "w1_2_3_4_5_6_9_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_10",
+      "to": "w1_2_3_4_5_9_10_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_10",
+      "to": "w1_2_3_4_5_6_9_10_11",
+      "label": "give merely-possible future people no weight",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4",
+      "to": "w1_3_4_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4",
+      "to": "w1_2_3_4_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4_11",
+      "to": "w1_3_4_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4_9",
+      "to": "w1_3_4_9_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_11",
+      "to": "w1_2_3_4_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5",
+      "to": "w1_2_3_4_5_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6",
+      "to": "w1_2_3_4_6_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_9",
+      "to": "w1_2_3_4_9_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4_9_11",
+      "to": "w1_3_4_9_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_10",
+      "to": "w1_2_3_4_5_10_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_11",
+      "to": "w1_2_3_4_5_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6",
+      "to": "w1_2_3_4_5_6_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9",
+      "to": "w1_2_3_4_5_9_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6_11",
+      "to": "w1_2_3_4_6_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6_9",
+      "to": "w1_2_3_4_6_9_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_9_11",
+      "to": "w1_2_3_4_9_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_10_11",
+      "to": "w1_2_3_4_5_10_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_10",
+      "to": "w1_2_3_4_5_6_10_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_11",
+      "to": "w1_2_3_4_5_6_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9",
+      "to": "w1_2_3_4_5_6_9_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_10",
+      "to": "w1_2_3_4_5_9_10_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_11",
+      "to": "w1_2_3_4_5_9_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_6_9_11",
+      "to": "w1_2_3_4_6_9_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_10_11",
+      "to": "w1_2_3_4_5_6_10_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_10",
+      "to": "w1_2_3_4_5_6_9_10_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_11",
+      "to": "w1_2_3_4_5_6_9_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_10_11",
+      "to": "w1_2_3_4_5_9_10_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_10_11",
+      "to": "w1_2_3_4_5_6_9_10_11_12",
+      "label": "prefer resilient foods to AI safety on the margin",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5",
+      "to": "w1_2_5_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5",
+      "to": "w1_2_3_5_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6",
+      "to": "w1_2_5_6_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_7",
+      "to": "w1_2_5_7_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_8",
+      "to": "w1_2_5_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5",
+      "to": "w1_2_3_4_5_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6",
+      "to": "w1_2_3_5_6_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_7",
+      "to": "w1_2_3_5_7_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_8",
+      "to": "w1_2_3_5_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6_7",
+      "to": "w1_2_5_6_7_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6_8",
+      "to": "w1_2_5_6_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_7_8",
+      "to": "w1_2_5_7_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_11",
+      "to": "w1_2_3_4_5_11_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_12",
+      "to": "w1_2_3_4_5_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6",
+      "to": "w1_2_3_4_5_6_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9",
+      "to": "w1_2_3_4_5_9_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6_7",
+      "to": "w1_2_3_5_6_7_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6_8",
+      "to": "w1_2_3_5_6_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_7_8",
+      "to": "w1_2_3_5_7_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_5_6_7_8",
+      "to": "w1_2_5_6_7_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_11_12",
+      "to": "w1_2_3_4_5_11_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_11",
+      "to": "w1_2_3_4_5_6_11_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_12",
+      "to": "w1_2_3_4_5_6_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9",
+      "to": "w1_2_3_4_5_6_9_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_11",
+      "to": "w1_2_3_4_5_9_11_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_12",
+      "to": "w1_2_3_4_5_9_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_5_6_7_8",
+      "to": "w1_2_3_5_6_7_8_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_11_12",
+      "to": "w1_2_3_4_5_6_11_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_11",
+      "to": "w1_2_3_4_5_6_9_11_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_12",
+      "to": "w1_2_3_4_5_6_9_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_9_11_12",
+      "to": "w1_2_3_4_5_9_11_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_2_3_4_5_6_9_11_12",
+      "to": "w1_2_3_4_5_6_9_11_12_13",
+      "label": "count the ~10^19 soil invertebrates",
+      "kind": "expand"
+    },
+    {
+      "from": "w1_3_4_9",
+      "to": "w1_3_4_9_14",
       "label": "deny moral realism",
       "kind": "override"
     },
     {
-      "from": "w1_3_4_7",
-      "to": "w1_3_4_7_9",
+      "from": "w1_3_4_9",
+      "to": "w1_3_4_9_15",
       "label": "only this moment's feeling is real",
       "kind": "override"
+    }
+  ],
+  "pages": [
+    {
+      "id": "train_tree",
+      "root": "w0",
+      "is_root": true,
+      "nodes": [
+        "w0",
+        "w1",
+        "w1_2",
+        "w1_3",
+        "w1_3_4",
+        "w1_3_4_9",
+        "w1_3_4_9_11",
+        "w1_3_4_9_11_12",
+        "w1_3_4_9_12",
+        "w1_3_4_9_14",
+        "w1_3_4_9_15",
+        "w1_3_4_11",
+        "w1_3_4_11_12",
+        "w1_3_4_12"
+      ],
+      "collapsed": {
+        "w1_2": {
+          "child": "train_tree__w1_2",
+          "count": 111
+        }
+      }
+    },
+    {
+      "id": "train_tree__w1_2",
+      "root": "w1_2",
+      "is_root": false,
+      "nodes": [
+        "w1_2",
+        "w1_2_3",
+        "w1_2_5",
+        "w1_2_6",
+        "w1_2_6_7",
+        "w1_2_7"
+      ],
+      "collapsed": {
+        "w1_2_5": {
+          "child": "train_tree__w1_2_5",
+          "count": 19
+        },
+        "w1_2_3": {
+          "child": "train_tree__w1_2_3",
+          "count": 87
+        }
+      }
+    },
+    {
+      "id": "train_tree__w1_2_5",
+      "root": "w1_2_5",
+      "is_root": false,
+      "nodes": [
+        "w1_2_5",
+        "w1_2_5_6",
+        "w1_2_5_6_7",
+        "w1_2_5_6_7_8",
+        "w1_2_5_6_7_8_13",
+        "w1_2_5_6_7_10",
+        "w1_2_5_6_7_13",
+        "w1_2_5_6_8",
+        "w1_2_5_6_8_13",
+        "w1_2_5_6_10",
+        "w1_2_5_6_13",
+        "w1_2_5_7",
+        "w1_2_5_7_8",
+        "w1_2_5_7_8_13",
+        "w1_2_5_7_10",
+        "w1_2_5_7_13",
+        "w1_2_5_8",
+        "w1_2_5_8_13",
+        "w1_2_5_10",
+        "w1_2_5_13"
+      ],
+      "collapsed": {}
+    },
+    {
+      "id": "train_tree__w1_2_3",
+      "root": "w1_2_3",
+      "is_root": false,
+      "nodes": [
+        "w1_2_3",
+        "w1_2_3_4",
+        "w1_2_3_4_5",
+        "w1_2_3_4_6",
+        "w1_2_3_4_6_9",
+        "w1_2_3_4_6_9_11",
+        "w1_2_3_4_6_9_11_12",
+        "w1_2_3_4_6_9_12",
+        "w1_2_3_4_6_11",
+        "w1_2_3_4_6_11_12",
+        "w1_2_3_4_6_12",
+        "w1_2_3_4_9",
+        "w1_2_3_4_9_11",
+        "w1_2_3_4_9_11_12",
+        "w1_2_3_4_9_12",
+        "w1_2_3_4_11",
+        "w1_2_3_4_11_12",
+        "w1_2_3_4_12",
+        "w1_2_3_5",
+        "w1_2_3_6",
+        "w1_2_3_6_7",
+        "w1_2_3_7"
+      ],
+      "collapsed": {
+        "w1_2_3_4_5": {
+          "child": "train_tree__w1_2_3_4_5",
+          "count": 47
+        },
+        "w1_2_3_5": {
+          "child": "train_tree__w1_2_3_5",
+          "count": 19
+        }
+      }
+    },
+    {
+      "id": "train_tree__w1_2_3_4_5",
+      "root": "w1_2_3_4_5",
+      "is_root": false,
+      "nodes": [
+        "w1_2_3_4_5",
+        "w1_2_3_4_5_6",
+        "w1_2_3_4_5_9",
+        "w1_2_3_4_5_9_10",
+        "w1_2_3_4_5_9_10_11",
+        "w1_2_3_4_5_9_10_11_12",
+        "w1_2_3_4_5_9_10_12",
+        "w1_2_3_4_5_9_11",
+        "w1_2_3_4_5_9_11_12",
+        "w1_2_3_4_5_9_11_12_13",
+        "w1_2_3_4_5_9_11_13",
+        "w1_2_3_4_5_9_12",
+        "w1_2_3_4_5_9_12_13",
+        "w1_2_3_4_5_9_13",
+        "w1_2_3_4_5_10",
+        "w1_2_3_4_5_10_11",
+        "w1_2_3_4_5_10_11_12",
+        "w1_2_3_4_5_10_12",
+        "w1_2_3_4_5_11",
+        "w1_2_3_4_5_11_12",
+        "w1_2_3_4_5_11_12_13",
+        "w1_2_3_4_5_11_13",
+        "w1_2_3_4_5_12",
+        "w1_2_3_4_5_12_13",
+        "w1_2_3_4_5_13"
+      ],
+      "collapsed": {
+        "w1_2_3_4_5_6": {
+          "child": "train_tree__w1_2_3_4_5_6",
+          "count": 23
+        }
+      }
+    },
+    {
+      "id": "train_tree__w1_2_3_5",
+      "root": "w1_2_3_5",
+      "is_root": false,
+      "nodes": [
+        "w1_2_3_5",
+        "w1_2_3_5_6",
+        "w1_2_3_5_6_7",
+        "w1_2_3_5_6_7_8",
+        "w1_2_3_5_6_7_8_13",
+        "w1_2_3_5_6_7_10",
+        "w1_2_3_5_6_7_13",
+        "w1_2_3_5_6_8",
+        "w1_2_3_5_6_8_13",
+        "w1_2_3_5_6_10",
+        "w1_2_3_5_6_13",
+        "w1_2_3_5_7",
+        "w1_2_3_5_7_8",
+        "w1_2_3_5_7_8_13",
+        "w1_2_3_5_7_10",
+        "w1_2_3_5_7_13",
+        "w1_2_3_5_8",
+        "w1_2_3_5_8_13",
+        "w1_2_3_5_10",
+        "w1_2_3_5_13"
+      ],
+      "collapsed": {}
+    },
+    {
+      "id": "train_tree__w1_2_3_4_5_6",
+      "root": "w1_2_3_4_5_6",
+      "is_root": false,
+      "nodes": [
+        "w1_2_3_4_5_6",
+        "w1_2_3_4_5_6_9",
+        "w1_2_3_4_5_6_9_10",
+        "w1_2_3_4_5_6_9_10_11",
+        "w1_2_3_4_5_6_9_10_11_12",
+        "w1_2_3_4_5_6_9_10_12",
+        "w1_2_3_4_5_6_9_11",
+        "w1_2_3_4_5_6_9_11_12",
+        "w1_2_3_4_5_6_9_11_12_13",
+        "w1_2_3_4_5_6_9_11_13",
+        "w1_2_3_4_5_6_9_12",
+        "w1_2_3_4_5_6_9_12_13",
+        "w1_2_3_4_5_6_9_13",
+        "w1_2_3_4_5_6_10",
+        "w1_2_3_4_5_6_10_11",
+        "w1_2_3_4_5_6_10_11_12",
+        "w1_2_3_4_5_6_10_12",
+        "w1_2_3_4_5_6_11",
+        "w1_2_3_4_5_6_11_12",
+        "w1_2_3_4_5_6_11_12_13",
+        "w1_2_3_4_5_6_11_13",
+        "w1_2_3_4_5_6_12",
+        "w1_2_3_4_5_6_12_13",
+        "w1_2_3_4_5_6_13"
+      ],
+      "collapsed": {}
     }
   ]
 }

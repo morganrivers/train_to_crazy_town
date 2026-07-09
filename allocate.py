@@ -103,7 +103,11 @@ def main():
 
     center = BY_ID[args.center]
     cred, ew, alloc = allocate(center, args.diversification, args.animal_weight)
-    baseline = max(ew[BASELINE_ORG], 1e-30)
+    # "x GiveWell" is relative to GiveWell's OWN fixed cost-effectiveness — AMF in
+    # the all-present-humans worldview (~0.00994 DALY/$), not the diversified
+    # mixture's AMF (which the meat-eater/soil-animal externalities can drag
+    # negative, making a ratio to it meaningless).
+    baseline = BY_ID["w1"]["evs"][BASELINE_ORG]
 
     print(f"\ncenter: {args.center} ({center['file']})")
     print(f"diversification: {args.diversification}   animal-weight: {args.animal_weight}\n")

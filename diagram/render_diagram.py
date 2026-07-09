@@ -9,15 +9,19 @@ build_diagram.py (which emits an editable .drawio for draw.io to render), this
 writes the raster/vector images directly, so it needs nothing but Graphviz `dot`
 on PATH — no draw.io app, no Electron.
 
-The two outputs are committed to the repo and linked from the README via their
-raw.githubusercontent URLs, so the images never depend on GitHub Pages being
-enabled.
+The tree is cut into bounded, clickable PAGES (train_tree.json's `pages`); this
+renders one PNG + SVG per page. The root page keeps the given basename; each
+collapsed subtree gets `<basename>__<subtree-root-id>.{png,svg}`. A collapsed
+boundary node is drawn with a `▼ N more worldviews` badge and hyperlinks to its
+subtree page's draw.io viewer, so the SVG is a navigable, zoom-in map. The root
+PNG + SVG are committed and linked from the README via raw.githubusercontent
+URLs, so the images never depend on GitHub Pages being enabled.
 
 Usage:  python render_diagram.py [train_tree.json] [out_basename]
-        # writes <out_basename>.png and <out_basename>.svg (default: train_tree)
+        # writes <out_basename>.png/.svg plus <out_basename>__<id>.png/.svg
 Requires Graphviz `dot` on PATH.
 """
-import json, os, subprocess, sys
+import json, os, subprocess, sys, urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from squiggle_playground import playground_url
@@ -25,6 +29,18 @@ from squiggle_playground import playground_url
 HERE = os.path.dirname(__file__)
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'train_tree.json')
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'train_tree')
+OUTDIR = os.path.dirname(OUT) or '.'
+BASE = os.path.basename(OUT)
+
+# Child-page links use the same draw.io viewer + raw-GitHub pattern as
+# build_diagram.py; keep REF a plain branch name (see that file's note).
+REPO = 'morganrivers/train_to_crazy_town'
+REF = os.environ.get('DIAGRAM_REF', 'main')
+
+
+def viewer_url(page_id):
+    raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{page_id}.drawio'
+    return 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
 
 # (fill, stroke/border, font) per stop — the craziness gradient shared with
 # build_diagram.py (calm slate at the top → hot red → override violet). A
@@ -37,9 +53,11 @@ STOP_STYLE = [
     ('#f6e0c0', '#c9932a', '#5a3f10'),   # 4 amber (no discounting)
     ('#f5d3b8', '#cc7a33', '#5a300e'),   # 5 orange (RP animals)
     ('#f2ccc0', '#c96a4a', '#5a2410'),   # 6 clay (suffering)
-    ('#eeb3b3', '#c0392b', '#5a1410'),   # 7 red (simulation)
-    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 8 violet (anti-realism)
-    ('#c9b3dd', '#4a2a78', '#201040'),   # 9 dark violet (Boltzmann)
+    ('#eec2a8', '#c65a2e', '#5a2a10'),   # 7 terracotta (meat-eater)
+    ('#e9b0a0', '#b8402a', '#511810'),   # 8 rust (net-negative lives)
+    ('#eeb3b3', '#c0392b', '#5a1410'),   # 9 red (simulation)
+    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 10 violet (anti-realism)
+    ('#c9b3dd', '#4a2a78', '#201040'),   # 11 dark violet (Boltzmann)
 ]
 
 
@@ -48,21 +66,21 @@ def esc(s):
     return str(s).replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
 
 
-def node_label(n):
-    """Worldview headline (latest assumption + accepted chain), its argmax
-    donation target, and the figure(s) who articulate the latest assumption —
-    same composition build_diagram.py bakes into draw.io."""
-    figs = ', '.join(n.get('figures', []))
+def node_label(n, collapsed):
+    """Worldview headline (latest assumption + accepted chain) and its argmax
+    donation target. A collapsed boundary shows a `▼ N more` badge instead of
+    the figures line; an expanded node shows the figures who articulate it."""
     label = n['lbl'] + '\n→ ' + n.get('top_pick', '?')
-    if figs:
-        label += '\n(' + figs + ')'
-    return label
+    if n['id'] in collapsed:
+        return label + f"\n▼ {collapsed[n['id']]['count']} more worldviews"
+    figs = ', '.join(n.get('figures', []))
+    return label + ('\n(' + figs + ')' if figs else '')
 
 
-def main():
-    G = json.load(open(SRC))
-    nodes = [n for n in G['nodes'] if not n.get('id', '').startswith('_')]
-    edges = G['edges']
+def render_page(page, nodes_by_id, edges):
+    ids = set(page['nodes'])
+    collapsed = page['collapsed']
+    nodes = [nodes_by_id[i] for i in page['nodes']]
     stops = sorted({n['stop'] for n in nodes})
 
     dot = [
@@ -75,30 +93,37 @@ def main():
         ' fontcolor="#5b6675"];',
     ]
 
-    # One dashed "STOP k" band per stop, enclosing every node at that depth.
+    # One dashed "STOP k" band per stop, enclosing every worldview at that depth.
     for s in stops:
-        fill, stroke, _ = STOP_STYLE[min(s, len(STOP_STYLE) - 1)]
+        stroke = STOP_STYLE[min(s, len(STOP_STYLE) - 1)][1]
         dot.append(f'  subgraph cluster_stop{s} {{')
         dot.append(f'    label="STOP {s}"; labeljust="l"; fontname="Helvetica-Bold";')
         dot.append(f'    fontsize=13; fontcolor="{stroke}"; color="{stroke}";')
         dot.append('    style="dashed,rounded"; penwidth=2;')
         for n in nodes:
-            if n['stop'] == s:
-                fill, stroke, font = STOP_STYLE[min(n['stop'], len(STOP_STYLE) - 1)]
-                # Same temporary-playground link the .drawio uses, so the SVG is
-                # clickable too (opens the node's model, editable, no account).
+            if n['stop'] != s:
+                continue
+            fill, stroke, font = STOP_STYLE[min(n['stop'], len(STOP_STYLE) - 1)]
+            if n['id'] in collapsed:
+                # link to the subtree's own page; double border signals "more inside"
+                url = viewer_url(collapsed[n['id']]['child'])
+                extra = ', peripheries=2, penwidth=2.4, style="rounded,filled,dashed"'
+            else:
+                # temporary-playground link, so the SVG is clickable too
                 url = playground_url(n)
-                href = f' URL="{esc(url)}", target="_blank"' if url else ''
-                dot.append(
-                    f'    "{n["id"]}"[label="{esc(node_label(n))}",'
-                    f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"{href}];')
-        # keep every worldview that rides to the same stop on one visual band
+                extra = ''
+            href = f' URL="{esc(url)}", target="_blank"' if url else ''
+            dot.append(
+                f'    "{n["id"]}"[label="{esc(node_label(n, collapsed))}",'
+                f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"{href}{extra}];')
         same = [n['id'] for n in nodes if n['stop'] == s]
         if len(same) > 1:
             dot.append('    {rank=same; ' + ' '.join(f'"{i}"' for i in same) + ';}')
         dot.append('  }')
 
     for e in edges:
+        if e['from'] not in ids or e['to'] not in ids:
+            continue
         style = 'dashed' if e.get('kind') == 'override' else 'solid'
         color = '#c0392b' if e.get('kind') == 'override' else '#9aa6b3'
         label = f', label="{esc(e["label"])}"' if e.get('label') else ''
@@ -108,14 +133,22 @@ def main():
     dot.append('}')
     src = '\n'.join(dot)
 
+    basename = BASE if page['is_root'] else page['id']
     for fmt in ('png', 'svg'):
-        out = f'{OUT}.{fmt}'
+        out = os.path.join(OUTDIR, f'{basename}.{fmt}')
         p = subprocess.run(['dot', f'-T{fmt}', '-o', out],
                            input=src, text=True, capture_output=True)
         if p.returncode != 0:
             sys.stderr.write(p.stderr)
             sys.exit(p.returncode)
         print(f'wrote {out}')
+
+
+def main():
+    G = json.load(open(SRC))
+    nodes_by_id = {n['id']: n for n in G['nodes'] if not n.get('id', '').startswith('_')}
+    for page in G['pages']:
+        render_page(page, nodes_by_id, G['edges'])
 
 
 if __name__ == '__main__':
