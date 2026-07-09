@@ -1,5 +1,5 @@
 {
-  "_comment": "GENERATED from assumptions/*.py by generate.py - do not edit by hand. Each node is a WORLDVIEW: a chain of numbered assumptions, composed by exec-ing the assumption files in craziness order. Each edge adds exactly ONE assumption (the child's highest-numbered one). 'stop' is the craziest assumption the worldview accepts - how far down the line it rides; 'depth' is how many assumptions it holds. Every worldview ranks the SAME donation slate; 'top_pick' is the Python-side argmax, matching the generated Squiggle model. REQUIRES/EXCLUDES/TERMINAL metadata on the assumptions limits which chains a real person could plausibly hold, so the combinatorial explosion stays small.",
+  "_comment": "GENERATED from assumptions/*.py by generate.py - do not edit by hand. Each node is a WORLDVIEW: a chain of numbered assumptions, composed by exec-ing the assumption files in craziness order. Each edge adds exactly ONE assumption (the child's highest-numbered one). 'stop' is the craziest assumption the worldview accepts - how far down the line it rides; 'depth' is how many assumptions it holds. Every worldview ranks the SAME donation slate; 'top_pick' is the Python-side argmax, matching the generated Squiggle model. REQUIRES/EXCLUDES/TERMINAL metadata on the assumptions limits which chains a real person could plausibly hold, so the combinatorial explosion stays small. 'pages' is the render layout: the tree is cut into bounded, clickable diagram pages (diagram/partition.py), each a subtree; a subtree big enough for its own page is COLLAPSED on its parent page to a boundary node linking to it.",
   "slate": [
     "Local soup kitchen",
     "GiveDirectly",
@@ -1067,6 +1067,69 @@
       "to": "w1_3_4_9_11",
       "label": "only this moment's feeling is real",
       "kind": "override"
+    }
+  ],
+  "pages": [
+    {
+      "id": "train_tree",
+      "root": "w0",
+      "is_root": true,
+      "nodes": [
+        "w0",
+        "w1",
+        "w1_2",
+        "w1_2_3",
+        "w1_2_5",
+        "w1_2_5_6",
+        "w1_2_5_6_7",
+        "w1_2_5_6_7_8",
+        "w1_2_5_6_8",
+        "w1_2_5_7",
+        "w1_2_5_7_8",
+        "w1_2_5_8",
+        "w1_2_6",
+        "w1_2_6_7",
+        "w1_2_7",
+        "w1_3",
+        "w1_3_4",
+        "w1_3_4_9",
+        "w1_3_4_9_10",
+        "w1_3_4_9_11"
+      ],
+      "collapsed": {
+        "w1_2_3": {
+          "child": "train_tree__w1_2_3",
+          "count": 19
+        }
+      }
+    },
+    {
+      "id": "train_tree__w1_2_3",
+      "root": "w1_2_3",
+      "is_root": false,
+      "nodes": [
+        "w1_2_3",
+        "w1_2_3_4",
+        "w1_2_3_4_5",
+        "w1_2_3_4_5_6",
+        "w1_2_3_4_5_6_9",
+        "w1_2_3_4_5_9",
+        "w1_2_3_4_6",
+        "w1_2_3_4_6_9",
+        "w1_2_3_4_9",
+        "w1_2_3_5",
+        "w1_2_3_5_6",
+        "w1_2_3_5_6_7",
+        "w1_2_3_5_6_7_8",
+        "w1_2_3_5_6_8",
+        "w1_2_3_5_7",
+        "w1_2_3_5_7_8",
+        "w1_2_3_5_8",
+        "w1_2_3_6",
+        "w1_2_3_6_7",
+        "w1_2_3_7"
+      ],
+      "collapsed": {}
     }
   ]
 }

@@ -11,18 +11,30 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
   `top_pick`, a `squiggle` model path, their accepted assumption numbers, and
   the public `figures` who most prominently articulate the latest assumption.
   Edges add one assumption each; `kind: "override"` marks the dashed-red edges
-  into the flat terminal worldviews.
+  into the flat terminal worldviews. Its `pages` field is the render layout
+  (see `partition.py`).
+- **`partition.py`** — cuts the tree into bounded, clickable **pages** so it
+  stays readable as it grows. Greedy largest-chunk-first: a subtree big enough
+  for its own page (`≥ min_page`, `≤ max_page`; defaults 8/25, override with
+  `DIAGRAM_MIN_PAGE`/`DIAGRAM_MAX_PAGE`) is split off, and on its parent page it
+  becomes a single collapsed boundary. Taking the largest fitting chunk first
+  keeps pages balanced; the `min_page` floor (and a soft-overflow fallback)
+  avoids fragmenting into tiny pages. `generate.py` bakes the result into
+  `train_tree.json`; run `python3 partition.py` to print the page layout.
 - **`graph_common.py`** — shared primitives: Graphviz `dot` run + plain-format
   parse, coordinate transform, node/edge/band/mxfile emission.
-- **`build_diagram.py`** — reads the JSON, lays the tree top→bottom with
+- **`build_diagram.py`** — reads the JSON, lays each page top→bottom with
   Graphviz (root = least crazy, at the top), bands each stop (a node's band =
   its craziest accepted assumption, STOP 0–11, on a 12-colour craziness
-  gradient), writes the editable `train_tree.drawio`, and prints the public
-  read-only draw.io view link. Requires Graphviz `dot` on PATH.
-- **`render_diagram.py`** — renders `train_tree.json` → `train_tree.png` +
-  `train_tree.svg` directly with Graphviz (no draw.io app needed). Both images
-  are committed and linked from the top-level README via their
-  raw.githubusercontent URLs, so they never depend on GitHub Pages.
+  gradient), and writes one editable `.drawio` per page: `train_tree.drawio`
+  (root) plus `train_tree__<subtree-root-id>.drawio`. A collapsed boundary is a
+  `▼ N more worldviews` node linking to its subtree's page. Prints the public
+  read-only draw.io view link for the root page. Requires Graphviz `dot`.
+- **`render_diagram.py`** — renders each page to PNG + SVG directly with
+  Graphviz (no draw.io app needed): `train_tree.{png,svg}` plus
+  `train_tree__<id>.{png,svg}`. All are committed and linked from the top-level
+  README via raw.githubusercontent URLs, so they never depend on GitHub Pages.
+  Collapsed boundaries in the SVG hyperlink to their subtree page's viewer.
 - **`squiggle_playground.py`** — turns a worldview's generated Squiggle model
   into a temporary, no-account playground link. The models are standalone, so
   the whole file is packed into the URL's `#code=` hash
@@ -35,9 +47,10 @@ Graph-generation code mirroring the Graphviz→draw.io setup in
 ## Regenerating
 
 ```bash
-python3 ../generate.py           # recompose worldviews -> train_tree.json + models
-python3 build_diagram.py         # editable .drawio + printed view link
-python3 render_diagram.py        # train_tree.png + train_tree.svg
+python3 ../generate.py           # recompose worldviews -> train_tree.json (+ pages) + models
+python3 build_diagram.py         # one editable .drawio per page + printed view link
+python3 render_diagram.py        # one PNG + SVG per page
+python3 partition.py             # print the page layout (sizes, collapse points)
 ```
 
 The committed `.drawio` is served read-only by draw.io straight from its raw

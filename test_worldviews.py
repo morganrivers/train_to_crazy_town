@@ -134,6 +134,35 @@ def test_playground_links_roundtrip():
     assert decode_playground_url(encode_playground_url(src)) == src
 
 
+def test_diagram_pages_are_bounded_and_cover_the_tree():
+    """The render layout cuts the tree into bounded, clickable pages: every
+    worldview is expanded on exactly one page, no page exceeds the cap, no
+    split-off subtree is tiny, and every collapse stub points to a real page
+    rooted at that stub."""
+    import json
+    sys.path.insert(0, os.path.join(ROOT, "diagram"))
+    from partition import DEFAULT_MAX_PAGE, DEFAULT_MIN_PAGE
+    tree = json.load(open(os.path.join(ROOT, "diagram", "train_tree.json")))
+    pages = tree["pages"]
+    by_page = {p["id"]: p for p in pages}
+
+    roots = [p for p in pages if p["is_root"]]
+    assert len(roots) == 1 and roots[0]["id"] == "train_tree"
+
+    # each worldview is the expanded (non-stub) node on exactly one page
+    expanded = [i for p in pages for i in p["nodes"] if i not in p["collapsed"]]
+    assert sorted(expanded) == sorted(n["id"] for n in tree["nodes"])
+
+    for p in pages:
+        assert len(p["nodes"]) <= DEFAULT_MAX_PAGE, f'{p["id"]} exceeds the page cap'
+        if not p["is_root"]:
+            assert len(p["nodes"]) >= DEFAULT_MIN_PAGE, f'{p["id"]} is a tiny subtree'
+        for boundary, meta in p["collapsed"].items():
+            child = by_page.get(meta["child"])
+            assert child and child["root"] == boundary and boundary in child["nodes"], \
+                f'{boundary} stub does not point at its expanded page'
+
+
 def test_allocate_uses_the_canonical_slate():
     """allocate.py ranks exactly the composed slate — same names, no extra copy."""
     import allocate

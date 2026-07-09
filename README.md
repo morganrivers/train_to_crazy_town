@@ -51,6 +51,11 @@ one.
   species' welfare range, so one unit covers human health, animals, and future
   minds). Only the assumptions change; the same optimizer returns different
   winners.
+- **The tree is too big for one screen, so it's split into pages.** A branch
+  large enough to deserve its own page is collapsed on its parent to a
+  `▼ N more worldviews` node (dashed double border); click it to open that
+  subtree's own page. The image above is the top page — the rest are one click
+  in.
 
 ## The assumptions (ordered by how crazy they are)
 
