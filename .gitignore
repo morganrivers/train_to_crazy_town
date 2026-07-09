@@ -2,11 +2,14 @@
 *.png
 *.svg
 
-# ...except the tree render itself, which IS committed and linked from the README
-# via its raw.githubusercontent URL, so the image never depends on GitHub Pages
-# being enabled. Regenerate with diagram/render_diagram.py.
+# ...except the tree renders themselves, which ARE committed and linked from the
+# README via their raw.githubusercontent URLs, so the images never depend on
+# GitHub Pages being enabled. This is the root page plus one per collapsed
+# subtree (train_tree__<id>.{png,svg}). Regenerate with diagram/render_diagram.py.
 !diagram/train_tree.png
 !diagram/train_tree.svg
+!diagram/train_tree__*.png
+!diagram/train_tree__*.svg
 
 # The generated .drawio IS committed: the repo is public, so draw.io serves it
 # read-only from its raw GitHub URL (see the view link build_diagram.py prints).

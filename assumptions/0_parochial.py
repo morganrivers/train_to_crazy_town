@@ -119,10 +119,18 @@ def coefficient(org):
     return moral_weight(org["domain"]) * welfare_range(org)
 
 
+def externality(org):
+    """Additive wDALY/$ term beyond the org's direct effect × coefficient — a
+    downstream SIDE EFFECT of funding it. Zero at the root; the meat-eater
+    problem redefines this to charge human-welfare orgs for the factory farming
+    their beneficiaries' diets cause."""
+    return 0.0
+
+
 def expected_values():
     """{org name: E[wDALY averted per $]} under this worldview — the Python-side
     twin of the generated Squiggle model's `scored` list."""
-    return {org["name"]: direct_daly_per_usd(org) * coefficient(org)
+    return {org["name"]: direct_daly_per_usd(org) * coefficient(org) + externality(org)
             for org in SLATE}
 
 
@@ -167,9 +175,14 @@ def squiggle_prelude():
 
 
 def value_expression(org):
-    """Squiggle expression for the org's E[wDALY/$] under this worldview. The
-    override assumptions at the end of the line redefine this wholesale."""
-    return f"mean({squiggle_var(org)}) * {coefficient(org):.6g}"
+    """Squiggle expression for the org's E[wDALY/$] under this worldview: its
+    direct effect times the moral coefficient, plus any additive externality.
+    The override assumptions at the end of the line redefine this wholesale."""
+    expr = f"mean({squiggle_var(org)}) * {coefficient(org):.6g}"
+    ext = externality(org)
+    if ext:
+        expr += f" + ({ext:.6g})"
+    return expr
 
 
 def squiggle(header=""):

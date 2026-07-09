@@ -24,7 +24,9 @@ import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "diagram"))
 from assumptions import worldviews as W  # noqa: E402
+import partition as P  # noqa: E402  (diagram/partition.py)
 
 TRAIN_TREE = os.path.join(ROOT, "diagram", "train_tree.json")
 SQUIGGLE_DIR = os.path.join(ROOT, "squiggle", "worldviews")
@@ -65,10 +67,14 @@ def build_train_tree(views):
                      "Python-side argmax, matching the generated Squiggle model. REQUIRES/"
                      "EXCLUDES/TERMINAL metadata on the assumptions limits which chains a "
                      "real person could plausibly hold, so the combinatorial explosion "
-                     "stays small."),
+                     "stays small. 'pages' is the render layout: the tree is cut into "
+                     "bounded, clickable diagram pages (diagram/partition.py), each a "
+                     "subtree; a subtree big enough for its own page is COLLAPSED on its "
+                     "parent page to a boundary node linking to it."),
         "slate": [o["name"] for o in W.slate()],
         "nodes": nodes,
         "edges": edges,
+        "pages": P.partition(nodes),
     }
     return json.dumps(tree, indent=2, ensure_ascii=False) + "\n"
 

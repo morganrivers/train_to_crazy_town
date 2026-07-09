@@ -67,18 +67,19 @@ jobs:
       - name: Assert the render produced non-empty images
         run: |
           set -e
-          for f in diagram/train_tree.png diagram/train_tree.svg; do
-            test -s "$f" || { echo "::error::$f is missing or empty"; exit 1; }
-          done
+          # the root page plus one PNG/SVG per collapsed subtree page
+          test -s diagram/train_tree.png || { echo "::error::root PNG missing/empty"; exit 1; }
           file diagram/train_tree.png | grep -q 'PNG image data' \
             || { echo "::error::train_tree.png is not a valid PNG"; exit 1; }
-          echo "Render OK:"; ls -l diagram/train_tree.png diagram/train_tree.svg
+          for f in diagram/train_tree*.png diagram/train_tree*.svg; do
+            test -s "$f" || { echo "::error::$f is missing or empty"; exit 1; }
+          done
+          echo "Render OK:"; ls -l diagram/train_tree*.png diagram/train_tree*.svg
 
       - name: Assemble Pages site
         run: |
           mkdir -p _site
-          cp diagram/train_tree.png _site/train_tree.png
-          cp diagram/train_tree.svg _site/train_tree.svg
+          cp diagram/train_tree*.png diagram/train_tree*.svg _site/
           touch _site/.nojekyll
           cat > _site/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>Train to crazy town - diagram</title>

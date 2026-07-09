@@ -1,5 +1,5 @@
-// === Train to crazy town — worldview w1_3_4_7_8 (stop 8) ===
-// Assumption chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 7 living_in_simulation → 8 morality_is_not_real
+// === Train to crazy town — worldview w1_3_4_9_10 (stop 10) ===
+// Assumption chain: 0 parochial → 1 far_away_humans → 3 future_humans_matter_with_discounting → 4 no_discounting_future_humans → 9 living_in_simulation → 10 morality_is_not_real
 // Each assumption is a Python file in assumptions/ that adds, redefines or
 // re-parameterises the chain's functions; composing the chain rendered this
 // standalone model. `worldviewEv` is the expected value of this worldview.
