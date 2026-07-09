@@ -19,7 +19,7 @@ futureDiscount = Sym.lognormal({p5: 0.0012, p95: 0.03})  // pure-time + catastro
 // grounded in the source cited on it.
 soupKitchenPeopleHelpedPerUsd = Sym.lognormal({p5: 0.05, p95: 0.5})
 soupKitchenWellbeingGainDaly = Sym.lognormal({p5: 0.001, p95: 0.01})
-soupKitchenCounterfactualBankValue = 0.3
+soupKitchenCounterfactualBankValue = Sym.uniform(0.1, 0.5)
 soupKitchenDalyPerUsd = soupKitchenPeopleHelpedPerUsd * soupKitchenWellbeingGainDaly * (1 - soupKitchenCounterfactualBankValue)
 // https://www.givewell.org/international/technical/programs/cash-transfers
 gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})
@@ -43,7 +43,7 @@ redwoodDalyPerUsd = Sym.lognormal({p5: 0.2, p95: 20000})
 // same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of
 // `dist`, which is what the ranking sorts by.
 scored = [
-  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - soupKitchenCounterfactualBankValue)) * 1 },
+  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - mean(soupKitchenCounterfactualBankValue))) * 1 },
   { name: "GiveDirectly", dist: gdDalyPerUsd * 1, wdalyPerUsd: mean(gdDalyPerUsd) * 1 },
   { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * 1, wdalyPerUsd: mean(amfDalyPerUsd) * 1 },
   { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * 1, wdalyPerUsd: mean(aimDalyPerUsd) * 1 },

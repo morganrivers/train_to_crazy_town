@@ -13,7 +13,7 @@
 // grounded in the source cited on it.
 soupKitchenPeopleHelpedPerUsd = Sym.lognormal({p5: 0.05, p95: 0.5})
 soupKitchenWellbeingGainDaly = Sym.lognormal({p5: 0.001, p95: 0.01})
-soupKitchenCounterfactualBankValue = 0.3
+soupKitchenCounterfactualBankValue = Sym.uniform(0.1, 0.5)
 soupKitchenDalyPerUsd = soupKitchenPeopleHelpedPerUsd * soupKitchenWellbeingGainDaly * (1 - soupKitchenCounterfactualBankValue)
 // https://www.givewell.org/international/technical/programs/cash-transfers
 gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})
@@ -37,10 +37,10 @@ redwoodDalyPerUsd = Sym.lognormal({p5: 0.2, p95: 20000})
 // same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of
 // `dist`, which is what the ranking sorts by.
 scored = [
-  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * (1 + (-0.101156)), wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - soupKitchenCounterfactualBankValue)) * (1 + (-0.101156)) },
-  { name: "GiveDirectly", dist: gdDalyPerUsd * (1 + (-0.101156)), wdalyPerUsd: mean(gdDalyPerUsd) * (1 + (-0.101156)) },
-  { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * (1 + (-0.101156)), wdalyPerUsd: mean(amfDalyPerUsd) * (1 + (-0.101156)) },
-  { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * (1 + (-0.101156)), wdalyPerUsd: mean(aimDalyPerUsd) * (1 + (-0.101156)) },
+  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * (1 + (-0.094781)), wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - mean(soupKitchenCounterfactualBankValue))) * (1 + (-0.094781)) },
+  { name: "GiveDirectly", dist: gdDalyPerUsd * (1 + (-0.094781)), wdalyPerUsd: mean(gdDalyPerUsd) * (1 + (-0.094781)) },
+  { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * (1 + (-0.094781)), wdalyPerUsd: mean(amfDalyPerUsd) * (1 + (-0.094781)) },
+  { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * (1 + (-0.094781)), wdalyPerUsd: mean(aimDalyPerUsd) * (1 + (-0.094781)) },
   { name: "The Humane League", dist: thlDalyPerUsd * 0.0505781, wdalyPerUsd: mean(thlDalyPerUsd) * 0.0505781 },
   { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0, wdalyPerUsd: mean(swpDalyPerUsd) * 0 },
   { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0 },

@@ -10,7 +10,14 @@
 // is a 90% CI; Sym.beta is a probability, bounded to [0, 1]. Factors are
 // independent, so each org's E[wDALY/$] below factorises exactly into the
 // product of the means.
+flourishingDiscount = Sym.lognormal({p5: 0.08, p95: 0.8})  // reduced weight on creating happiness (Tomasik; Vinding 2020)
+sufferingPriority = Sym.lognormal({p5: 1.1, p95: 6.5})  // extra weight on averting intense suffering (Tomasik; Vinding 2020)
+soilScaleBoost = Sym.lognormal({p5: 1.4, p95: 12})  // wild-invert work proxies the ~10^19 soil animals (Grilo)
 futureDiscount = 1  // pure-time + catastrophe attenuation on far-future value (Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)
+
+// Marginal cost-effectiveness of resilient foods over AGI safety, as a
+// distribution calibrated so P(ratio > 1) ~= 98% (Denkenberger & Pearce).
+resilientFoodsVsAgi = Sym.lognormal({p5: 1.25, p95: 6.9})
 
 // Direct effect on each org's primary beneficiary, BEFORE moral
 // weighting. Sym.lognormal({p5, p95}) is the lognormal whose two-sided
@@ -19,7 +26,7 @@ futureDiscount = 1  // pure-time + catastrophe attenuation on far-future value (
 // grounded in the source cited on it.
 soupKitchenPeopleHelpedPerUsd = Sym.lognormal({p5: 0.05, p95: 0.5})
 soupKitchenWellbeingGainDaly = Sym.lognormal({p5: 0.001, p95: 0.01})
-soupKitchenCounterfactualBankValue = 0.3
+soupKitchenCounterfactualBankValue = Sym.uniform(0.1, 0.5)
 soupKitchenDalyPerUsd = soupKitchenPeopleHelpedPerUsd * soupKitchenWellbeingGainDaly * (1 - soupKitchenCounterfactualBankValue)
 // https://www.givewell.org/international/technical/programs/cash-transfers
 gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})
@@ -43,15 +50,15 @@ redwoodDalyPerUsd = Sym.lognormal({p5: 0.2, p95: 20000})
 // same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of
 // `dist`, which is what the ranking sorts by.
 scored = [
-  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * (0.3 + (-110000)), wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - soupKitchenCounterfactualBankValue)) * (0.3 + (-110000)) },
-  { name: "GiveDirectly", dist: gdDalyPerUsd * (0.3 + (-110000)), wdalyPerUsd: mean(gdDalyPerUsd) * (0.3 + (-110000)) },
-  { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * (3 + (-110000)), wdalyPerUsd: mean(amfDalyPerUsd) * (3 + (-110000)) },
-  { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * (0.3 + (-110000)), wdalyPerUsd: mean(aimDalyPerUsd) * (0.3 + (-110000)) },
-  { name: "The Humane League", dist: thlDalyPerUsd * 0.996, wdalyPerUsd: mean(thlDalyPerUsd) * 0.996 },
-  { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0.093, wdalyPerUsd: mean(swpDalyPerUsd) * 0.093 },
-  { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0.15, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0.15 },
-  { name: "ALLFED", dist: 3 * (redwoodDalyPerUsd * 0.3 * futureDiscount), wdalyPerUsd: 3 * (mean(redwoodDalyPerUsd) * 0.3 * futureDiscount) },
-  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 0.3 * futureDiscount, wdalyPerUsd: mean(redwoodDalyPerUsd) * 0.3 * futureDiscount },
+  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * (1 * flourishingDiscount + (-108698)), wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - mean(soupKitchenCounterfactualBankValue))) * (1 * mean(flourishingDiscount) + (-108698)) },
+  { name: "GiveDirectly", dist: gdDalyPerUsd * (1 * flourishingDiscount + (-108698)), wdalyPerUsd: mean(gdDalyPerUsd) * (1 * mean(flourishingDiscount) + (-108698)) },
+  { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * (1 * sufferingPriority + (-108698)), wdalyPerUsd: mean(amfDalyPerUsd) * (1 * mean(sufferingPriority) + (-108698)) },
+  { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * (1 * flourishingDiscount + (-108698)), wdalyPerUsd: mean(aimDalyPerUsd) * (1 * mean(flourishingDiscount) + (-108698)) },
+  { name: "The Humane League", dist: thlDalyPerUsd * 0.332 * sufferingPriority, wdalyPerUsd: mean(thlDalyPerUsd) * 0.332 * mean(sufferingPriority) },
+  { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0.031 * sufferingPriority, wdalyPerUsd: mean(swpDalyPerUsd) * 0.031 * mean(sufferingPriority) },
+  { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0.01 * sufferingPriority * soilScaleBoost, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0.01 * mean(sufferingPriority) * mean(soilScaleBoost) },
+  { name: "ALLFED", dist: resilientFoodsVsAgi * (redwoodDalyPerUsd * 1 * futureDiscount * flourishingDiscount), wdalyPerUsd: mean(resilientFoodsVsAgi) * (mean(redwoodDalyPerUsd) * 1 * futureDiscount * mean(flourishingDiscount)) },
+  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 1 * futureDiscount * flourishingDiscount, wdalyPerUsd: mean(redwoodDalyPerUsd) * 1 * futureDiscount * mean(flourishingDiscount) },
 ]
 
 ranking = List.reverse(List.sortBy(scored, {|x| x.wdalyPerUsd}))

@@ -60,9 +60,13 @@ SLATE = [
     {"id": "soup_kitchen", "name": "Local soup kitchen", "domain": "local_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
      "source": "worked BOTEC (subjective-wellbeing scale of a hot-meal program)",
+     # counterfactual_bank_value: the fraction of the donation's welfare value
+     # the money would have produced anyway sitting in a bank (consumption
+     # smoothing / eventual spending) — a uniform [lo, hi] with mean 0.3,
+     # since a symmetric bounded fraction has no lognormal-style tail.
      "botec": {"people_helped_per_usd": [0.05, 0.5],
                "wellbeing_gain_daly": [0.001, 0.01],
-               "counterfactual_bank_value": 0.3}},
+               "counterfactual_bank_value": [0.1, 0.5]}},
     {"id": "gd", "name": "GiveDirectly", "domain": "global_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
      "source": "GiveWell cash benchmark; ~1/10 of top charities per $",
@@ -133,13 +137,20 @@ def lognormal_mean(lo, hi):
     return math.exp(mu + sigma * sigma / 2)
 
 
+def uniform_mean(lo, hi):
+    """E[X] for uniform [lo, hi] — matches Squiggle's mean(Sym.uniform)."""
+    return (lo + hi) / 2
+
+
 def direct_daly_per_usd(org):
-    """Point estimate of the org's direct effect, before moral weighting."""
+    """Exact E[direct effect] of the org, before moral weighting: the factors
+    are independent, so the expectation of the product is the product of the
+    expectations (and E[1-X] = 1-E[X] by linearity)."""
     if "botec" in org:
         b = org["botec"]
         return (lognormal_mean(*b["people_helped_per_usd"])
                 * lognormal_mean(*b["wellbeing_gain_daly"])
-                * (1 - b["counterfactual_bank_value"]))
+                * (1 - uniform_mean(*b["counterfactual_bank_value"])))
     return lognormal_mean(*org["daly_per_usd"])
 
 
@@ -255,10 +266,11 @@ def squiggle_dist_lines(org):
     var = squiggle_var(org)
     if "botec" in org:
         b, p = org["botec"], _camel(org["id"])
+        cb_lo, cb_hi = b["counterfactual_bank_value"]
         return [
             f"{p}PeopleHelpedPerUsd = {_sym_lognormal(*b['people_helped_per_usd'])}",
             f"{p}WellbeingGainDaly = {_sym_lognormal(*b['wellbeing_gain_daly'])}",
-            f"{p}CounterfactualBankValue = {_sq_num(b['counterfactual_bank_value'])}",
+            f"{p}CounterfactualBankValue = Sym.uniform({_sq_num(cb_lo)}, {_sq_num(cb_hi)})",
             f"{var} = {p}PeopleHelpedPerUsd * {p}WellbeingGainDaly"
             f" * (1 - {p}CounterfactualBankValue)",
         ]
@@ -273,7 +285,7 @@ def squiggle_mean_expr(org):
     if "botec" in org:
         p = _camel(org["id"])
         return (f"(mean({p}PeopleHelpedPerUsd) * mean({p}WellbeingGainDaly)"
-                f" * (1 - {p}CounterfactualBankValue))")
+                f" * (1 - mean({p}CounterfactualBankValue)))")
     return f"mean({squiggle_var(org)})"
 
 

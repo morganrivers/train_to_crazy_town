@@ -10,8 +10,14 @@
 // is a 90% CI; Sym.beta is a probability, bounded to [0, 1]. Factors are
 // independent, so each org's E[wDALY/$] below factorises exactly into the
 // product of the means.
+invertWelfareShrink = Sym.lognormal({p5: 0.0008, p95: 0.015})  // Bayesian shrink on RP's shrimp welfare range (Sempere 2023)
+wildInvertWelfareShrink = Sym.lognormal({p5: 0.0003, p95: 0.006})  // Bayesian shrink on RP's insect welfare range (Sempere 2023)
 futureDiscount = 1  // pure-time + catastrophe attenuation on far-future value (Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)
 simulationContinues = Sym.beta(1, 9)  // P(simulation runs long enough for the far future) — Bostrom 2003
+
+// Marginal cost-effectiveness of resilient foods over AGI safety, as a
+// distribution calibrated so P(ratio > 1) ~= 98% (Denkenberger & Pearce).
+resilientFoodsVsAgi = Sym.lognormal({p5: 1.25, p95: 6.9})
 
 // Direct effect on each org's primary beneficiary, BEFORE moral
 // weighting. Sym.lognormal({p5, p95}) is the lognormal whose two-sided
@@ -20,7 +26,7 @@ simulationContinues = Sym.beta(1, 9)  // P(simulation runs long enough for the f
 // grounded in the source cited on it.
 soupKitchenPeopleHelpedPerUsd = Sym.lognormal({p5: 0.05, p95: 0.5})
 soupKitchenWellbeingGainDaly = Sym.lognormal({p5: 0.001, p95: 0.01})
-soupKitchenCounterfactualBankValue = 0.3
+soupKitchenCounterfactualBankValue = Sym.uniform(0.1, 0.5)
 soupKitchenDalyPerUsd = soupKitchenPeopleHelpedPerUsd * soupKitchenWellbeingGainDaly * (1 - soupKitchenCounterfactualBankValue)
 // https://www.givewell.org/international/technical/programs/cash-transfers
 gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})
@@ -44,14 +50,14 @@ redwoodDalyPerUsd = Sym.lognormal({p5: 0.2, p95: 20000})
 // same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of
 // `dist`, which is what the ranking sorts by.
 scored = [
-  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - soupKitchenCounterfactualBankValue)) * 1 },
+  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - mean(soupKitchenCounterfactualBankValue))) * 1 },
   { name: "GiveDirectly", dist: gdDalyPerUsd * 1, wdalyPerUsd: mean(gdDalyPerUsd) * 1 },
   { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * 1, wdalyPerUsd: mean(amfDalyPerUsd) * 1 },
   { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * 1, wdalyPerUsd: mean(aimDalyPerUsd) * 1 },
   { name: "The Humane League", dist: thlDalyPerUsd * 0.332, wdalyPerUsd: mean(thlDalyPerUsd) * 0.332 },
-  { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0.000155, wdalyPerUsd: mean(swpDalyPerUsd) * 0.000155 },
-  { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 2e-05, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 2e-05 },
-  { name: "ALLFED", dist: 3 * (redwoodDalyPerUsd * 1 * futureDiscount * simulationContinues), wdalyPerUsd: 3 * (mean(redwoodDalyPerUsd) * 1 * futureDiscount * mean(simulationContinues)) },
+  { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0.031 * invertWelfareShrink, wdalyPerUsd: mean(swpDalyPerUsd) * 0.031 * mean(invertWelfareShrink) },
+  { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0.01 * wildInvertWelfareShrink, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0.01 * mean(wildInvertWelfareShrink) },
+  { name: "ALLFED", dist: resilientFoodsVsAgi * (redwoodDalyPerUsd * 1 * futureDiscount * simulationContinues), wdalyPerUsd: mean(resilientFoodsVsAgi) * (mean(redwoodDalyPerUsd) * 1 * futureDiscount * mean(simulationContinues)) },
   { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 1 * futureDiscount * simulationContinues, wdalyPerUsd: mean(redwoodDalyPerUsd) * 1 * futureDiscount * mean(simulationContinues) },
 ]
 
