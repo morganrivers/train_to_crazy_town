@@ -2,7 +2,7 @@
 
 The full longtermist move: a person's moment in time is as morally irrelevant
 as their location. This assumption CHANGES A PARAMETER — it redefines
-`future_discount` (added by assumption 3) from 0.1 to 1.0 — and REDEFINES
+`future_discount` (added by assumption 3) from 0.01 to 1.0 — and REDEFINES
 `moral_weight` so existential-risk work (which buys the whole undiscounted
 future) enters the circle. Everything else in the chain is untouched: the same
 `coefficient` wrapper from assumption 3 now multiplies by 1.
@@ -27,7 +27,7 @@ _no_xrisk_moral_weight = moral_weight  # noqa: F821
 
 
 def future_discount():
-    """PARAMETER CHANGED: assumption 3 said 0.1; the moment in time a person
+    """PARAMETER CHANGED: assumption 3 said 0.01; the moment in time a person
     lives is now as irrelevant as where they live."""
     return 1.0
 

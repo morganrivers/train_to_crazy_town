@@ -5,7 +5,7 @@ files** in this directory, and every derived representation is generated from
 them; nothing lives twice:
 
 ```
-                 assumptions/*.py  (0_parochial … 9_boltzmann_brain)
+                 assumptions/*.py  (0_parochial … 15_boltzmann_brain)
                           │  composed per worldview by worldviews.py
                           │  (exec the chain, in craziness order, in one namespace)
         ┌─────────────────┼───────────────────────────┐

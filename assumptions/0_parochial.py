@@ -114,11 +114,22 @@ SLATE = [
 
 
 # ---- point estimates (mirror Squiggle's mean of a lognormal 90% CI) ----------
+# Squiggle's `lo to hi` is the lognormal whose 5th/95th percentiles are lo/hi;
+# Z90 = Phi^-1(0.95) is the normal deviate of a two-sided 90% interval.
+Z90 = 1.6448536269514722
+
+
 def lognormal_mean(lo, hi):
-    """E[X] for the lognormal whose 90% CI is [lo, hi] — exactly what Squiggle's
-    mean(lo to hi) returns, so the Python-side ranking agrees with the model."""
+    """E[X] for the lognormal whose two-sided 90% CI is [lo, hi]: with
+    mu = (ln lo + ln hi)/2 and sigma = (ln hi - ln lo)/(2 Z90),
+    E[X] = exp(mu + sigma^2/2) — exactly what Squiggle's mean(lo to hi)
+    returns, so the Python-side ranking agrees with the generated model.
+    Note the mean sits ABOVE the median exp(mu): wide order-of-magnitude
+    CIs are right-skewed, and expectations are dominated by their upper tail."""
+    if lo == hi:  # a degenerate "distribution": an assumption pinning the value
+        return float(lo)
     mu = (math.log(lo) + math.log(hi)) / 2
-    sigma = (math.log(hi) - math.log(lo)) / (2 * 1.6448536269514722)
+    sigma = (math.log(hi) - math.log(lo)) / (2 * Z90)
     return math.exp(mu + sigma * sigma / 2)
 
 
