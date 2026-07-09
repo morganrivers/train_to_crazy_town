@@ -11,6 +11,16 @@ model opens in a live, editable [Squiggle](https://www.squiggle-language.com)
 playground — no account needed — so you can change any number and watch the
 ranking re-rank.
 
+[![Train to crazy town — worldview tree](diagram/train_tree.png)](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)
+
+**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
+(read-only draw.io viewer, no account, pan/zoom; hover a node for its story,
+click it for its live model — draw.io serves the committed `train_tree.drawio`
+straight from its raw GitHub URL). Also available as
+[PNG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png)
+/ [SVG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg)
+(the SVG is clickable too).
+
 ## The metaphor
 
 The "train to crazy town" is Ajeya Cotra's image (80,000 Hours podcast #90,
@@ -27,18 +37,7 @@ at any stop. Near-termists get off early (measurable global health);
 longtermists ride further. A later stop can retroactively reframe an earlier
 one.
 
-## The tree
-
-![Train to crazy town — worldview tree](diagram/train_tree.png)
-
-**[Open the interactive diagram](https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio)**
-(read-only draw.io viewer; hover a node for its story, click it for its live
-model). Also available as
-[PNG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.png)
-/ [SVG](https://raw.githubusercontent.com/morganrivers/train_to_crazy_town/main/diagram/train_tree.svg)
-(the SVG is clickable too).
-
-How to read it:
+## How to read the tree
 
 - **A node is a worldview** — a chain of numbered assumptions (the `[1+2+5]`
   tag), with the donation target that worldview ranks first and the public
