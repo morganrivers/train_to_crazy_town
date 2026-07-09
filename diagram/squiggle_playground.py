@@ -1,14 +1,12 @@
 """
-squiggle_playground.py — turn a node's Squiggle model into a temporary,
+squiggle_playground.py — turn a worldview's Squiggle model into a temporary,
 no-account Squiggle *playground* link.
 
-Clicking a node in the diagram should open its model, live and editable, with no
-Squiggle Hub account. The on-disk node files (squiggle/nodes/*.squiggle) can't be
-opened directly for that: they `import "hub:morganrivers/..."`, and those imports
-only resolve once the models are published to a Hub account. So for each node we
-build ONE self-contained source — base_model inlined, and the node's PARENT
-import chain resolved to a flat `coeffs` record — which runs and stays editable on
-its own, then pack it into the playground URL hash.
+Clicking a node in the diagram opens its model, live and editable, with no
+Squiggle Hub account. The generated models (squiggle/worldviews/*.squiggle) are
+STANDALONE — the assumption chain is composed in Python before the Squiggle is
+rendered, so there are no imports to resolve — which means the file content can
+be packed straight into the playground URL hash.
 
 URL format is byte-for-byte what Squiggle's own playground.ts produces:
 
@@ -25,17 +23,11 @@ link.
 import base64
 import json
 import os
-import sys
 import urllib.parse
 import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-BASE_MODEL = os.path.join(ROOT, "squiggle", "base_model.squiggle")
-
-# data/model.py is the single source of truth for the coefficient chain.
-sys.path.insert(0, os.path.join(ROOT, "data"))
-import model as M  # noqa: E402
 
 PLAYGROUND = "https://www.squiggle-language.com/playground"
 
@@ -57,75 +49,27 @@ def decode_playground_url(url):
     return json.loads(zlib.decompress(compressed).decode("utf-8"))["defaultCode"]
 
 
-# ---- self-contained source per node -----------------------------------------
-def _sq(v):
-    """Render a resolved-coeff scalar as Squiggle source."""
-    if isinstance(v, bool):
-        return "true" if v else "false"
-    if isinstance(v, str):
-        return f'"{v}"'
-    if isinstance(v, float) and v.is_integer():
-        return str(int(v))
-    return repr(v)
-
-
-def _base_model_inline():
-    """base_model.squiggle as inline source: its top-level `export`s become plain
-    bindings so `defaults`/`evaluate` are usable directly (no `base.` prefix)."""
-    text = open(BASE_MODEL).read()
-    return "\n".join(
-        line[len("export "):] if line.startswith("export ") else line
-        for line in text.splitlines()
-    )
-
-
-def self_contained_source(node_id):
-    """The full, import-free Squiggle source for one node id: base_model inlined
-    plus this stop's resolved coefficient record and the ranking call. Runs as-is
-    in the playground or via `node run.mjs` — identical ranking to the Hub-import
-    version, just with the parent chain already merged."""
-    stop = M.stop_by_id(node_id)
-    coeffs = M.resolved_coeffs(stop)
-    headline = " ".join(stop["label"].split("\n"))
-    coeff_lines = "\n".join(f"  {k}: {_sq(v)}," for k, v in coeffs.items())
-    return (
-        f"// === Train to crazy town — {headline} (Stop {stop['stop']}) ===\n"
-        f"// Self-contained playground copy of squiggle/nodes/{node_id}.squiggle:\n"
-        f"// base_model is inlined and this stop's PARENT import chain is already\n"
-        f"// resolved into the flat `coeffs` record below, so it runs and stays\n"
-        f"// editable with NO Squiggle Hub account. Edit any coefficient (or a slate\n"
-        f"// BOTEC) and the ranking re-ranks live. Generated from data/model.json.\n"
-        f"\n"
-        f"{_base_model_inline()}\n"
-        f"\n"
-        f"// ---- this stop's resolved coefficients (parent chain already merged) ----\n"
-        f"coeffs = {{\n"
-        f"{coeff_lines}\n"
-        f"}}\n"
-        f"\n"
-        f"ranking = evaluate(coeffs)\n"
-    )
-
-
 def playground_url(node):
     """A node dict (from train_tree.json) -> its playground URL, or None if the
-    node has no Squiggle model (e.g. the soil-animal branch has no published
-    BOTEC to copy yet)."""
+    node carries no Squiggle model path."""
     if not node.get("squiggle"):
         return None
-    return encode_playground_url(self_contained_source(node["id"]))
+    with open(os.path.join(ROOT, *node["squiggle"].split("/"))) as f:
+        return encode_playground_url(f.read())
 
 
 # ---- self-test --------------------------------------------------------------
-def roundtrip(node_id):
+def roundtrip(node):
     """encode -> decode reproduces the source byte-for-byte (local guarantee)."""
-    src = self_contained_source(node_id)
+    with open(os.path.join(ROOT, *node["squiggle"].split("/"))) as f:
+        src = f.read()
     return decode_playground_url(encode_playground_url(src)) == src
 
 
 if __name__ == "__main__":
-    for s in M.squiggle_stops():
-        url = encode_playground_url(self_contained_source(s["id"]))
-        assert roundtrip(s["id"]), f"roundtrip failed for {s['id']}"
-        print(f"{s['id']:16} {len(url):5d} chars  {url[:72]}…")
+    tree = json.load(open(os.path.join(HERE, "train_tree.json")))
+    for node in tree["nodes"]:
+        url = playground_url(node)
+        assert roundtrip(node), f"roundtrip failed for {node['id']}"
+        print(f"{node['id']:16} {len(url):5d} chars  {url[:72]}…")
     print("\nall links round-trip (decode reproduces the source byte-for-byte)")

@@ -3,6 +3,11 @@ name: diagram
 # Regenerate the worldview-tree diagram, verify the render pipeline, and (from
 # the default branch) publish it to GitHub Pages.
 #
+# The diagram is built from the assumptions/ layout: generate.py runs the
+# Python assumption chain for every worldview (node), which renders that
+# worldview's standalone Squiggle model and the graph JSON; build_diagram.py
+# then lays the tree out and prints the public draw.io view link.
+#
 # Two independent ways the images reach a reader, so neither is a single point of
 # failure:
 #   1. The rendered PNG + SVG are COMMITTED (diagram/train_tree.{png,svg}) and
@@ -15,16 +20,17 @@ name: diagram
 #      only) fails fast; the `render` job and the committed raw-URL images are
 #      unaffected.
 #
-# Regenerate locally after changing the diagram:
+# Regenerate locally after changing the assumptions or the diagram:
+#     python generate.py                   # worldview graph + squiggle models
 #     python diagram/build_diagram.py      # editable .drawio
 #     python diagram/render_diagram.py     # train_tree.png + train_tree.svg
-#     git add diagram/train_tree.*
+#     git add diagram/train_tree.* squiggle/worldviews
 
 on:
   push:
-    paths: ["diagram/**", "data/model.json", ".github/workflows/diagram.yml"]
+    paths: ["diagram/**", "assumptions/**", "generate.py", ".github/workflows/diagram.yml"]
   pull_request:
-    paths: ["diagram/**", "data/model.json", ".github/workflows/diagram.yml"]
+    paths: ["diagram/**", "assumptions/**", "generate.py", ".github/workflows/diagram.yml"]
   workflow_dispatch:
 
 permissions:
@@ -48,6 +54,9 @@ jobs:
 
       - name: Install Graphviz (dot)
         run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Run the assumption chains (assert generated files are current)
+        run: python generate.py --check
 
       - name: Build editable .drawio from train_tree.json
         run: python diagram/build_diagram.py
@@ -74,8 +83,14 @@ jobs:
           cat > _site/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>Train to crazy town - diagram</title>
           <h1>Train to crazy town</h1>
-          <p><a href="train_tree.svg">SVG</a> &middot; <a href="train_tree.png">PNG</a></p>
-          <img src="train_tree.svg" alt="Worldview tree" style="max-width:100%">
+          <p>Every node is a worldview; click one to open its Squiggle model in a
+          live playground.
+          <a href="https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fmorganrivers%2Ftrain_to_crazy_town%2Fmain%2Fdiagram%2Ftrain_tree.drawio">draw.io viewer</a>
+          &middot; <a href="train_tree.svg">SVG</a> &middot; <a href="train_tree.png">PNG</a></p>
+          <!-- <object>, not <img>: keeps the SVG's clickable node links working -->
+          <object data="train_tree.svg" type="image/svg+xml" style="max-width:100%">
+            <img src="train_tree.png" alt="Worldview tree" style="max-width:100%">
+          </object>
           HTML
 
       - name: Upload rendered diagram (downloadable from any run)

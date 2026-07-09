@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """
 Build an editable draw.io diagram of the *train to crazy town* worldview tree
-from train_tree.json, using Graphviz for a top-to-bottom layered layout (root =
-least crazy, at the top). Mirrors the setup in morganrivers/iati_webapp
+from train_tree.json (generated from assumptions/ by generate.py), using
+Graphviz for a top-to-bottom layered layout (root = least crazy, at the top).
+Mirrors the setup in morganrivers/iati_webapp
 (docs/diagram/build_webapp_drawio.py): all layout/emit machinery is shared via
 graph_common.py; this script only defines the tree's stop bands, the
-craziness-gradient colours, and the (stubbed) per-node Guesstimate links.
+craziness-gradient colours, and the per-node Squiggle playground links.
+
+Each node is a WORLDVIEW (a chain of assumptions); each edge adds exactly one
+assumption. A node's band ("STOP k") is its craziest accepted assumption — how
+far down the line that worldview rides.
 
 Usage:  python build_diagram.py [train_tree.json] [out.drawio]
 Requires Graphviz 'dot' on PATH.
-
-Render step: this only writes the editable .drawio. Turning it into PNG/SVG is a
-separate stub (render_diagram.py); those raster/vector outputs are .gitignored
-and are NOT committed.
 """
 import json, sys, os
 from graph_common import (run_dot, transforms, decl, emit_node, emit_edges,
@@ -30,17 +31,19 @@ edges = G['edges']
 # ---------- per-node model links --------------------------------------------
 # Each node opens its Squiggle model in a TEMPORARY playground link: clicking a
 # node loads the model live and editable, with no Squiggle Hub account. The
-# link's hash carries a self-contained copy of the model (base_model inlined and
-# the node's parent import chain resolved to a flat coeffs record), so it runs on
-# its own — the on-disk `import "hub:..."` files can't, since those imports only
-# resolve once published to an account. See squiggle_playground.py for the
-# encoding (identical to Squiggle's own playground.ts) and the run.mjs check that
-# the inlined model ranks identically to the Hub-import version.
+# generated worldview models are standalone (the assumption chain is composed in
+# Python before the Squiggle is rendered), so the whole file rides in the link's
+# #code= hash. See squiggle_playground.py for the encoding (identical to
+# Squiggle's own playground.ts).
+# NOTE: keep REF a plain branch name (no refs/heads/ prefix). draw.io's viewer
+# recognises raw.githubusercontent.com/<user>/<repo>/<branch>/<path> URLs and
+# re-parses them into its GitHub handler; extra path segments make it read the
+# branch as "refs" and fail with "File not found".
 REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'refs/heads/main')
+REF = os.environ.get('DIAGRAM_REF', 'main')
 
 for n in nodes:
-    link = playground_url(n)   # None if the node has no model (soil-animal branch)
+    link = playground_url(n)
     if link:
         n['link'] = link
 
@@ -54,35 +57,36 @@ def size(n):
     return w, h
 
 
-# Compose the node label: assumption headline, its argmax donation target, and
-# the public figure(s) who most prominently articulate that stop's worldview.
-# Mark subgraph nodes so it is obvious where a child tree will open.
+# Compose the node label: worldview headline (latest assumption + accepted
+# chain), its argmax donation target, and the public figure(s) who most
+# prominently articulate the latest assumption.
 for n in nodes:
-    tag = '  ▼' if n.get('subgraph') else ''   # ▼ = click to open sub-tree (TBD)
     figs = ', '.join(n.get('figures', []))
-    n['lbl'] = n['lbl'] + '\n→ ' + n.get('top_pick', '?') + tag + ('\n(' + figs + ')' if figs else '')
+    n['lbl'] = n['lbl'] + '\n→ ' + n.get('top_pick', '?') + ('\n(' + figs + ')' if figs else '')
     n['w'], n['h'] = size(n)
 
 
 # ---------- craziness gradient (calm slate at the top → hot at the bottom) ---
-# Colour encodes how far down the train a stop is. Later this can be replaced by
-# a real instability metric (how much the ranking swings under a small
-# perturbation of that stop's newest parameter).
+# Colour encodes how far down the train a worldview rides: its craziest
+# accepted assumption, 0 (parochial) to 9 (Boltzmann brain).
 STOP_STYLE = [
-    'fillColor=#dfe7ef;strokeColor=#6b7f96;fontColor=#1b2733;',   # 0 slate
-    'fillColor=#cfe6cf;strokeColor=#5a9367;fontColor=#1e3a24;',   # 1 green
-    'fillColor=#e6e2c0;strokeColor=#b0a04a;fontColor=#3a3410;',   # 2 olive
-    'fillColor=#f6e0c0;strokeColor=#c9932a;fontColor=#5a3f10;',   # 3 amber (first unstable)
-    'fillColor=#f2ccc0;strokeColor=#c96a4a;fontColor=#5a2410;',   # 4 clay
-    'fillColor=#eeb3b3;strokeColor=#c0392b;fontColor=#5a1410;',   # 5 red (crazy town)
-    'fillColor=#d7c6e6;strokeColor=#6a3fa0;fontColor=#2c1650;',   # 6 violet (overrides)
+    'fillColor=#dfe7ef;strokeColor=#6b7f96;fontColor=#1b2733;',   # 0 slate (parochial)
+    'fillColor=#cfe6cf;strokeColor=#5a9367;fontColor=#1e3a24;',   # 1 green (all humans)
+    'fillColor=#e6e2c0;strokeColor=#b0a04a;fontColor=#3a3410;',   # 2 olive (animals)
+    'fillColor=#f2e3b3;strokeColor=#c9a72a;fontColor=#57450e;',   # 3 gold (future, discounted)
+    'fillColor=#f6e0c0;strokeColor=#c9932a;fontColor=#5a3f10;',   # 4 amber (no discounting)
+    'fillColor=#f5d3b8;strokeColor=#cc7a33;fontColor=#5a300e;',   # 5 orange (RP animals)
+    'fillColor=#f2ccc0;strokeColor=#c96a4a;fontColor=#5a2410;',   # 6 clay (suffering)
+    'fillColor=#eeb3b3;strokeColor=#c0392b;fontColor=#5a1410;',   # 7 red (simulation)
+    'fillColor=#d7c6e6;strokeColor=#6a3fa0;fontColor=#2c1650;',   # 8 violet (anti-realism)
+    'fillColor=#c9b3dd;strokeColor=#4a2a78;fontColor=#201040;',   # 9 dark violet (Boltzmann)
 ]
 NODE_BASE = 'rounded=1;whiteSpace=wrap;html=1;fontSize=11;'
 def node_style(n):
     return NODE_BASE + STOP_STYLE[min(n['stop'], len(STOP_STYLE) - 1)]
 
 EBASE = 'edgeStyle=none;curved=1;html=1;endArrow=block;endFill=1;strokeColor=#9aa6b3;fontSize=9;fontColor=#5b6675;'
-EK = {'expand': 'strokeColor=#8a5fb0;', 'branch': 'strokeColor=#c0392b;dashed=1;'}
+EK = {'expand': 'strokeColor=#8a5fb0;', 'override': 'strokeColor=#c0392b;dashed=1;'}
 
 
 # ---------- layout via Graphviz ---------------------------------------------
@@ -112,7 +116,8 @@ mid = []  # edges
 fg = []   # nodes (front)
 
 # one dotted band per stop, labelled with how far down the train it is
-STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9932a', '#c96a4a', '#c0392b', '#6a3fa0']
+STOP_COL = ['#6b7f96', '#5a9367', '#b0a04a', '#c9a72a', '#c9932a',
+            '#cc7a33', '#c96a4a', '#c0392b', '#6a3fa0', '#4a2a78']
 for s in stops:
     col = STOP_COL[min(s, len(STOP_COL) - 1)]
     group_box(nodes, set(by_stop[s]), pos, X, Y, f'band_{s}',
@@ -132,8 +137,7 @@ print('wrote %s: nodes=%d edges=%d bytes=%d' % (OUT, len(pos), len(edges), len(x
 # The repo is public, so draw.io can open the committed .drawio straight from its
 # raw GitHub URL via the #U hash (chrome=0 => read-only viewer, no account). This
 # is the link "auto-populated by repo code": it points at whatever this build
-# just committed. Override the ref via DIAGRAM_REF (defaults to the dev branch).
-# Uses raw refs/heads/<branch> form so branch names containing '/' resolve.
+# just committed. Override the ref via DIAGRAM_REF (defaults to main).
 import urllib.parse
 raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{os.path.basename(OUT)}'
 view = 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
