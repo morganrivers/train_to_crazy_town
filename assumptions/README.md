@@ -80,13 +80,26 @@ own multiples:
 | **The Humane League** | Farmed vertebrates | Saulius chicken-years/$ × Grilo DALY/$ | ~460x |
 | **Shrimp Welfare Project** | Invertebrates | Grilo HSI 639 DALY/$ | ~64,000x |
 | **Wild insects (humane pesticides)** | Wild / soil invertebrates | Grilo 236 DALY/$ | ~24,000x |
-| **ALLFED** | Global catastrophic risk / resilience | Denkenberger & Pearce (near-term GCR) | future-gated |
-| **AI safety (Redwood Research)** | Existential risk, astronomical waste | Linch's $100M/0.01% × Bostrom/Cotra | future-gated |
+| **ALLFED** | Global catastrophic risk / resilience | worked nuclear-winter BOTEC (Denkenberger & Pearce) | future-gated |
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | worked BOTEC: Linch's $100M/0.01% × Bostrom/Cotra future | future-gated |
 
 The parochial root's soup-kitchen value is a worked BOTEC — people made happier
 per dollar × their wellbeing gain, netted against the counterfactual of the
 money sitting in a bank — and every worldview downstream carries that agreed
 number unchanged.
+
+ALLFED and AI safety are **worked BOTECs too**, not opaque ranges. ALLFED's value
+is computed from a nuclear-war probability (~0.1%/yr full-scale × ~10%
+conditional nuclear winter), Denkenberger & Pearce's lives-fed-per-dollar, and a
+far-future term for averting civilization-ending collapse; AI safety's from
+Linch's ~$100M-per-0.01%-x-risk bar. Both multiply the *same* astronomical
+`futureDalysAtStake`, so which one a longtermist funds is arithmetic on their
+x-risk-reduced-per-dollar — **not** a chosen result. On the slate's central
+inputs AI safety edges ahead (~1.7×); Denkenberger's more pessimistic
+recovery-from-collapse estimates flip it to ALLFED. A positive pure-time discount
+(`future_discount ≈ 1e-6` at stop 3) annihilates the mostly-aeons-away future, so
+moderate longtermists still rank present global health first; dropping it to 1
+(stop 4) is what lets the astronomical future dominate.
 
 ## The ladder (ordered by how crazy they are)
 
@@ -95,43 +108,48 @@ number unchanged.
 | 0 | `parochial` | the base: slate, the `moral_weight`/`welfare_range`/`coefficient`/`externality` hooks, `squiggle()` |
 | 1 | `far_away_humans` | redefines `moral_weight`: all present humans |
 | 2 | `animals_somewhat` | adds `neuron_count_exponent()`; redefines `welfare_range` |
-| 3 | `future_humans_matter_with_discounting` | adds `future_discount()` (= 0.01); wraps `coefficient` |
+| 3 | `future_humans_matter_with_discounting` | adds `future_discount()` (≈ 1e-6); wraps `coefficient` |
 | 4 | `no_discounting_future_humans` | re-parameterises `future_discount()` → 1.0; x-risk enters the circle |
 | 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges (Fischer et al.); invertebrates enter |
 | 6 | `suffering_focused` | adds `suffering_multiplier(org)`; wraps `coefficient` (Tomasik, Vinding) |
 | 7 | `meat_eater_problem` | redefines the `externality` hook: charges human orgs for the meat their beneficiaries eat (Grilo) |
 | 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering penalty; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
 | 9 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value (Bostrom) |
-| 10 | `two_envelope_welfare_skepticism` | wraps `welfare_range`: Bayesian-shrinks invertebrate ranges (Nuño Sempere) |
-| 11 | `person_affecting_view` | wraps `coefficient`: merely-possible future people get ~no weight (Narveson) |
-| 12 | `resilient_foods_beat_agi` | redefines `expected_values`/`value_expression`: ALLFED = a multiple of AI safety (Denkenberger & Pearce) |
-| 13 | `soil_animals` | wraps `coefficient`/`externality`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
-| 14 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
-| 15 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+| 10 | `person_affecting_view` | wraps `coefficient`: merely-possible future people get ~no weight (Narveson) |
+| 11 | `soil_animals` | wraps `externality`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
+| 12 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
+| 13 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+
+Two things are deliberately **not** on this ladder, because they are not
+worldview forks. (1) **The resilient-foods-vs-AI-safety comparison** is decided
+by the two orgs' *worked BOTECs* in the slate, not by an assumption that sets the
+answer — see "The metric and the slate" above. (2) **Two-envelope skepticism
+about RP's invertebrate welfare ranges** (Nuño Sempere) is a *methodological
+correction*, not a value premise: whether to apply it has a determinate answer
+given welfare-range realism + EV, so it is documented as a judgment call in
+`5_animals_matter_a_lot.py` (we keep RP's published medians as the baseline and
+flag the contention) rather than branched.
 
 ## Limiting the combinatorial explosion
 
-Sixteen assumptions would naively give 2¹⁵ = 32,768 chains (the parochial base
+Fourteen assumptions would naively give 2¹³ = 8,192 chains (the parochial base
 is always present). Metadata on each file limits combinations to what one person
 could plausibly hold at once:
 
 - **`REQUIRES`** — an animals person won't think only people in their community
   matter, so `2` requires `1`; `4` modifies the discount `3` introduced, so it
   requires `3`; `5` upgrades `2`; `7` (meat-eater) needs animals in the circle
-  (`2`); `8` (net-negative lives) and `10` (two-envelope skepticism) and `13`
-  (soil animals) all presuppose the RP welfare ranges (`5`); `9` (simulation),
-  `11` (person-affecting) and `12` (resilient foods vs AGI) only make sense to
-  someone already reasoning about the undiscounted far future (`4`).
-- **`EXCLUDES`** — the two overrides (`14`, `15`) can't be held together; the
-  near-term animal-vs-human stops `7`/`8` are not combined with
-  astronomical-stakes longtermism (`4`); and two-envelope skepticism (`10`)
-  excludes the assumptions that bet the *other* way on invertebrates —
-  net-negative lives (`8`) and counting soil animals (`13`).
+  (`2`); `8` (net-negative lives) and `11` (soil animals) presuppose the RP
+  welfare ranges (`5`); `9` (simulation) and `10` (person-affecting) only make
+  sense to someone already reasoning about the undiscounted far future (`4`).
+- **`EXCLUDES`** — the two overrides (`12`, `13`) can't be held together; and
+  the near-term animal-vs-human stops `7`/`8` are not combined with
+  astronomical-stakes longtermism (`4`), where x-risk swamps the bookkeeping.
 - **`TERMINAL`** — an override invalidates every assumption before it, so it is
   generated only on its minimal `REQUIRES`-closure chain; any larger chain
   would produce a byte-identical all-flat model.
 
-That leaves **125 worldviews**. Every worldview's parent is the same chain minus
+That leaves **73 worldviews**. Every worldview's parent is the same chain minus
 its craziest assumption, so the graph is a tree and every edge adds exactly one
 assumption.
 

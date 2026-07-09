@@ -26,14 +26,16 @@ _undiscounted_coefficient = coefficient    # noqa: F821
 
 
 def future_discount():
-    """NEW parameter: the pure-time discount on future people. Even a heavy
-    discount leaves them IN the circle — dropping it is a separate assumption.
-    0.01 stands for the aggregate attenuation a moderate positive pure-time
-    preference plus catastrophe/extinction hazard puts on far-future value
-    (Ramsey and Stern argue the pure rate should be ~0; Cowen/Nordhaus defend a
-    positive one — the moderate-longtermist compromise keeps the far future
-    counting but not dominating)."""
-    return 0.01
+    """NEW parameter: the pure-time discount applied to far-future value. Future
+    people are still IN the circle — dropping the discount is a separate
+    assumption — but almost all of the astronomical future's value sits millions
+    of years out, and ANY positive pure-time rate, compounded over that span,
+    drives its present value to nearly zero. So a moderate longtermist who keeps
+    a positive rate finds the far future heavily attenuated and present global
+    health still on top; ~1e-6 stands for that near-total suppression. This is
+    exactly why strong longtermism needs a pure rate of ~0 (Ramsey, Stern,
+    Greaves & MacAskill) — the next assumption drops it to 1."""
+    return 1e-6
 
 
 def moral_weight(domain):

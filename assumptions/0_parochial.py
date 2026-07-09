@@ -97,19 +97,53 @@ SLATE = [
                "range ~0.01 this direct figure reproduces that human-equivalent number",
      "source_url": "https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane",
      "daly_per_usd": [1600, 82000]},
+    # ALLFED and AI safety are WORKED BOTECs (like the soup kitchen), not opaque
+    # ranges: their value is COMPUTED from mechanistic inputs, so which one wins
+    # among longtermists is math under stated assumptions, not a chosen result.
+    # Both share the same astronomical `futureDalysAtStake`, so the comparison
+    # reduces to their x-risk-reduced-per-dollar — exactly what Denkenberger &
+    # Pearce and Linch estimate. On these central inputs AI safety edges ahead
+    # (~1.7x); Denkenberger's more pessimistic recovery-from-collapse estimates
+    # flip it to ALLFED. Neither is forced — change an input and the ranking moves.
     {"id": "allfed", "name": "ALLFED", "domain": "future_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "Resilient foods for global catastrophes; NEAR-TERM cost-effectiveness "
-               "~$400-20000 per life (Denkenberger & Pearce). Its astronomical far-future "
-               "upside is unlocked only by the resilient_foods_beat_agi assumption.",
+     "source": "Resilient foods for nuclear-winter / abrupt-sunlight-reduction "
+               "catastrophes: near-term lives fed PLUS the far-future value of "
+               "averting a civilization-ending collapse (Denkenberger & Pearce)",
      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176",
-     "daly_per_usd": [0.002, 0.5]},
+     "botec": {
+        "factors": [
+            # P(nuclear-winter-scale agricultural catastrophe this century)
+            # = ~0.1-1%/yr full-scale nuclear war x ~10% conditional winter.
+            ("pAgriculturalCatastrophePerCentury", [0.003, 0.05]),
+            # Denkenberger alternate-food cost-effectiveness GIVEN the catastrophe:
+            # lives saved per dollar of prepared resilient-food capacity.
+            ("livesSavedPerDollarIfCatastrophe", [0.02, 2]),
+            ("dalyPerLife", 30),
+            # Far future: the chance the catastrophe is permanently civilization-
+            # ending, the astronomical future it would cost, and the fraction of
+            # that risk a marginal resilient-food dollar removes.
+            ("pCivilizationEndingGivenCatastrophe", [0.005, 0.1]),
+            ("riskShareRemovedPerDollar", [1e-10, 1e-9]),
+            ("futureDalysAtStake", [1e11, 1e16]),
+        ],
+        # near-term lives fed + far-future collapse averted
+        "expr": ("pAgriculturalCatastrophePerCentury * livesSavedPerDollarIfCatastrophe * dalyPerLife"
+                 " + pAgriculturalCatastrophePerCentury * pCivilizationEndingGivenCatastrophe"
+                 " * riskShareRemovedPerDollar * futureDalysAtStake"),
+     }},
     {"id": "redwood", "name": "AI safety (Redwood Research)", "domain": "xrisk_future",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "Linch's ~$100M per 0.01% x-risk reduction (~1e-12/$) x the undiscounted "
-               "future at stake (Bostrom astronomical waste; Cotra AI timelines/takeover)",
+     "source": "Linch's ~$100M-$1B per 0.01% (1e-4) x-risk reduction x the same "
+               "astronomical future at stake (Bostrom astronomical waste; Cotra timelines)",
      "source_url": "https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01",
-     "daly_per_usd": [0.2, 20000]},
+     "botec": {
+        "factors": [
+            ("xRiskReducedPerDollar", [1e-13, 1e-12]),   # Linch's bar
+            ("futureDalysAtStake", [1e11, 1e16]),        # same future as ALLFED
+        ],
+        "expr": "xRiskReducedPerDollar * futureDalysAtStake",
+     }},
 ]
 
 
@@ -122,10 +156,27 @@ def lognormal_mean(lo, hi):
     return math.exp(mu + sigma * sigma / 2)
 
 
+def _botec_value(factor):
+    """A worked-BOTEC factor is either a scalar constant or a [lo, hi] 90% CI;
+    reduce it to the point estimate the model uses (Squiggle's mean(lo to hi))."""
+    if isinstance(factor, (list, tuple)):
+        return lognormal_mean(*factor)
+    return float(factor)
+
+
 def direct_daly_per_usd(org):
-    """Point estimate of the org's direct effect, before moral weighting."""
+    """Point estimate of the org's direct effect, before moral weighting.
+
+    A `botec` is a worked calculation. New form: an ordered list of named
+    `factors` (each a scalar or [lo, hi]) plus an `expr` that combines them, so a
+    BOTEC can add and multiply terms (e.g. ALLFED's near-term lives + far-future
+    collapse averted). Old form: the soup kitchen's people x wellbeing x (1-bank).
+    """
     if "botec" in org:
         b = org["botec"]
+        if "factors" in b:
+            env = {name: _botec_value(f) for name, f in b["factors"]}
+            return eval(b["expr"], {"__builtins__": {}}, env)  # trusted, in-repo expr
         return (lognormal_mean(*b["people_helped_per_usd"])
                 * lognormal_mean(*b["wellbeing_gain_daly"])
                 * (1 - b["counterfactual_bank_value"]))
@@ -185,10 +236,24 @@ def squiggle_var(org):
     return _camel(org["id"]) + "DalyPerUsd"
 
 
+def _sq_factor(factor):
+    """Render a worked-BOTEC factor as Squiggle: `lo to hi`, or a scalar."""
+    if isinstance(factor, (list, tuple)):
+        return f"{_sq_num(factor[0])} to {_sq_num(factor[1])}"
+    return _sq_num(factor)
+
+
 def squiggle_dist(org):
     """Squiggle source for the org's direct-effect distribution."""
     if "botec" in org:
         b = org["botec"]
+        if "factors" in b:
+            lines = ["{"]
+            for name, factor in b["factors"]:
+                lines.append(f"  {name} = {_sq_factor(factor)}")
+            lines.append(f"  {b['expr']}")
+            lines.append("}")
+            return "\n".join(lines)
         return "\n".join([
             "{",
             f"  peopleHelpedPerUsd = {_sq_num(b['people_helped_per_usd'][0])} to {_sq_num(b['people_helped_per_usd'][1])}",
