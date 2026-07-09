@@ -62,20 +62,26 @@ sentience-adjusted welfare range (Rethink Priorities / Bob Fischer) so one unit
 covers human health, animals, and future minds. One human DALY = 1 wDALY.
 
 The donation slate is fixed across every worldview and lives once, on
-`0_parochial.py`, each org with its direct-effect BOTEC and source URL. Only
-the coefficients change as assumptions accumulate:
+`0_parochial.py`, each org with its direct-effect BOTEC (a lognormal 90% CI) and
+a source URL. Only the coefficients change as assumptions accumulate. Each
+org's *direct* figure is in its beneficiary's own welfare units, before the
+moral circle / welfare range / discount the chain applies; the numbers are
+calibrated so that the **animals-matter-a-lot worldview (`w1_2_5`) reproduces
+Vasco Grilo's published cost-effectiveness figures** and the GiveWell baseline
+reproduces his ~0.00994 DALY/$, so `allocate.py`'s "x GiveWell" column reads his
+own multiples:
 
-| Target | Cause | Rides to about... |
-|---|---|---|
-| **Local soup kitchen** | Community / present-generation neighbours | the root (parochial) |
-| **GiveDirectly** | Global poor, direct cash | assumption 1 (all present humans) |
-| **GiveWell top charity (AMF)** | Global health, lives saved | same, DALY-maximizing |
-| **AIM / Charity Entrepreneurship** | Incubation, higher variance | same |
-| **The Humane League** | Farmed vertebrates | assumption 2 (animals, neuron-weighted) |
-| **Shrimp Welfare Project** | Invertebrates | assumption 5 (RP welfare ranges) |
-| **Wild insects (humane pesticides)** | Wild / soil invertebrates | assumption 5 (nematode weight) |
-| **ALLFED** | Global catastrophic risk / resilience | assumption 3–4 (future people) |
-| **AI safety (Redwood Research)** | Existential risk, astronomical waste | assumption 4 (no discounting) |
+| Target | Cause | Direct figure grounded in | ≈ x GiveWell at RP welfare ranges |
+|---|---|---|---|
+| **Local soup kitchen** | Community / present neighbours | worked subjective-wellbeing BOTEC | — (root) |
+| **GiveDirectly** | Global poor, direct cash | GiveWell cash benchmark (~1/10 of top) | 0.1x |
+| **GiveWell top charity (AMF)** | Global health, lives saved | GiveWell CEA / Grilo ~0.00994 DALY/$ | 1x (baseline) |
+| **AIM / Charity Entrepreneurship** | Incubation, higher variance | GiveWell-level target, high variance | ~2x |
+| **The Humane League** | Farmed vertebrates | Saulius chicken-years/$ × Grilo DALY/$ | ~460x |
+| **Shrimp Welfare Project** | Invertebrates | Grilo HSI 639 DALY/$ | ~64,000x |
+| **Wild insects (humane pesticides)** | Wild / soil invertebrates | Grilo 236 DALY/$ | ~24,000x |
+| **ALLFED** | Global catastrophic risk / resilience | Denkenberger & Pearce (near-term GCR) | future-gated |
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | Linch's $100M/0.01% × Bostrom/Cotra | future-gated |
 
 The parochial root's soup-kitchen value is a worked BOTEC — people made happier
 per dollar × their wellbeing gain, netted against the counterfactual of the
@@ -91,35 +97,41 @@ number unchanged.
 | 2 | `animals_somewhat` | adds `neuron_count_exponent()`; redefines `welfare_range` |
 | 3 | `future_humans_matter_with_discounting` | adds `future_discount()` (= 0.01); wraps `coefficient` |
 | 4 | `no_discounting_future_humans` | re-parameterises `future_discount()` → 1.0; x-risk enters the circle |
-| 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges; invertebrates + nematode weight |
-| 6 | `suffering_focused` | adds `suffering_multiplier(org)`; wraps `coefficient` |
-| 7 | `meat_eater_problem` | redefines the `externality` hook: charges human orgs for the meat their beneficiaries eat |
-| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering penalty; wraps `coefficient` to boost suffering-reduction |
-| 9 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value |
-| 10 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything |
-| 11 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+| 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges (Fischer et al.); invertebrates enter |
+| 6 | `suffering_focused` | adds `suffering_multiplier(org)`; wraps `coefficient` (Tomasik, Vinding) |
+| 7 | `meat_eater_problem` | redefines the `externality` hook: charges human orgs for the meat their beneficiaries eat (Grilo) |
+| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering penalty; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
+| 9 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value (Bostrom) |
+| 10 | `two_envelope_welfare_skepticism` | wraps `welfare_range`: Bayesian-shrinks invertebrate ranges (Nuño Sempere) |
+| 11 | `person_affecting_view` | wraps `coefficient`: merely-possible future people get ~no weight (Narveson) |
+| 12 | `resilient_foods_beat_agi` | redefines `expected_values`/`value_expression`: ALLFED = a multiple of AI safety (Denkenberger & Pearce) |
+| 13 | `soil_animals` | wraps `coefficient`/`externality`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
+| 14 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
+| 15 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
 
 ## Limiting the combinatorial explosion
 
-Twelve assumptions would naively give 2¹¹ = 2,048 chains (the parochial base is
-always present). Metadata on each file limits combinations to what one person
+Sixteen assumptions would naively give 2¹⁵ = 32,768 chains (the parochial base
+is always present). Metadata on each file limits combinations to what one person
 could plausibly hold at once:
 
 - **`REQUIRES`** — an animals person won't think only people in their community
   matter, so `2` requires `1`; `4` modifies the discount `3` introduced, so it
   requires `3`; `5` upgrades `2`; `7` (meat-eater) needs animals in the circle
-  (`2`); `8` (net-negative lives) presupposes counting wild/invertebrate
-  animals (`5`); `9` (simulation) only makes sense to someone already reasoning
-  expected-value-style about the undiscounted far future (`4`).
-- **`EXCLUDES`** — the two overrides (`10`, `11`) can't be held together; and
-  the near-term animal-vs-human stops `7`/`8` are not combined with
-  astronomical-stakes longtermism (`4`), where x-risk swamps the meat
-  bookkeeping — a different get-off point.
+  (`2`); `8` (net-negative lives) and `10` (two-envelope skepticism) and `13`
+  (soil animals) all presuppose the RP welfare ranges (`5`); `9` (simulation),
+  `11` (person-affecting) and `12` (resilient foods vs AGI) only make sense to
+  someone already reasoning about the undiscounted far future (`4`).
+- **`EXCLUDES`** — the two overrides (`14`, `15`) can't be held together; the
+  near-term animal-vs-human stops `7`/`8` are not combined with
+  astronomical-stakes longtermism (`4`); and two-envelope skepticism (`10`)
+  excludes the assumptions that bet the *other* way on invertebrates —
+  net-negative lives (`8`) and counting soil animals (`13`).
 - **`TERMINAL`** — an override invalidates every assumption before it, so it is
   generated only on its minimal `REQUIRES`-closure chain; any larger chain
   would produce a byte-identical all-flat model.
 
-That leaves **39 worldviews**. Every worldview's parent is the same chain minus
+That leaves **125 worldviews**. Every worldview's parent is the same chain minus
 its craziest assumption, so the graph is a tree and every edge adds exactly one
 assumption.
 

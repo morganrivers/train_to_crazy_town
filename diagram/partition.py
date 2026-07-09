@@ -21,14 +21,16 @@ Algorithm (greedy, largest-chunk-first):
     accept a soft overflow on the page rather than fragment it into tiny pages —
     "aim for not having really small subtrees".
 
-Defaults (max_page=25, min_page=8) match the "collapse a subtree once it hits
-25+ nodes" rule of thumb; override via the env vars or the function args.
+Defaults (max_page=25, min_page=6) match the "collapse a subtree once it hits
+25+ nodes" rule of thumb; the min-page floor is low enough that a narrow spine
+whose branches have all been split off can still form its own small page rather
+than overflow its parent. Override via the env vars or the function args.
 """
 import os
 from collections import defaultdict
 
 DEFAULT_MAX_PAGE = int(os.environ.get("DIAGRAM_MAX_PAGE", "25"))
-DEFAULT_MIN_PAGE = int(os.environ.get("DIAGRAM_MIN_PAGE", "8"))
+DEFAULT_MIN_PAGE = int(os.environ.get("DIAGRAM_MIN_PAGE", "6"))
 ROOT_PAGE_ID = "train_tree"
 
 
@@ -61,6 +63,15 @@ def partition(nodes, max_page=DEFAULT_MAX_PAGE, min_page=DEFAULT_MIN_PAGE):
             c = by_id[c["parent"]]
             d += 1
         depth[i] = d
+
+    def is_ancestor(a, b):
+        """True if node a is a strict ancestor of node b."""
+        c = by_id[b]
+        while c.get("parent"):
+            c = by_id[c["parent"]]
+            if c["id"] == a:
+                return True
+        return False
 
     full_size = {}
 
@@ -106,6 +117,17 @@ def partition(nodes, max_page=DEFAULT_MAX_PAGE, min_page=DEFAULT_MIN_PAGE):
                 if not bigs:
                     break  # only small subtrees left: accept overflow, don't fragment
                 v = max(bigs, key=lambda x: (subsize(x), -depth[x], x))
+            # Cuts on a page must stay an ANTICHAIN. `subsize` measures v with its
+            # already-cut descendants removed, so cutting a spine node whose big
+            # branches were cut earlier is exactly how the residual spine gets
+            # chunked off — but v then ABSORBS those descendant cuts: they belong
+            # to v's own page now (which recursively re-splits them), so drop them
+            # here to avoid duplicate, overlapping pages.
+            absorbed = [c for c in cuts if is_ancestor(v, c)]
+            for c in absorbed:
+                cuts.remove(c)
+                cuts_set.discard(c)
+                worklist.remove((c, False))
             cuts.append(v)
             cuts_set.add(v)
             worklist.append((v, False))

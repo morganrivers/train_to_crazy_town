@@ -39,7 +39,11 @@ DESC = (
 
 # How much worse than "neutral" a net-negative life-year is, replacing the
 # meat-eater problem's milder default: a farmed life is now dominated by
-# suffering (a whole DALY-plus of it per life-year).
+# suffering (a whole DALY-plus of it per life-year). The net-negative-lives
+# hypothesis for farmed and wild animals is Tomasik's
+# (https://reducing-suffering.org/the-importance-of-wild-animal-suffering/),
+# with the philosophical asymmetry from Benatar (an absent good is not bad, an
+# absent harm is good); the magnitude here is an order-of-magnitude stand-in.
 _NET_NEGATIVE_SUFFERING_PER_LIFE_YEAR = 2.0
 
 # Extra value on suffering-reduction once the baseline life is net-negative,

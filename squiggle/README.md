@@ -26,11 +26,16 @@ These files are generated: edit the assumption files and run
 `python3 ../generate.py`, don't hand-edit the `.squiggle` files.
 `../test_worldviews.py` (run in CI) fails if a generated file drifts.
 
-Numbers are placeholder order-of-magnitude estimates (`lo to hi` = lognormal 90%
-CI) traceable to published work: GiveWell CEAs; Rethink Priorities / Fischer
-welfare ranges; invertebrate and x-risk estimates (source URLs sit on each org
-in `../assumptions/0_parochial.py`). The soup kitchen is a worked BOTEC whose
-agreed value is carried unchanged into every worldview.
+Numbers are order-of-magnitude estimates (`lo to hi` = lognormal 90% CI)
+calibrated to published work and cited on each org in
+`../assumptions/0_parochial.py`: GiveWell CEAs; Rethink Priorities / Fischer
+welfare ranges; Vasco Grilo's animal-welfare cost-effectiveness analyses;
+Denkenberger & Pearce and Linch's x-risk bar for the far-future orgs. The
+calibration is chosen so the animals-matter-a-lot worldview (`w1_2_5`)
+reproduces Grilo's published DALY/$ figures — shrimp welfare ~64,000× GiveWell,
+humane pesticides ~24,000×, chicken campaigns ~460× — and the GiveWell (AMF)
+baseline reproduces his ~0.00994 DALY/$. The soup kitchen is a worked BOTEC
+whose agreed value is carried unchanged into every worldview.
 
 ## Run
 

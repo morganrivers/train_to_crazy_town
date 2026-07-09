@@ -37,7 +37,10 @@ DESC = (
 # Empirical order-of-magnitude BOTECs (deliberately illustrative):
 # a person's diet keeps a handful of farmed land animals (mostly chickens) alive
 # on their behalf at any time, so a human life-year drags this many
-# farmed-animal life-years behind it.
+# farmed-animal life-years behind it. Order-of-magnitude; Grilo's meat-eater
+# analysis ("GiveWell may have made 1 billion dollars of harmful grants...",
+# https://forum.effectivealtruism.org/posts/FqioYEr97eoCQMxhk ) runs higher once
+# fish and shrimp are added, which would only sharpen the sign flip.
 FARMED_LIFE_YEARS_PER_HUMAN_DALY = 4.0
 
 # Present-human domains whose beneficiaries go on to eat meat. (Future/x-risk

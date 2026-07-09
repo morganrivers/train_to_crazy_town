@@ -27,7 +27,12 @@ _undiscounted_coefficient = coefficient    # noqa: F821
 
 def future_discount():
     """NEW parameter: the pure-time discount on future people. Even a heavy
-    discount leaves them IN the circle — dropping it is a separate assumption."""
+    discount leaves them IN the circle — dropping it is a separate assumption.
+    0.01 stands for the aggregate attenuation a moderate positive pure-time
+    preference plus catastrophe/extinction hazard puts on far-future value
+    (Ramsey and Stern argue the pure rate should be ~0; Cowen/Nordhaus defend a
+    positive one — the moderate-longtermist compromise keeps the far future
+    counting but not dominating)."""
     return 0.01
 
 
