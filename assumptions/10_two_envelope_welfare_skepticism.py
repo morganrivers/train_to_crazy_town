@@ -9,11 +9,13 @@ of magnitude. Nuño Sempere's Bayesian adjustment argues the mainline point
 estimates are inflated for the smallest, least-understood animals and should be
 shrunk by one to two orders of magnitude, most of all for invertebrates.
 
-This assumption REDEFINES `welfare_range`, wrapping the RP table from
-assumption 5 with a per-domain Bayesian shrink. Chickens (vertebrate,
-comparatively well-evidenced) are barely touched; shrimp and insects are pulled
-down ~2 orders of magnitude, which flips the animal winner from the Shrimp
-Welfare Project / wild insects back to corporate chicken campaigns.
+This assumption WRAPS `uncertain_factors` with a per-domain Bayesian shrink on
+the RP table from assumption 5 — a distribution in the generated model (the
+size of the shrink is itself deeply uncertain), its exact mean in the ranking.
+Chickens (vertebrate, comparatively well-evidenced) are untouched; shrimp and
+insects are pulled down ~2 orders of magnitude in expectation, which flips the
+animal winner from the Shrimp Welfare Project / wild insects back to corporate
+chicken campaigns.
 
 Requires `animals_matter_a_lot`: there is nothing to be skeptical about until
 the RP welfare ranges are on the table. Excludes the two assumptions that lean
@@ -43,21 +45,30 @@ DESC = (
 # Nuno Sempere, "A Bayesian Adjustment to Rethink Priorities' Welfare Range
 # Estimates" (https://nunosempere.com/blog/2023/02/19/bayesian-adjustment-to-
 # rethink-priorities-welfare-range-estimates/). Per-domain shrink of the RP
-# point estimate: vertebrate farmed animals are comparatively well-evidenced so
-# they keep their range; the smallest, most sentience-uncertain animals take the
-# largest (~2 order-of-magnitude) haircut.
-WELFARE_RANGE_SHRINK = {
-    "farmed_animal": 1.0,        # chickens: well-evidenced, negligible adjustment
-    "invertebrate": 0.005,       # shrimp: ~2 orders of magnitude down
-    "wild_invertebrate": 0.002,  # insects: even less certain, larger haircut
+# point estimate, each a 90% CI (the whole point of the adjustment is that the
+# right shrink is itself deeply uncertain): vertebrate farmed animals are
+# comparatively well-evidenced so they keep their range; the smallest, most
+# sentience-uncertain animals take the largest haircut — ~2 orders of
+# magnitude in expectation (means ~0.005 shrimp, ~0.002 insects).
+WELFARE_RANGE_SHRINK_CI = {
+    "invertebrate": (0.0008, 0.015),      # shrimp
+    "wild_invertebrate": (0.0003, 0.006),  # insects: even less certain
 }
 
-_rp_welfare_range = welfare_range  # noqa: F821  (assumption 5's RP table)
+_mainline_rp_uncertain_factors = uncertain_factors  # noqa: F821
 
 
-def welfare_range(org):
-    """REDEFINED: RP welfare range times a per-domain Bayesian shrink."""
-    wr = _rp_welfare_range(org)
-    if not org["animal"]:
-        return wr
-    return wr * WELFARE_RANGE_SHRINK.get(org["domain"], 1.0)
+def uncertain_factors(org):
+    """WRAPPED: invertebrate welfare ranges carry a Bayesian shrink — the full
+    distribution in the model, its exact mean in the ranking. Chickens
+    (well-evidenced vertebrates) are untouched."""
+    fs = _mainline_rp_uncertain_factors(org)
+    if org["domain"] == "invertebrate":
+        fs.append(lognormal_factor(  # noqa: F821
+            "invertWelfareShrink", *WELFARE_RANGE_SHRINK_CI["invertebrate"],
+            "Bayesian shrink on RP's shrimp welfare range (Sempere 2023)"))
+    elif org["domain"] == "wild_invertebrate":
+        fs.append(lognormal_factor(  # noqa: F821
+            "wildInvertWelfareShrink", *WELFARE_RANGE_SHRINK_CI["wild_invertebrate"],
+            "Bayesian shrink on RP's insect welfare range (Sempere 2023)"))
+    return fs

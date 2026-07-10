@@ -12,10 +12,12 @@ soil-animal suffering than human benefit, so GiveWell's top charities come out
 firmly net-negative — the "GiveWell may have made harmful grants" conclusion.
 
 This assumption does two things:
-  1. it WRAPS `coefficient` to boost wild-invertebrate work, the slate's proxy
-     for interventions acting on the vast soil-animal population; and
-  2. it WRAPS `externality` to charge cropland-expanding human orgs for the
-     soil-animal suffering their beneficiaries' extra food demand causes.
+  1. it WRAPS `uncertain_factors` to boost wild-invertebrate work — the
+     slate's proxy for interventions acting on the vast soil-animal population
+     — by a distribution whose exact mean feeds the ranking; and
+  2. it WRAPS `externality_coefficient` to charge cropland-expanding human orgs
+     for the soil-animal suffering their beneficiaries' extra food demand
+     causes.
 
 Requires `animals_matter_a_lot`: soil animals only enter once invertebrates are
 already in the moral circle with real welfare ranges.
@@ -44,31 +46,43 @@ DESC = (
 # GiveWell top charities cause ~1.11 kQALY/$ of soil-animal welfare change; at
 # their ~0.00994 human DALY/$ that is ~1.1e5 units of soil-animal welfare per
 # human DALY of benefit. Soil lives taken as net-negative (Grilo: ~55-59% chance
-# negative for nematodes/mites/springtails), so the sign is a harm.
-SOIL_WELFARE_PER_HUMAN_DALY = 1.1e5
+# negative for nematodes/mites/springtails), so the sign is a harm. A 90% CI
+# spanning more than an order of magnitude each way around his central figure
+# (cropland-per-DALY, soil density and welfare-per-animal are all uncertain),
+# calibrated so its lognormal MEAN reproduces his ~1.1e5 central estimate.
+SOIL_WELFARE_PER_HUMAN_DALY_CI = (2e4, 3e5)
+SOIL_WELFARE_PER_HUMAN_DALY = lognormal_mean(*SOIL_WELFARE_PER_HUMAN_DALY_CI)  # noqa: F821
 _MEAT_EATING_DOMAINS = ("local_human", "global_human")
 
 # Soil/wild invertebrates are the largest affected population, so wild-invert
-# work (the slate's proxy for acting on them) is scaled up over farmed inverts.
-SOIL_SCALE_BOOST = 5.0
+# work (the slate's proxy for acting on them) is scaled up over farmed inverts
+# — a 90% CI (mean ~5.1) rather than a point, since the scale-up inherits the
+# soil-population and welfare-density uncertainty above.
+SOIL_SCALE_BOOST_CI = (1.4, 12)
 
-_pre_soil_coefficient = coefficient  # noqa: F821
-_pre_soil_externality = externality  # noqa: F821
+_pre_soil_uncertain_factors = uncertain_factors  # noqa: F821
+_pre_soil_externality_coefficient = externality_coefficient  # noqa: F821
 
 
-def coefficient(org):
+def uncertain_factors(org):
     """WRAPPED: wild-invertebrate work stands in for the dominant soil-animal
-    population and is scaled up accordingly."""
-    c = _pre_soil_coefficient(org)
+    population and is scaled up accordingly — the full distribution in the
+    model, its exact mean in the ranking."""
+    fs = _pre_soil_uncertain_factors(org)
     if org["domain"] == "wild_invertebrate":
-        c *= SOIL_SCALE_BOOST
-    return c
+        fs.append(lognormal_factor(  # noqa: F821
+            "soilScaleBoost", *SOIL_SCALE_BOOST_CI,
+            "wild-invert work proxies the ~10^19 soil animals (Grilo)"))
+    return fs
 
 
-def externality(org):
+def externality_coefficient(org):
     """WRAPPED: cropland-expanding human orgs are charged for the net-negative
-    soil-animal welfare their beneficiaries' extra food demand causes."""
-    ext = _pre_soil_externality(org)
+    soil-animal welfare their beneficiaries' extra food demand causes, PER
+    direct human DALY — the charge rides the org's own uncertain direct-effect
+    distribution (Grilo's accounting is itself proportional to the human
+    benefit delivered)."""
+    ext = _pre_soil_externality_coefficient(org)
     if org["domain"] in _MEAT_EATING_DOMAINS:
-        ext -= direct_daly_per_usd(org) * SOIL_WELFARE_PER_HUMAN_DALY  # noqa: F821
+        ext -= SOIL_WELFARE_PER_HUMAN_DALY
     return ext

@@ -51,6 +51,12 @@ one.
   species' welfare range, so one unit covers human health, animals, and future
   minds). Only the assumptions change; the same optimizer returns different
   winners.
+- **Every genuinely uncertain number is a distribution.** Direct effects are
+  lognormal 90% CIs; uncertain moral parameters (the pure-time discount, the
+  simulation-continuation probability, the suffering asymmetry, …) are named,
+  cited distributions in each model's prelude. Rankings sort on exact analytic
+  means, so the Python side and the Squiggle models agree to float precision —
+  and editing any distribution in the playground re-ranks the slate live.
 - **The tree is too big for one screen, so it's split into pages.** A branch
   large enough to deserve its own page is collapsed on its parent to a
   `▼ N more worldviews` node (dashed double border); click it to open that
@@ -156,5 +162,34 @@ documented in [`assumptions/README.md`](assumptions/README.md).
   of existential catastrophe?* — EA Forum —
   https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
 - Nick Bostrom, *Astronomical Waste* — https://www.nickbostrom.com/astronomical/waste.html
+- Nick Bostrom, *Are You Living in a Computer Simulation?* (Philosophical
+  Quarterly, 2003) — https://www.simulation-argument.com/simulation.pdf
 - Ajeya Cotra, *Forecasting transformative AI: the "biological anchors" method* —
   https://www.cold-takes.com/forecasting-transformative-ai-the-biological-anchors-method-in-a-nutshell/
+- Frank Ramsey, *A Mathematical Theory of Saving* (Economic Journal, 1928) —
+  the classic case that a pure time preference is ethically indefensible
+- Nicholas Stern et al., *The Stern Review on the Economics of Climate Change*
+  (2006, pure rate δ ≈ 0.1%/yr) vs William Nordhaus, *A Review of the Stern
+  Review* (JEL, 2007, ~1.5%/yr) — the published disagreement behind the
+  discount-rate distribution in assumption 3
+- Toby Ord, *The Precipice* (2020) — the ~1/6-per-century existential-risk
+  estimate behind the catastrophe-hazard component of the discount
+- Hilary Greaves & William MacAskill, *The Case for Strong Longtermism* (GPI
+  working paper) — and the person-affecting objection assumption 11 encodes
+- David Thorstad, *Existential risk pessimism and the time of perils* — the
+  skeptical low end of the AI-safety entry's CI —
+  https://globalprioritiesinstitute.org/existential-risk-pessimism-and-the-time-of-perils-david-thorstad/
+- Magnus Vinding, *Suffering-Focused Ethics: Defense and Implications* (2020) —
+  https://centerforreducingsuffering.org/research/suffering-focused-ethics-defense-and-implications/
+- David Benatar, *Better Never to Have Been* (2006) — the asymmetry behind
+  net-negative lives
+- Our World in Data, *How many animals are farmed?* (FAOSTAT) — the ~26-33
+  billion live chickens anchoring the meat-eater ratio —
+  https://ourworldindata.org/how-many-animals-are-farmed
+- Welfare Footprint Project — pain-track estimates behind the
+  suffering-per-farmed-life-year CI — https://welfarefootprint.org
+- Open Philanthropy, *2017 Report on Consciousness and Moral Patienthood* —
+  https://www.openphilanthropy.org/research/2017-report-on-consciousness-and-moral-patienthood/
+- Rethink Priorities, *Why Neuron Counts Shouldn't Be Used as Proxies for
+  Moral Weight* —
+  https://rethinkpriorities.org/publications/why-neuron-counts-shouldnt-be-used-as-proxies-for-moral-weight

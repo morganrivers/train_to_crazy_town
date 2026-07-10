@@ -1853,7 +1853,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + resilient_foods_beat_agi",
       "lbl": "Resilient foods beat\nAGI safety\n[1+2+3+4+5+6+9+12]",
-      "top_pick": "ALLFED",
+      "top_pick": "Shrimp Welfare Project",
       "figures": [
         "David Denkenberger",
         "Joshua Pearce"
@@ -2387,7 +2387,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+13]",
-      "top_pick": "AI safety (Redwood Research)",
+      "top_pick": "Wild insects (humane pesticides)",
       "figures": [
         "Vasco Grilo"
       ],
@@ -2410,7 +2410,7 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+13]",
-      "top_pick": "AI safety (Redwood Research)",
+      "top_pick": "Wild insects (humane pesticides)",
       "figures": [
         "Vasco Grilo"
       ],

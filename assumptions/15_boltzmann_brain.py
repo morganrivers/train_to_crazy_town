@@ -1,4 +1,4 @@
-"""Assumption 11 — you are probably a Boltzmann brain.
+"""Assumption 15 — you are probably a Boltzmann brain.
 
 The last stop: if you are more likely a fleeting thermal fluctuation than an
 embodied agent, nothing matters except the brief moments of how you happen to
@@ -25,7 +25,9 @@ DESC = (
     "beats any other."
 )
 
-BOLTZMANN_LEVEL = 1e-6  # one fleeting pleasant thought, in wDALY/$
+BOLTZMANN_LEVEL = 1e-6      # one fleeting pleasant thought, in wDALY/$
+_BOLTZMANN_LEVEL_SQ = "1e-6"  # the same constant as Squiggle source
+assert float(_BOLTZMANN_LEVEL_SQ) == BOLTZMANN_LEVEL
 
 
 def expected_values():
@@ -35,9 +37,15 @@ def expected_values():
 
 def squiggle_prelude():
     """REDEFINED: the generated model needs the pleasant-thought constant."""
-    return ["boltzmannLevel = 1e-6  // one fleeting pleasant thought, in wDALY/$", ""]
+    return [f"boltzmannLevel = {_BOLTZMANN_LEVEL_SQ}  // one fleeting pleasant thought, in wDALY/$", ""]
 
 
 def value_expression(org):
     """REDEFINED: nothing matters except how this moment happens to feel."""
+    return "boltzmannLevel"
+
+
+def dist_expression(org):
+    """REDEFINED: the same fleeting constant — there is no uncertainty left to
+    have a distribution over."""
     return "boltzmannLevel"

@@ -1,4 +1,4 @@
-"""Assumption 10 — morality is not real.
+"""Assumption 14 — morality is not real.
 
 Moral anti-realism (Mackie's error theory): there are no moral facts, so no
 charity has any value at all. This assumption REDEFINES `coefficient` and
@@ -32,4 +32,9 @@ def coefficient(org):
 
 def value_expression(org):
     """REDEFINED: sets all DALYs to 0."""
+    return "0"
+
+
+def dist_expression(org):
+    """REDEFINED: no moral facts, no distribution over moral value either."""
     return "0"

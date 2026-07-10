@@ -16,18 +16,32 @@ chain's *output*.
   chain's `squiggle()` renders the model. Each file is **standalone** — no
   imports, no base model — because the composition already happened in Python.
   Every model exports:
-  - `scored` — each org's `E[wDALY/$]`: its direct-effect BOTEC times the moral
-    coefficient the assumption chain puts on it;
-  - `ranking` — the slate, best first;
+  - a prelude of **named parameter distributions** — every genuinely uncertain
+    moral parameter the chain applies (discounts, probabilities, multipliers),
+    each cited, each editable live in the playground;
+  - `scored` — per org, `dist` (its full wDALY/$ distribution: direct-effect
+    BOTEC × the chain's moral coefficient, with externalities riding the same
+    direct-effect draw) and `wdalyPerUsd` (the exact analytic mean of `dist`);
+  - `ranking` — the slate, best first, sorted by `wdalyPerUsd`;
   - `worldviewEv` — **the expected value of that worldview**: what its best buy
     achieves per dollar.
+
+  Distributions are built with the symbolic constructors
+  (`Sym.lognormal({p5, p95})`, `Sym.beta`, `Sym.uniform`) rather than
+  `lo to hi`, because the runtime samples `to`-built distributions even inside
+  `mean()` — which under-estimates heavy-tailed means several-fold — while
+  symbolic means are analytic. Uncertain terms are independent by
+  construction, so each expectation factorises exactly, and `node run.mjs`
+  prints rankings that equal the Python side's `expected_values()` to float
+  precision.
 
 These files are generated: edit the assumption files and run
 `python3 ../generate.py`, don't hand-edit the `.squiggle` files.
 `../test_worldviews.py` (run in CI) fails if a generated file drifts.
 
-Numbers are order-of-magnitude estimates (`lo to hi` = lognormal 90% CI)
-calibrated to published work and cited on each org in
+Numbers are order-of-magnitude estimates (`Sym.lognormal({p5, p95})` = a
+lognormal stated by its two-sided 90% CI) calibrated to published work and
+cited on each org in
 `../assumptions/0_parochial.py`: GiveWell CEAs; Rethink Priorities / Fischer
 welfare ranges; Vasco Grilo's animal-welfare cost-effectiveness analyses;
 Denkenberger & Pearce and Linch's x-risk bar for the far-future orgs. The

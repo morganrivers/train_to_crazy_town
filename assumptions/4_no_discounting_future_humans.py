@@ -1,11 +1,12 @@
 """Assumption 4 — no discounting of future humans.
 
 The full longtermist move: a person's moment in time is as morally irrelevant
-as their location. This assumption CHANGES A PARAMETER — it redefines
-`future_discount` (added by assumption 3) from 0.1 to 1.0 — and REDEFINES
-`moral_weight` so existential-risk work (which buys the whole undiscounted
-future) enters the circle. Everything else in the chain is untouched: the same
-`coefficient` wrapper from assumption 3 now multiplies by 1.
+as their location. This assumption CHANGES A PARAMETER — it collapses
+`future_discount_ci` (added by assumption 3, a 90% CI with mean ~0.01) to
+exactly 1 — and REDEFINES `moral_weight` so existential-risk work (which buys
+the whole undiscounted future) enters the circle. Everything else in the chain
+is untouched: assumption 3's factor still multiplies every future-facing org,
+now pinned at 1 (and shown as such in the generated model).
 """
 
 NAME = "no_discounting_future_humans"
@@ -26,10 +27,13 @@ DESC = (
 _no_xrisk_moral_weight = moral_weight  # noqa: F821
 
 
-def future_discount():
-    """PARAMETER CHANGED: assumption 3 said 0.1; the moment in time a person
-    lives is now as irrelevant as where they live."""
-    return 1.0
+def future_discount_ci():
+    """PARAMETER CHANGED: assumption 3 gave a 90% CI with mean ~0.01; the
+    moment in time a person lives is now as irrelevant as where they live, so
+    the distribution collapses to exactly 1 — not an estimate any more but an
+    ethical commitment (Ord, MacAskill), which is why it carries no
+    uncertainty."""
+    return (1.0, 1.0)
 
 
 def moral_weight(domain):
