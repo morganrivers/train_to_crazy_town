@@ -26,20 +26,24 @@ DESC = (
 _present_only_moral_weight = moral_weight    # noqa: F821
 _undiscounted_uncertain_factors = uncertain_factors  # noqa: F821
 
-# The aggregate attenuation on far-future value from a positive pure-time
-# preference compounded with catastrophe/extinction hazard over the horizon,
-# as a 90% CI rather than a point. The anchors disagree by orders of
+# The fraction of far-future value that survives a positive pure-time discount,
+# as a 90% CI rather than a point. Almost all of the astronomical future's value
+# (the x-risk / resilient-food BOTECs' `futureDalysAtStake`) sits millions of
+# years out, and ANY positive pure-time rate, compounded over that span, drives
+# its present value to a rounding error: survival ~ e^(-rate x horizon), and for
+# any rate > 0 over aeons that is ~0. The anchors disagree by orders of
 # magnitude, which is exactly why this is a distribution:
-#   - Ramsey (1928, "A Mathematical Theory of Saving") and the Stern Review
-#     (2006, delta ~= 0.1%/yr) argue the PURE rate should be ~0 — attenuation
-#     driven only by catastrophe hazard (cf. Ord, The Precipice: ~1/6 per
-#     century), keeping far-future value near the top of this CI;
-#   - Nordhaus (2007, "A Review of the Stern Review", ~1.5%/yr) and Cowen's
-#     discussion of positive rates compound to near-total attenuation over
-#     centuries, the bottom of this CI.
-# The CI's mean (~0.0097) preserves the moderate-longtermist compromise the
-# old 0.01 point stood for: the far future counts, but does not dominate.
-FUTURE_DISCOUNT_CI = (0.0012, 0.03)
+#   - Ramsey (1928) and the Stern Review (2006, delta ~= 0.1%/yr) argue the PURE
+#     rate should be ~0; even so, over a far-future horizon the surviving share
+#     is tiny — the TOP of this CI;
+#   - Nordhaus (2007, ~1.5%/yr) and Cowen's defence of positive rates compound to
+#     near-total annihilation — the BOTTOM of this CI.
+# The CI's mean (~8e-7) is small enough that a moderate longtermist who keeps ANY
+# positive rate still ranks present global health above the discounted
+# astronomical future. This is exactly why strong longtermism needs a pure rate
+# of ~0 (Ord; Greaves & MacAskill) — the next assumption drops it, and the far
+# future takes over.
+FUTURE_DISCOUNT_CI = (3e-8, 3e-6)
 
 
 def future_discount_ci():

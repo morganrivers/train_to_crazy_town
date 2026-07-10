@@ -33,6 +33,7 @@ DESC = (
 )
 
 import math  # noqa: E402  (assumption files run via exec, in chain order)
+import re    # noqa: E402
 
 HUMAN_NEURONS = 8.6e10
 
@@ -105,24 +106,55 @@ SLATE = [
                "x insect welfare range 0.01 = 234 DALY/$, reproducing his figure",
      "source_url": "https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane",
      "daly_per_usd": [1600, 82000]},
+    # ALLFED and AI safety are WORKED BOTECs, not opaque ranges: their value is
+    # COMPUTED from mechanistic inputs, so which one a longtermist funds is math
+    # under stated assumptions, not a chosen result. Both carry the SAME
+    # astronomical `futureDalysAtStake`, so the comparison reduces to their
+    # x-risk-reduced-per-dollar — exactly what Denkenberger & Pearce and Linch
+    # estimate. On these central inputs AI safety edges ahead (~1.7x); more
+    # pessimistic recovery-from-collapse inputs flip it to ALLFED. Neither is
+    # forced — edit a factor in the playground and the ranking moves.
     {"id": "allfed", "name": "ALLFED", "domain": "future_human",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "Resilient foods for global catastrophes; NEAR-TERM cost-effectiveness "
-               "~$400-20000 per life saved (Denkenberger & Pearce) = ~0.002-0.1 DALY/$ "
-               "at ~40 DALYs per life saved, which is this CI. Its astronomical "
-               "far-future upside is unlocked only by resilient_foods_beat_agi.",
+     "source": "Resilient foods for nuclear-winter / abrupt-sunlight-reduction "
+               "catastrophes: near-term lives fed PLUS the far-future value of "
+               "averting a civilization-ending collapse (Denkenberger & Pearce). "
+               "Worked BOTEC; central mean ~3.5k undiscounted DALY/$.",
      "source_url": "https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176",
-     "daly_per_usd": [0.002, 0.1]},
+     "botec": {
+        "factors": [
+            {"name": "allfedPCatastrophePerCentury", "ci": [0.003, 0.05],
+             "comment": "P(nuclear-winter-scale ag catastrophe this century): ~0.1-1%/yr full-scale nuclear war x ~10% winter"},
+            {"name": "allfedLivesSavedPerDollarIfCatastrophe", "ci": [0.02, 2],
+             "comment": "Denkenberger alternate-food lives saved per $ GIVEN the catastrophe"},
+            {"name": "allfedDalyPerLife", "point": 30,
+             "comment": "DALYs per life saved"},
+            {"name": "allfedPCivEndGivenCatastrophe", "ci": [0.005, 0.1],
+             "comment": "chance the catastrophe is permanently civilization-ending"},
+            {"name": "allfedRiskShareRemovedPerDollar", "ci": [1e-10, 1e-9],
+             "comment": "fraction of that x-risk a marginal resilient-food $ removes"},
+            {"name": "allfedFutureDalysAtStake", "ci": [1e11, 1e16],
+             "comment": "astronomical DALYs preserved if the collapse is averted (Bostrom)"},
+        ],
+        "expr": ("allfedPCatastrophePerCentury * allfedLivesSavedPerDollarIfCatastrophe * allfedDalyPerLife"
+                 " + allfedPCatastrophePerCentury * allfedPCivEndGivenCatastrophe"
+                 " * allfedRiskShareRemovedPerDollar * allfedFutureDalysAtStake"),
+     }},
     {"id": "redwood", "name": "AI safety (Redwood Research)", "domain": "xrisk_future",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
-     "source": "Linch's ~$100M per 0.01% x-risk reduction (~1e-12/$) x Bostrom's "
-               "conservative ~1e16 biological life-years at stake ('Astronomical "
-               "Waste') = ~1e4 undiscounted DALY/$ central; the CI is calibrated so "
-               "its lognormal mean reproduces that 1e4, and its ~5-OOM spread runs "
-               "from Thorstad-style skepticism (persistent hazard, small tractable "
-               "share) up to fuller Bostromian stakes (Cotra timelines/takeover)",
+     "source": "Linch's ~$100M-$1B per 0.01% (1e-4) x-risk reduction x the SAME "
+               "astronomical future at stake as ALLFED (Bostrom astronomical waste; "
+               "Cotra timelines). Worked BOTEC; central mean ~5.8k undiscounted DALY/$.",
      "source_url": "https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01",
-     "daly_per_usd": [0.07, 7000]},
+     "botec": {
+        "factors": [
+            {"name": "redwoodXRiskReducedPerDollar", "ci": [1e-13, 1e-12],
+             "comment": "Linch's ~$100M-$1B per 0.01% x-risk bar"},
+            {"name": "redwoodFutureDalysAtStake", "ci": [1e11, 1e16],
+             "comment": "astronomical DALYs preserved if extinction is averted (Bostrom); same future as ALLFED"},
+        ],
+        "expr": "redwoodXRiskReducedPerDollar * redwoodFutureDalysAtStake",
+     }},
 ]
 
 
@@ -151,12 +183,29 @@ def uniform_mean(lo, hi):
     return (lo + hi) / 2
 
 
+def _botec_factor_mean(f):
+    """E[factor] for a worked-BOTEC factor: a pinned scalar (`point`) or a
+    lognormal 90% CI (`ci`)."""
+    return float(f["point"]) if "point" in f else lognormal_mean(*f["ci"])
+
+
 def direct_daly_per_usd(org):
     """Exact E[direct effect] of the org, before moral weighting: the factors
     are independent, so the expectation of the product is the product of the
-    expectations (and E[1-X] = 1-E[X] by linearity)."""
+    expectations (and E[1-X] = 1-E[X] by linearity).
+
+    A `botec` is a worked calculation. General form: an ordered list of named,
+    independent `factors` (each a `ci` 90% CI or a pinned `point`) combined by
+    an `expr` of sums and products, so a BOTEC can add and multiply terms
+    (e.g. ALLFED's near-term lives fed + far-future collapse averted). Because
+    the factors are independent and the expr is multilinear, E[expr] is the expr
+    evaluated at each factor's mean. Old form: the soup kitchen's
+    people x wellbeing x (1 - bank)."""
     if "botec" in org:
         b = org["botec"]
+        if "factors" in b:
+            env = {f["name"]: _botec_factor_mean(f) for f in b["factors"]}
+            return eval(b["expr"], {"__builtins__": {}}, env)  # trusted in-repo expr
         return (lognormal_mean(*b["people_helped_per_usd"])
                 * lognormal_mean(*b["wellbeing_gain_daly"])
                 * (1 - uniform_mean(*b["counterfactual_bank_value"])))
@@ -270,11 +319,30 @@ def _sym_lognormal(lo, hi):
     return f"Sym.lognormal({{p5: {_sq_num(lo)}, p95: {_sq_num(hi)}}})"
 
 
+def _botec_factor_line(f):
+    """Squiggle line defining one worked-BOTEC factor as a named distribution
+    (or pinned scalar), with its cited justification."""
+    rhs = _sq_num(f["point"]) if "point" in f else _sym_lognormal(*f["ci"])
+    return f"{f['name']} = {rhs}  // {f['comment']}"
+
+
+def _botec_mean_expr(b):
+    """The BOTEC's `expr` with every DISTRIBUTION factor wrapped in mean() — its
+    exact analytic expectation (pinned points are already their own mean)."""
+    expr = b["expr"]
+    for f in b["factors"]:
+        if "point" not in f:
+            expr = re.sub(rf"\b{re.escape(f['name'])}\b", f"mean({f['name']})", expr)
+    return f"({expr})"
+
+
 def squiggle_dist_lines(org):
     """Squiggle lines defining the org's direct-effect distribution."""
     var = squiggle_var(org)
     if "botec" in org:
         b, p = org["botec"], _camel(org["id"])
+        if "factors" in b:
+            return [_botec_factor_line(f) for f in b["factors"]] + [f"{var} = {b['expr']}"]
         cb_lo, cb_hi = b["counterfactual_bank_value"]
         return [
             f"{p}PeopleHelpedPerUsd = {_sym_lognormal(*b['people_helped_per_usd'])}",
@@ -292,7 +360,9 @@ def squiggle_mean_expr(org):
     terms, so the BOTEC's expectation is the product of component means —
     the same computation direct_daly_per_usd performs in Python."""
     if "botec" in org:
-        p = _camel(org["id"])
+        b, p = org["botec"], _camel(org["id"])
+        if "factors" in b:
+            return _botec_mean_expr(b)
         return (f"(mean({p}PeopleHelpedPerUsd) * mean({p}WellbeingGainDaly)"
                 f" * (1 - mean({p}CounterfactualBankValue)))")
     return f"mean({squiggle_var(org)})"

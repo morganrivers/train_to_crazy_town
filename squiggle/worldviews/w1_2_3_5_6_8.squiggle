@@ -12,7 +12,7 @@
 // product of the means.
 flourishingDiscount = Sym.lognormal({p5: 0.08, p95: 0.8})  // reduced weight on creating happiness (Tomasik; Vinding 2020)
 sufferingPriority = Sym.lognormal({p5: 1.1, p95: 6.5})  // extra weight on averting intense suffering (Tomasik; Vinding 2020)
-futureDiscount = Sym.lognormal({p5: 0.0012, p95: 0.03})  // pure-time + catastrophe attenuation on far-future value (Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)
+futureDiscount = Sym.lognormal({p5: 3e-08, p95: 3e-06})  // pure-time + catastrophe attenuation on far-future value (Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)
 
 // Direct effect on each org's primary beneficiary, BEFORE moral
 // weighting. Sym.lognormal({p5, p95}) is the lognormal whose two-sided
@@ -36,9 +36,17 @@ swpDalyPerUsd = Sym.lognormal({p5: 1200, p95: 74000})
 // https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
 wildbugsDalyPerUsd = Sym.lognormal({p5: 1600, p95: 82000})
 // https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176
-allfedDalyPerUsd = Sym.lognormal({p5: 0.002, p95: 0.1})
+allfedPCatastrophePerCentury = Sym.lognormal({p5: 0.003, p95: 0.05})  // P(nuclear-winter-scale ag catastrophe this century): ~0.1-1%/yr full-scale nuclear war x ~10% winter
+allfedLivesSavedPerDollarIfCatastrophe = Sym.lognormal({p5: 0.02, p95: 2})  // Denkenberger alternate-food lives saved per $ GIVEN the catastrophe
+allfedDalyPerLife = 30  // DALYs per life saved
+allfedPCivEndGivenCatastrophe = Sym.lognormal({p5: 0.005, p95: 0.1})  // chance the catastrophe is permanently civilization-ending
+allfedRiskShareRemovedPerDollar = Sym.lognormal({p5: 1e-10, p95: 1e-09})  // fraction of that x-risk a marginal resilient-food $ removes
+allfedFutureDalysAtStake = Sym.lognormal({p5: 100000000000, p95: 10000000000000000})  // astronomical DALYs preserved if the collapse is averted (Bostrom)
+allfedDalyPerUsd = allfedPCatastrophePerCentury * allfedLivesSavedPerDollarIfCatastrophe * allfedDalyPerLife + allfedPCatastrophePerCentury * allfedPCivEndGivenCatastrophe * allfedRiskShareRemovedPerDollar * allfedFutureDalysAtStake
 // https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
-redwoodDalyPerUsd = Sym.lognormal({p5: 0.07, p95: 7000})
+redwoodXRiskReducedPerDollar = Sym.lognormal({p5: 1e-13, p95: 1e-12})  // Linch's ~$100M-$1B per 0.01% x-risk bar
+redwoodFutureDalysAtStake = Sym.lognormal({p5: 100000000000, p95: 10000000000000000})  // astronomical DALYs preserved if extinction is averted (Bostrom); same future as ALLFED
+redwoodDalyPerUsd = redwoodXRiskReducedPerDollar * redwoodFutureDalysAtStake
 
 // Each org: `dist` is its full wDALY/$ distribution under this worldview
 // (direct effect × moral coefficient, externalities correlated with the
@@ -52,8 +60,8 @@ scored = [
   { name: "The Humane League", dist: thlDalyPerUsd * 0.664 * sufferingPriority, wdalyPerUsd: mean(thlDalyPerUsd) * 0.664 * mean(sufferingPriority) },
   { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0.093 * sufferingPriority, wdalyPerUsd: mean(swpDalyPerUsd) * 0.093 * mean(sufferingPriority) },
   { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0.05 * sufferingPriority, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0.05 * mean(sufferingPriority) },
-  { name: "ALLFED", dist: allfedDalyPerUsd * 1 * futureDiscount * flourishingDiscount, wdalyPerUsd: mean(allfedDalyPerUsd) * 1 * mean(futureDiscount) * mean(flourishingDiscount) },
-  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 0, wdalyPerUsd: mean(redwoodDalyPerUsd) * 0 },
+  { name: "ALLFED", dist: allfedDalyPerUsd * 1 * futureDiscount * flourishingDiscount, wdalyPerUsd: (mean(allfedPCatastrophePerCentury) * mean(allfedLivesSavedPerDollarIfCatastrophe) * allfedDalyPerLife + mean(allfedPCatastrophePerCentury) * mean(allfedPCivEndGivenCatastrophe) * mean(allfedRiskShareRemovedPerDollar) * mean(allfedFutureDalysAtStake)) * 1 * mean(futureDiscount) * mean(flourishingDiscount) },
+  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 0, wdalyPerUsd: (mean(redwoodXRiskReducedPerDollar) * mean(redwoodFutureDalysAtStake)) * 0 },
 ]
 
 ranking = List.reverse(List.sortBy(scored, {|x| x.wdalyPerUsd}))
