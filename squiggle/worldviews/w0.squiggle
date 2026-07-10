@@ -19,8 +19,8 @@ aimDalyPerUsd = Sym.lognormal({p5: 0.001, p95: 0.025})  // moment-matched summar
 thlDalyPerUsd = Sym.lognormal({p5: 1.2, p95: 47})  // moment-matched summary of the thl botec (mean & variance exact); full derivation: squiggle/botecs/thl.squiggle
 swpDalyPerUsd = Sym.lognormal({p5: 1200, p95: 74000})  // moment-matched summary of the swp botec (mean & variance exact); full derivation: squiggle/botecs/swp.squiggle
 wildbugsDalyPerUsd = Sym.lognormal({p5: 1600, p95: 82000})  // moment-matched summary of the wildbugs botec (mean & variance exact); full derivation: squiggle/botecs/wildbugs.squiggle
-allfedDalyPerUsd = Sym.lognormal({p5: 0.0054504405159807425, p95: 1376.4811361363177})  // moment-matched summary of the allfed botec (mean & variance exact); full derivation: squiggle/botecs/allfed.squiggle
-redwoodDalyPerUsd = Sym.lognormal({p5: 0.02821566193484782, p95: 3544.1309238431677})  // moment-matched summary of the redwood botec (mean & variance exact); full derivation: squiggle/botecs/redwood.squiggle
+allfedDalyPerUsd = Sym.lognormal({p5: 0.1496764296773974, p95: 5262.689136082503})  // moment-matched summary of the allfed botec (mean & variance exact); full derivation: squiggle/botecs/allfed.squiggle
+redwoodDalyPerUsd = Sym.lognormal({p5: 0.18752610324040264, p95: 8398.830737611554})  // moment-matched summary of the redwood botec (mean & variance exact); full derivation: squiggle/botecs/redwood.squiggle
 
 // Each org: `dist` is its full wDALY/$ distribution under this worldview
 // (direct effect × moral coefficient, externalities correlated with the

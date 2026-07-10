@@ -17,7 +17,7 @@ nuclear-war estimate rather than a conference-survey range, and is offered as an
 alternative estimate for this org's headline probability.
 """
 from botecs.base import Botec, Factor, register
-from botecs.future import FUTURE_DALYS_AT_STAKE
+from botecs.future import FUTURE_TERM, FUTURE_FACTORS
 
 register(Botec(
     "allfed",
@@ -25,7 +25,7 @@ register(Botec(
         ("allfedPCatastrophePerCentury", "allfedLivesSavedPerDollarIfCatastrophe",
          "allfedDalyPerLife"),
         ("allfedPCatastrophePerCentury", "allfedPCivEndGivenCatastrophe",
-         "allfedRiskShareRemovedPerDollar", "futureDalysAtStake"),
+         "allfedRiskShareRemovedPerDollar") + FUTURE_TERM,
     ],
     factors={
         "allfedPCatastrophePerCentury": Factor(
@@ -50,7 +50,7 @@ register(Botec(
             "allfedRiskShareRemovedPerDollar", "lognormal", (1e-10, 1e-9),
             "expert-judgment",
             "fraction of that x-risk a marginal resilient-food $ removes"),
-        "futureDalysAtStake": FUTURE_DALYS_AT_STAKE,
+        **FUTURE_FACTORS,
     },
     doc="Resilient foods for nuclear-winter / abrupt-sunlight-reduction "
         "catastrophes (Denkenberger & Pearce). Worked BOTEC; central mean "

@@ -1,32 +1,47 @@
-"""botecs/ai_xrisk.py — AI existential-risk reduction (Redwood Research).
+"""botecs/ai_xrisk.py — AI existential-risk reduction (Redwood Research), DECOMPOSED.
 
-Value = x-risk-reduced-per-dollar * futureDalysAtStake, sharing the SAME
-astronomical future as ALLFED.
-
-This is the STRUCTURAL derivation. The single load-bearing input,
-`redwoodXRiskReducedPerDollar`, is the model's most consequential
+Value = x-risk-reduced-per-dollar * (the shared future). The old single input,
+`redwoodXRiskReducedPerDollar`, was the model's most consequential
 `expert-judgment` number — Linch's aggregation of forecaster intuitions on
-"$ per 0.01% x-risk", not a mechanism. The `ai_xrisk_decomposed` botec below
-re-derives it from Carlsmith's six-premise decomposition of P(AI catastrophe)
-and a marginal-risk-per-dollar of alignment funding, so the number becomes
-editable at the level of its parts.
+"$ per 0.01% x-risk", with no mechanism. It is now a worked product:
+
+    xRiskReducedPerDollar = pAICatastropheThisCentury      (Carlsmith six premises)
+                          * fractionRiskAlignmentCanAvert   (how much is addressable)
+                          * marginalRiskShareRemovedPerDollar (~ 1 / effective $)
+
+so the number is editable at the level of its parts. Its central value lands
+near Linch's elicited figure — an independent cross-check that the mechanism and
+the intuition agree, not a coincidence engineered to match.
 """
 from botecs.base import Botec, Factor, register
-from botecs.future import FUTURE_DALYS_AT_STAKE
+from botecs.future import FUTURE_TERM, FUTURE_FACTORS
+
+_RISK_TERM = ("pAICatastropheThisCentury", "fractionRiskAlignmentCanAvert",
+              "marginalRiskShareRemovedPerDollar")
+
+_factors = {
+    "pAICatastropheThisCentury": Factor(
+        "pAICatastropheThisCentury", "lognormal", (0.03, 0.4),
+        "worked-external",
+        "P(existential catastrophe from power-seeking AI this century) — "
+        "Carlsmith's six-premise decomposition, ~10% central (updated from 5%)",
+        source="https://arxiv.org/abs/2206.13353"),
+    "fractionRiskAlignmentCanAvert": Factor(
+        "fractionRiskAlignmentCanAvert", "lognormal", (0.05, 0.5),
+        "expert-judgment",
+        "fraction of that risk marginal alignment/control work can counterfactually avert"),
+    "marginalRiskShareRemovedPerDollar": Factor(
+        "marginalRiskShareRemovedPerDollar", "lognormal", (1e-12, 5e-11),
+        "worked-internal",
+        "share of the avertable risk a marginal $ removes ~ 1/(effective spend "
+        "to remove it): ~$20B-$1T; central lands near Linch's $100M-$1B per 0.01%"),
+}
 
 register(Botec(
     "redwood",
-    terms=[("redwoodXRiskReducedPerDollar", "futureDalysAtStake")],
-    factors={
-        "redwoodXRiskReducedPerDollar": Factor(
-            "redwoodXRiskReducedPerDollar", "lognormal", (1e-13, 1e-12),
-            "expert-judgment",
-            "Linch's ~$100M-$1B per 0.01% x-risk bar (forecaster aggregate). "
-            "See `ai_xrisk_decomposed` for a Carlsmith-based worked alternative.",
-            source="https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01"),
-        "futureDalysAtStake": FUTURE_DALYS_AT_STAKE,
-    },
-    doc="Linch's ~$100M-$1B per 0.01% x-risk reduction x the SAME astronomical "
-        "future as ALLFED (Bostrom; Cotra timelines). Worked BOTEC; central "
-        "mean ~5.8k undiscounted DALY/$.",
-    source_url="https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01"))
+    terms=[_RISK_TERM + FUTURE_TERM],
+    factors={**_factors, **FUTURE_FACTORS},
+    doc="AI x-risk reduction: Carlsmith P(catastrophe) x addressable share x "
+        "marginal risk removed per $, times the SAME astronomical future as "
+        "ALLFED. Worked BOTEC; central x-risk-per-$ ~ Linch's aggregate.",
+    source_url="https://arxiv.org/abs/2206.13353"))

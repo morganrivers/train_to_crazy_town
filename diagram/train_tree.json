@@ -54,12 +54,12 @@
         {
           "org": "GiveWell top charity (AMF)",
           "lives_per_1000usd": 0.3314661826755369,
-          "confidence": 0.676
+          "confidence": 0.688
         },
         {
           "org": "AIM / Charity Entrepreneurship",
           "lives_per_1000usd": 0.26899596540477017,
-          "confidence": 0.322
+          "confidence": 0.311
         }
       ],
       "figures": [
@@ -116,12 +116,12 @@
         {
           "org": "GiveWell top charity (AMF)",
           "lives_per_1000usd": 0.3314661826755369,
-          "confidence": 0.673
+          "confidence": 0.669
         },
         {
           "org": "AIM / Charity Entrepreneurship",
           "lives_per_1000usd": 0.26899596540477017,
-          "confidence": 0.315
+          "confidence": 0.308
         }
       ],
       "figures": [
@@ -151,8 +151,8 @@
           "confidence": 0.996
         },
         {
-          "org": "GiveWell top charity (AMF)",
-          "lives_per_1000usd": 0.3314661826755369,
+          "org": "ALLFED",
+          "lives_per_1000usd": 0.11810878254302784,
           "confidence": 0.002
         }
       ],
@@ -179,13 +179,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 194459.91382448244,
-          "confidence": 0.694
+          "lives_per_1000usd": 264804.18006141,
+          "confidence": 0.555
         },
         {
           "org": "ALLFED",
-          "lives_per_1000usd": 116221.91866893091,
-          "confidence": 0.302
+          "lives_per_1000usd": 147784.86601485676,
+          "confidence": 0.445
         }
       ],
       "figures": [
@@ -212,13 +212,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 194459.91382448244,
-          "confidence": 0.625
+          "lives_per_1000usd": 264804.18006141,
+          "confidence": 0.539
         },
         {
           "org": "ALLFED",
-          "lives_per_1000usd": 116221.91866893091,
-          "confidence": 0.224
+          "lives_per_1000usd": 147784.86601485676,
+          "confidence": 0.418
         }
       ],
       "figures": [
@@ -245,12 +245,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.7
+          "confidence": 0.709
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.3
+          "confidence": 0.291
         }
       ],
       "figures": [
@@ -278,12 +278,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -311,13 +311,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 194459.91382448244,
-          "confidence": 0.134
+          "lives_per_1000usd": 264804.18006141,
+          "confidence": 0.186
         },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.587
+          "confidence": 0.499
         }
       ],
       "figures": [
@@ -377,7 +377,7 @@
         {
           "org": "The Humane League",
           "lives_per_1000usd": 72.92743520415426,
-          "confidence": 0.999
+          "confidence": 0.998
         },
         {
           "org": "GiveWell top charity (AMF)",
@@ -410,12 +410,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.708
+          "confidence": 0.699
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.291
+          "confidence": 0.3
         }
       ],
       "figures": [
@@ -443,13 +443,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 62849.64369421357,
-          "confidence": 0.483
+          "lives_per_1000usd": 85584.98272615537,
+          "confidence": 0.467
         },
         {
-          "org": "The Humane League",
-          "lives_per_1000usd": 72.92743520415426,
-          "confidence": 0.373
+          "org": "ALLFED",
+          "lives_per_1000usd": 47764.22034627814,
+          "confidence": 0.341
         }
       ],
       "figures": [
@@ -478,12 +478,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -508,17 +508,17 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+4+5+6]",
-      "top_pick": "Shrimp Welfare Project",
+      "top_pick": "AI safety (Redwood Research)",
       "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 85584.98272615537,
+          "confidence": 0.073
+        },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.664
-        },
-        {
-          "org": "Wild insects (humane pesticides)",
-          "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.271
+          "confidence": 0.623
         }
       ],
       "figures": [
@@ -581,9 +581,9 @@
           "confidence": 0.997
         },
         {
-          "org": "GiveWell top charity (AMF)",
-          "lives_per_1000usd": 0.3000494845024374,
-          "confidence": 0.001
+          "org": "ALLFED",
+          "lives_per_1000usd": 0.11810878254302784,
+          "confidence": 0.002
         }
       ],
       "figures": [
@@ -611,12 +611,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.7
+          "confidence": 0.709
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.3
+          "confidence": 0.291
         }
       ],
       "figures": [
@@ -678,12 +678,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -746,12 +746,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.708
+          "confidence": 0.699
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.291
+          "confidence": 0.3
         }
       ],
       "figures": [
@@ -781,12 +781,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -814,12 +814,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.594
+          "confidence": 0.609
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.406
+          "confidence": 0.391
         }
       ],
       "figures": [
@@ -848,12 +848,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.604
+          "confidence": 0.598
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.396
+          "confidence": 0.402
         }
       ],
       "figures": [
@@ -882,12 +882,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.606
+          "confidence": 0.595
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.394
+          "confidence": 0.405
         }
       ],
       "figures": [
@@ -916,12 +916,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.594
+          "confidence": 0.609
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.406
+          "confidence": 0.391
         }
       ],
       "figures": [
@@ -951,12 +951,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.598
+          "confidence": 0.6
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.402
+          "confidence": 0.4
         }
       ],
       "figures": [
@@ -986,12 +986,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.604
+          "confidence": 0.598
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.396
+          "confidence": 0.402
         }
       ],
       "figures": [
@@ -1021,12 +1021,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.606
+          "confidence": 0.595
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.394
+          "confidence": 0.405
         }
       ],
       "figures": [
@@ -1057,12 +1057,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.598
+          "confidence": 0.6
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.402
+          "confidence": 0.4
         }
       ],
       "figures": [
@@ -1089,13 +1089,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 19445.991382448243,
-          "confidence": 0.648
+          "lives_per_1000usd": 26480.418006141004,
+          "confidence": 0.535
         },
         {
           "org": "ALLFED",
-          "lives_per_1000usd": 11622.191866893092,
-          "confidence": 0.252
+          "lives_per_1000usd": 14778.486601485674,
+          "confidence": 0.436
         }
       ],
       "figures": [
@@ -1122,13 +1122,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 19445.991382448243,
+          "lives_per_1000usd": 26480.418006141004,
           "confidence": 0.436
         },
         {
-          "org": "The Humane League",
-          "lives_per_1000usd": 23.572965115742573,
-          "confidence": 0.421
+          "org": "ALLFED",
+          "lives_per_1000usd": 14778.486601485674,
+          "confidence": 0.334
         }
       ],
       "figures": [
@@ -1152,17 +1152,17 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+2+3+4+5+9]",
-      "top_pick": "Shrimp Welfare Project",
+      "top_pick": "AI safety (Redwood Research)",
       "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 26480.418006141004,
+          "confidence": 0.066
+        },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.678
-        },
-        {
-          "org": "Wild insects (humane pesticides)",
-          "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.266
+          "confidence": 0.638
         }
       ],
       "figures": [
@@ -1190,13 +1190,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 6284.964369421357,
-          "confidence": 0.258
+          "lives_per_1000usd": 8558.498272615538,
+          "confidence": 0.305
         },
         {
           "org": "The Humane League",
           "lives_per_1000usd": 72.92743520415426,
-          "confidence": 0.664
+          "confidence": 0.478
         }
       ],
       "figures": [
@@ -1226,12 +1226,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.691
+          "confidence": 0.686
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.296
+          "confidence": 0.283
         }
       ],
       "figures": [
@@ -1257,13 +1257,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 16.726152016116068,
-          "confidence": 0.109
+          "lives_per_1000usd": 22.77669923379595,
+          "confidence": 0.138
         },
         {
           "org": "GiveWell top charity (AMF)",
           "lives_per_1000usd": 0.3314661826755369,
-          "confidence": 0.578
+          "confidence": 0.515
         }
       ],
       "figures": [
@@ -1292,12 +1292,12 @@
         {
           "org": "The Humane League",
           "lives_per_1000usd": 23.572965115742573,
-          "confidence": 0.967
+          "confidence": 0.945
         },
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 16.726152016116068,
-          "confidence": 0.024
+          "lives_per_1000usd": 22.77669923379595,
+          "confidence": 0.034
         }
       ],
       "figures": [
@@ -1325,13 +1325,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 1.6726152016116067,
-          "confidence": 0.035
+          "lives_per_1000usd": 2.277669923379595,
+          "confidence": 0.056
         },
         {
           "org": "GiveWell top charity (AMF)",
           "lives_per_1000usd": 0.3314661826755369,
-          "confidence": 0.654
+          "confidence": 0.617
         }
       ],
       "figures": [
@@ -1361,12 +1361,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.295
         }
       ],
       "figures": [
@@ -1396,12 +1396,12 @@
         {
           "org": "The Humane League",
           "lives_per_1000usd": 72.92743520415426,
-          "confidence": 0.993
+          "confidence": 0.982
         },
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 5.405909495244242,
-          "confidence": 0.005
+          "lives_per_1000usd": 7.361452564801641,
+          "confidence": 0.01
         }
       ],
       "figures": [
@@ -1431,12 +1431,12 @@
         {
           "org": "The Humane League",
           "lives_per_1000usd": 23.572965115742573,
-          "confidence": 0.988
+          "confidence": 0.984
         },
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 1.6726152016116067,
-          "confidence": 0.006
+          "lives_per_1000usd": 2.277669923379595,
+          "confidence": 0.008
         }
       ],
       "figures": [
@@ -1467,12 +1467,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -1503,7 +1503,7 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.705
+          "confidence": 0.706
         },
         {
           "org": "Wild insects (humane pesticides)",
@@ -1539,12 +1539,12 @@
         {
           "org": "The Humane League",
           "lives_per_1000usd": 72.92743520415426,
-          "confidence": 0.998
+          "confidence": 0.997
         },
         {
-          "org": "GiveWell top charity (AMF)",
-          "lives_per_1000usd": 1.0254534565656022,
-          "confidence": 0.001
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 0.7361452564801642,
+          "confidence": 0.002
         }
       ],
       "figures": [
@@ -1576,12 +1576,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.7
+          "confidence": 0.701
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.298
         }
       ],
       "figures": [
@@ -1609,12 +1609,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.7
+          "confidence": 0.709
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.3
+          "confidence": 0.291
         }
       ],
       "figures": [
@@ -1642,12 +1642,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -1675,12 +1675,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.708
+          "confidence": 0.699
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.291
+          "confidence": 0.3
         }
       ],
       "figures": [
@@ -1708,12 +1708,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.7
+          "confidence": 0.709
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.3
+          "confidence": 0.291
         }
       ],
       "figures": [
@@ -1741,12 +1741,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.594
+          "confidence": 0.609
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.406
+          "confidence": 0.391
         }
       ],
       "figures": [
@@ -1774,13 +1774,13 @@
       "picks": [
         {
           "org": "AI safety (Redwood Research)",
-          "lives_per_1000usd": 194459.91382448244,
-          "confidence": 0.134
+          "lives_per_1000usd": 264804.18006141,
+          "confidence": 0.186
         },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.587
+          "confidence": 0.499
         }
       ],
       "figures": [
@@ -1809,12 +1809,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -1843,12 +1843,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -1877,12 +1877,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.604
+          "confidence": 0.598
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.396
+          "confidence": 0.402
         }
       ],
       "figures": [
@@ -1911,12 +1911,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.708
+          "confidence": 0.699
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.291
+          "confidence": 0.3
         }
       ],
       "figures": [
@@ -1945,12 +1945,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.606
+          "confidence": 0.595
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.394
+          "confidence": 0.405
         }
       ],
       "figures": [
@@ -1979,12 +1979,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.594
+          "confidence": 0.609
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.406
+          "confidence": 0.391
         }
       ],
       "figures": [
@@ -2014,12 +2014,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.707
+          "confidence": 0.704
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.293
+          "confidence": 0.295
         }
       ],
       "figures": [
@@ -2044,17 +2044,17 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+11]",
-      "top_pick": "Shrimp Welfare Project",
+      "top_pick": "AI safety (Redwood Research)",
       "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 85584.98272615537,
+          "confidence": 0.073
+        },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.664
-        },
-        {
-          "org": "Wild insects (humane pesticides)",
-          "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.271
+          "confidence": 0.623
         }
       ],
       "figures": [
@@ -2079,17 +2079,17 @@
       ],
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+11]",
-      "top_pick": "Shrimp Welfare Project",
+      "top_pick": "AI safety (Redwood Research)",
       "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 26480.418006141004,
+          "confidence": 0.066
+        },
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.678
-        },
-        {
-          "org": "Wild insects (humane pesticides)",
-          "lives_per_1000usd": 7812.824618098233,
-          "confidence": 0.266
+          "confidence": 0.638
         }
       ],
       "figures": [
@@ -2119,12 +2119,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -2154,12 +2154,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.598
+          "confidence": 0.6
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.402
+          "confidence": 0.4
         }
       ],
       "figures": [
@@ -2189,12 +2189,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 64039.56156176112,
-          "confidence": 0.604
+          "confidence": 0.598
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 39064.123090491164,
-          "confidence": 0.396
+          "confidence": 0.402
         }
       ],
       "figures": [
@@ -2224,12 +2224,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.606
+          "confidence": 0.595
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.394
+          "confidence": 0.405
         }
       ],
       "figures": [
@@ -2260,12 +2260,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.701
+          "confidence": 0.703
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.296
         }
       ],
       "figures": [
@@ -2296,12 +2296,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.691
+          "confidence": 0.686
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.296
+          "confidence": 0.283
         }
       ],
       "figures": [
@@ -2332,7 +2332,7 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 21346.52052058704,
-          "confidence": 0.705
+          "confidence": 0.706
         },
         {
           "org": "Wild insects (humane pesticides)",
@@ -2368,12 +2368,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 198118.52065987609,
-          "confidence": 0.598
+          "confidence": 0.6
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 120852.26832946761,
-          "confidence": 0.402
+          "confidence": 0.4
         }
       ],
       "figures": [
@@ -2405,12 +2405,12 @@
         {
           "org": "Shrimp Welfare Project",
           "lives_per_1000usd": 66039.50688662537,
-          "confidence": 0.7
+          "confidence": 0.701
         },
         {
           "org": "Wild insects (humane pesticides)",
           "lives_per_1000usd": 24170.453665893525,
-          "confidence": 0.299
+          "confidence": 0.298
         }
       ],
       "figures": [

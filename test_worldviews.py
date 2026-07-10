@@ -193,11 +193,12 @@ def test_botec_models_carry_factors_and_provenance():
     src = {b.id: botecs.render_botec(b) for b in botecs.all_botecs()}
     assert "allfedPCatastrophePerCentury = Sym.lognormal" in src["allfed"]
     assert "[expert-judgment]" in src["allfed"]
-    assert "redwoodXRiskReducedPerDollar = Sym.lognormal" in src["redwood"]
-    # futureDalysAtStake is the SAME shared factor object in both far-future botecs
-    assert botecs.get("allfed").factors["futureDalysAtStake"] is \
-        botecs.get("redwood").factors["futureDalysAtStake"]
-    assert botecs.get("allfed").factors["futureDalysAtStake"].shared
+    assert "pAICatastropheThisCentury = Sym.lognormal" in src["redwood"]
+    # the shared future factors are the SAME objects in both far-future botecs,
+    # and flagged shared so the Monte-Carlo draws them once per world-state
+    for name in ("humansPerCentury", "expectedFutureCenturies", "dalyPerFutureLife"):
+        assert botecs.get("allfed").factors[name] is botecs.get("redwood").factors[name]
+        assert botecs.get("allfed").factors[name].shared
     # every factor's provenance is a known kind
     for b in botecs.all_botecs():
         for f in b.factors.values():
