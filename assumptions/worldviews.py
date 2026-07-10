@@ -167,6 +167,26 @@ def build_worldview(numbers):
     flat = max(evs.values()) == min(evs.values())
     top_pick = "nothing — ranking flat" if flat else max(evs, key=evs.get)
 
+    # Winner + runner-up, each with its lives-saved-equivalent per $1000 and the
+    # CONFIDENCE it is actually the best buy — P(argmax) over the chain's full
+    # distributions. The WINNER is the expected-value pick (the repo's decision
+    # rule, matching top_pick / the Squiggle "best buy"); the RUNNER-UP is the
+    # strongest actual challenger, the org most likely to beat it in a draw. When
+    # the winner leads only on a heavy tail, its confidence is low and the
+    # runner-up's is higher — exactly the (in)stability worth surfacing.
+    picks = []
+    if not flat:
+        conf = ns["argmax_confidences"]()
+        per_life = ns["DALYS_PER_LIFE"]
+        winner = max(evs, key=evs.get)
+        others = [nm for nm in evs if nm != winner]
+        challenger = max(others, key=lambda nm: conf[nm]) if others else None
+        for name in (winner, challenger):
+            if name is not None:
+                picks.append({"org": name,
+                              "lives_per_1000usd": evs[name] * 1000.0 / per_life,
+                              "confidence": round(conf[name], 3)})
+
     chain_str = " → ".join(f"{a.number} {a.name}" for a in chain)
     header = "\n".join([
         f"// === Train to crazy town — worldview {wid} (stop {last.number}) ===",
@@ -193,6 +213,7 @@ def build_worldview(numbers):
         "edge_kind": "override" if last.terminal else "expand",
         "desc": last.desc + " || Chain: " + chain_str,
         "top_pick": top_pick,
+        "picks": picks,
         "evs": evs,
         "coefficients": {org["name"]: ns["coefficient"](org) for org in ns["SLATE"]},
         "squiggle_source": ns["squiggle"](header),

@@ -66,15 +66,45 @@ def esc(s):
     return str(s).replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
 
 
+def _fmt_lives(x):
+    """Compact lives-saved-equivalent per $1000 (2.1e4 -> '21k', 0.33 -> '0.33')."""
+    ax = abs(x)
+    if ax >= 1000:
+        return f"{x/1000:.0f}k"
+    if ax >= 10:
+        return f"{x:.0f}"
+    if ax >= 1:
+        return f"{x:.1f}"
+    return f"{x:.2g}" if ax > 0 else "0"
+
+
+def _pick_lines(n):
+    """Winner + runner-up: lives-saved-equivalent per $1000 and the confidence
+    (P it is actually the best buy) the full distributions give."""
+    picks = n.get('picks') or []
+    if not picks:
+        return ['→ ' + n.get('top_pick', '?')]
+    w = picks[0]
+    out = [f"→ {w['org']}",
+           f"   {_fmt_lives(w['lives_per_1000usd'])} lives-eq/$1k · "
+           f"{round(w['confidence']*100)}% best"]
+    if len(picks) > 1:
+        r = picks[1]
+        out.append(f"   runner-up {r['org']} · {round(r['confidence']*100)}%")
+    return out
+
+
 def node_label(n, collapsed):
-    """Worldview headline (latest assumption + accepted chain) and its argmax
-    donation target. A collapsed boundary shows a `▼ N more` badge instead of
-    the figures line; an expanded node shows the figures who articulate it."""
-    label = n['lbl'] + '\n→ ' + n.get('top_pick', '?')
+    """Worldview headline (latest assumption + accepted chain), its best buy with
+    a lives-equivalent-per-$1000 and confidence, and its runner-up. A collapsed
+    boundary shows a `▼ N more` badge; an expanded node shows the figures."""
+    lines = [n['lbl']] + _pick_lines(n)
     if n['id'] in collapsed:
-        return label + f"\n▼ {collapsed[n['id']]['count']} more worldviews"
+        return '\n'.join(lines + [f"▼ {collapsed[n['id']]['count']} more worldviews"])
     figs = ', '.join(n.get('figures', []))
-    return label + ('\n(' + figs + ')' if figs else '')
+    if figs:
+        lines.append('(' + figs + ')')
+    return '\n'.join(lines)
 
 
 def render_page(page, nodes_by_id, edges):

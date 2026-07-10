@@ -49,6 +49,7 @@ def build_train_tree(views):
             "file": w["file"],
             "lbl": w["lbl"],
             "top_pick": w["top_pick"],
+            "picks": w["picks"],
             "figures": w["figures"],
             "squiggle": squiggle_relpath(w),
             "desc": w["desc"],

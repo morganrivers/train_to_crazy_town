@@ -42,6 +42,14 @@ one.
 - **A node is a worldview** — a chain of numbered assumptions (the `[1+2+5]`
   tag), with the donation target that worldview ranks first and the public
   figures who most prominently articulate its latest assumption.
+- **Each node reads out its best buy and its runner-up.** For the winner: its
+  **lives-saved-equivalent per $1000** (`wDALY/$ × 1000 ÷ 30`, a human life ≈ 30
+  welfare-adjusted DALYs) and a **confidence** — `P(it is actually the best buy)`
+  from a Monte-Carlo over the full distributions. The runner-up is the strongest
+  *challenger* (the org most likely to beat the winner) with its own confidence.
+  When a winner leads only on a heavy tail its confidence is low and the
+  challenger's is higher — e.g. under the person-affecting view the expected-value
+  pick is AI safety (best just ~4% of the time) while GiveWell is best ~65%.
 - **An edge accepts exactly one more assumption.**
 - **A band (STOP 0–13) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
