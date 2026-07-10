@@ -163,9 +163,6 @@ def test_models_carry_the_chains_distributions():
     assert "simulationContinues = Sym.beta(1, 9)" in src("w1_3_4_9")
     assert "presentPeopleFraction = Sym.lognormal" in src("w1_2_3_4_5_10")
     assert "sufferingPriority = Sym.lognormal" in src("w1_2_6")
-    # the worked far-future BOTECs render their mechanistic factors as distributions
-    assert "allfedPCatastrophePerCentury = Sym.lognormal" in src("w1_3_4")
-    assert "redwoodXRiskReducedPerDollar = Sym.lognormal" in src("w1_3_4")
     # every model ships a full distribution next to its exact mean
     assert "dist:" in src("w1_2_5") and "wdalyPerUsd:" in src("w1_2_5")
     # ... and no model regressed to the sampled-mean `to` syntax
@@ -174,6 +171,49 @@ def test_models_carry_the_chains_distributions():
             if "=" in line and not line.lstrip().startswith("//"):
                 assert " to " not in line.split("//")[0], \
                     f'{w["id"]}: sampled `to` distribution in {line!r}'
+
+
+def test_worldview_models_summarise_botecs_and_link_out():
+    """Direct effects appear in worldview models as ONE moment-matched lognormal
+    summary per org that links to its botec derivation — the full factor
+    breakdown is NOT inlined into all 73 models."""
+    src = BY_ID["w1_3_4"]["squiggle_source"]
+    assert "allfedDalyPerUsd = Sym.lognormal" in src
+    assert "full derivation: squiggle/botecs/allfed.squiggle" in src
+    # the mechanistic factors live in the botec model, not the worldview model
+    assert "allfedPCatastrophePerCentury" not in src
+    assert "redwoodXRiskReducedPerDollar" not in src
+
+
+def test_botec_models_carry_factors_and_provenance():
+    """Each botec renders a standalone full-derivation model whose factors are
+    tagged with provenance; the shared future factor is defined once and used by
+    both far-future orgs."""
+    import botecs
+    src = {b.id: botecs.render_botec(b) for b in botecs.all_botecs()}
+    assert "allfedPCatastrophePerCentury = Sym.lognormal" in src["allfed"]
+    assert "[expert-judgment]" in src["allfed"]
+    assert "redwoodXRiskReducedPerDollar = Sym.lognormal" in src["redwood"]
+    # futureDalysAtStake is the SAME shared factor object in both far-future botecs
+    assert botecs.get("allfed").factors["futureDalysAtStake"] is \
+        botecs.get("redwood").factors["futureDalysAtStake"]
+    assert botecs.get("allfed").factors["futureDalysAtStake"].shared
+    # every factor's provenance is a known kind
+    for b in botecs.all_botecs():
+        for f in b.factors.values():
+            assert f.provenance in botecs.PROVENANCE_KINDS
+
+
+def test_botec_means_match_the_python_ranking():
+    """A botec's analytic mean equals the direct-effect the ranking uses, and
+    its moment-matched summary lognormal has that same mean to float precision
+    (so the worldview model's displayed dist and its exact wdalyPerUsd agree)."""
+    import botecs
+    for b in botecs.all_botecs():
+        summ = b.summary_lognormal()
+        if summ is None:
+            continue
+        assert abs(botecs.lognormal_mean(*summ) - b.mean()) / b.mean() < 1e-9
 
 
 def test_credences_are_a_distribution():

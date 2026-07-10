@@ -13,53 +13,35 @@
 futureDiscount = Sym.lognormal({p5: 3e-08, p95: 3e-06})  // pure-time + catastrophe attenuation on far-future value (Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)
 
 // Direct effect on each org's primary beneficiary, BEFORE moral
-// weighting. Sym.lognormal({p5, p95}) is the lognormal whose two-sided
-// 90% CI is [p5, p95] — an order-of-magnitude BOTEC, symbolic so every
-// mean() below is analytic rather than sampled. Each org's figure is
-// grounded in the source cited on it.
-soupKitchenPeopleHelpedPerUsd = Sym.lognormal({p5: 0.05, p95: 0.5})
-soupKitchenWellbeingGainDaly = Sym.lognormal({p5: 0.001, p95: 0.01})
-soupKitchenCounterfactualBankValue = Sym.uniform(0.1, 0.5)
-soupKitchenDalyPerUsd = soupKitchenPeopleHelpedPerUsd * soupKitchenWellbeingGainDaly * (1 - soupKitchenCounterfactualBankValue)
-// https://www.givewell.org/international/technical/programs/cash-transfers
-gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})
-// https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models
-amfDalyPerUsd = Sym.lognormal({p5: 0.0035, p95: 0.021})
-// https://www.charityentrepreneurship.com/
-aimDalyPerUsd = Sym.lognormal({p5: 0.001, p95: 0.025})
-// https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken
-thlDalyPerUsd = Sym.lognormal({p5: 1.2, p95: 47})
-// https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane
-swpDalyPerUsd = Sym.lognormal({p5: 1200, p95: 74000})
-// https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
-wildbugsDalyPerUsd = Sym.lognormal({p5: 1600, p95: 82000})
-// https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176
-allfedPCatastrophePerCentury = Sym.lognormal({p5: 0.003, p95: 0.05})  // P(nuclear-winter-scale ag catastrophe this century): ~0.1-1%/yr full-scale nuclear war x ~10% winter
-allfedLivesSavedPerDollarIfCatastrophe = Sym.lognormal({p5: 0.02, p95: 2})  // Denkenberger alternate-food lives saved per $ GIVEN the catastrophe
-allfedDalyPerLife = 30  // DALYs per life saved
-allfedPCivEndGivenCatastrophe = Sym.lognormal({p5: 0.005, p95: 0.1})  // chance the catastrophe is permanently civilization-ending
-allfedRiskShareRemovedPerDollar = Sym.lognormal({p5: 1e-10, p95: 1e-09})  // fraction of that x-risk a marginal resilient-food $ removes
-allfedFutureDalysAtStake = Sym.lognormal({p5: 100000000000, p95: 10000000000000000})  // astronomical DALYs preserved if the collapse is averted (Bostrom)
-allfedDalyPerUsd = allfedPCatastrophePerCentury * allfedLivesSavedPerDollarIfCatastrophe * allfedDalyPerLife + allfedPCatastrophePerCentury * allfedPCivEndGivenCatastrophe * allfedRiskShareRemovedPerDollar * allfedFutureDalysAtStake
-// https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
-redwoodXRiskReducedPerDollar = Sym.lognormal({p5: 1e-13, p95: 1e-12})  // Linch's ~$100M-$1B per 0.01% x-risk bar
-redwoodFutureDalysAtStake = Sym.lognormal({p5: 100000000000, p95: 10000000000000000})  // astronomical DALYs preserved if extinction is averted (Bostrom); same future as ALLFED
-redwoodDalyPerUsd = redwoodXRiskReducedPerDollar * redwoodFutureDalysAtStake
+// weighting, as a moment-matched lognormal SUMMARY of that org's worked
+// botec (mean AND variance exact). The full factor-by-factor derivation —
+// with each factor's provenance and source — lives in the linked
+// squiggle/botecs/<id>.squiggle model, so it is edited in ONE place and
+// read by every worldview, rather than inlined into all 73.
+soupKitchenDalyPerUsd = Sym.lognormal({p5: 6.629938598123701e-05, p95: 0.0017987341077512714})  // moment-matched summary of the soup_kitchen botec (mean & variance exact); full derivation: squiggle/botecs/soup_kitchen.squiggle
+gdDalyPerUsd = Sym.lognormal({p5: 0.0004, p95: 0.002})  // moment-matched summary of the gd botec (mean & variance exact); full derivation: squiggle/botecs/gd.squiggle
+amfDalyPerUsd = Sym.lognormal({p5: 0.0035, p95: 0.021})  // moment-matched summary of the amf botec (mean & variance exact); full derivation: squiggle/botecs/amf.squiggle
+aimDalyPerUsd = Sym.lognormal({p5: 0.001, p95: 0.025})  // moment-matched summary of the aim botec (mean & variance exact); full derivation: squiggle/botecs/aim.squiggle
+thlDalyPerUsd = Sym.lognormal({p5: 1.2, p95: 47})  // moment-matched summary of the thl botec (mean & variance exact); full derivation: squiggle/botecs/thl.squiggle
+swpDalyPerUsd = Sym.lognormal({p5: 1200, p95: 74000})  // moment-matched summary of the swp botec (mean & variance exact); full derivation: squiggle/botecs/swp.squiggle
+wildbugsDalyPerUsd = Sym.lognormal({p5: 1600, p95: 82000})  // moment-matched summary of the wildbugs botec (mean & variance exact); full derivation: squiggle/botecs/wildbugs.squiggle
+allfedDalyPerUsd = Sym.lognormal({p5: 0.0054504405159807425, p95: 1376.4811361363177})  // moment-matched summary of the allfed botec (mean & variance exact); full derivation: squiggle/botecs/allfed.squiggle
+redwoodDalyPerUsd = Sym.lognormal({p5: 0.02821566193484782, p95: 3544.1309238431677})  // moment-matched summary of the redwood botec (mean & variance exact); full derivation: squiggle/botecs/redwood.squiggle
 
 // Each org: `dist` is its full wDALY/$ distribution under this worldview
 // (direct effect × moral coefficient, externalities correlated with the
 // same direct-effect draw); `wdalyPerUsd` is the exact analytic mean of
 // `dist`, which is what the ranking sorts by.
 scored = [
-  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: (mean(soupKitchenPeopleHelpedPerUsd) * mean(soupKitchenWellbeingGainDaly) * (1 - mean(soupKitchenCounterfactualBankValue))) * 1 },
+  { name: "Local soup kitchen", dist: soupKitchenDalyPerUsd * 1, wdalyPerUsd: mean(soupKitchenDalyPerUsd) * 1 },
   { name: "GiveDirectly", dist: gdDalyPerUsd * 1, wdalyPerUsd: mean(gdDalyPerUsd) * 1 },
   { name: "GiveWell top charity (AMF)", dist: amfDalyPerUsd * 1, wdalyPerUsd: mean(amfDalyPerUsd) * 1 },
   { name: "AIM / Charity Entrepreneurship", dist: aimDalyPerUsd * 1, wdalyPerUsd: mean(aimDalyPerUsd) * 1 },
   { name: "The Humane League", dist: thlDalyPerUsd * 0, wdalyPerUsd: mean(thlDalyPerUsd) * 0 },
   { name: "Shrimp Welfare Project", dist: swpDalyPerUsd * 0, wdalyPerUsd: mean(swpDalyPerUsd) * 0 },
   { name: "Wild insects (humane pesticides)", dist: wildbugsDalyPerUsd * 0, wdalyPerUsd: mean(wildbugsDalyPerUsd) * 0 },
-  { name: "ALLFED", dist: allfedDalyPerUsd * 1 * futureDiscount, wdalyPerUsd: (mean(allfedPCatastrophePerCentury) * mean(allfedLivesSavedPerDollarIfCatastrophe) * allfedDalyPerLife + mean(allfedPCatastrophePerCentury) * mean(allfedPCivEndGivenCatastrophe) * mean(allfedRiskShareRemovedPerDollar) * mean(allfedFutureDalysAtStake)) * 1 * mean(futureDiscount) },
-  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 0, wdalyPerUsd: (mean(redwoodXRiskReducedPerDollar) * mean(redwoodFutureDalysAtStake)) * 0 },
+  { name: "ALLFED", dist: allfedDalyPerUsd * 1 * futureDiscount, wdalyPerUsd: mean(allfedDalyPerUsd) * 1 * mean(futureDiscount) },
+  { name: "AI safety (Redwood Research)", dist: redwoodDalyPerUsd * 0, wdalyPerUsd: mean(redwoodDalyPerUsd) * 0 },
 ]
 
 ranking = List.reverse(List.sortBy(scored, {|x| x.wdalyPerUsd}))

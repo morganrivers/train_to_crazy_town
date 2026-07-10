@@ -7,6 +7,8 @@ Writes / overwrites:
   - diagram/train_tree.json           (the worldview graph the diagram builds from)
   - squiggle/worldviews/*.squiggle    (one STANDALONE Squiggle model per worldview,
                                        rendered by running the chain's Python)
+  - squiggle/botecs/*.squiggle        (one full-derivation model per botec — the
+                                       empirical axis, linked from each worldview)
 
 Usage:
   python3 generate.py            # regenerate everything
@@ -26,14 +28,20 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "diagram"))
 from assumptions import worldviews as W  # noqa: E402
+import botecs  # noqa: E402  (the empirical axis)
 import partition as P  # noqa: E402  (diagram/partition.py)
 
 TRAIN_TREE = os.path.join(ROOT, "diagram", "train_tree.json")
 SQUIGGLE_DIR = os.path.join(ROOT, "squiggle", "worldviews")
+BOTEC_DIR = os.path.join(ROOT, "squiggle", "botecs")
 
 
 def squiggle_relpath(w):
     return f"squiggle/worldviews/{w['id']}.squiggle"
+
+
+def botec_relpath(b):
+    return f"squiggle/botecs/{b.id}.squiggle"
 
 
 def build_train_tree(views):
@@ -86,18 +94,20 @@ def targets():
     out = {TRAIN_TREE: build_train_tree(views)}
     for w in views:
         out[os.path.join(ROOT, *squiggle_relpath(w).split("/"))] = w["squiggle_source"]
+    for b in botecs.all_botecs():
+        out[os.path.join(ROOT, *botec_relpath(b).split("/"))] = botecs.render_botec(b)
     return out
 
 
 def orphans(target_paths):
-    """Committed .squiggle files no current worldview generates (stale ids)."""
-    if not os.path.isdir(SQUIGGLE_DIR):
-        return []
-    return sorted(
-        os.path.join(SQUIGGLE_DIR, f)
-        for f in os.listdir(SQUIGGLE_DIR)
-        if f.endswith(".squiggle") and os.path.join(SQUIGGLE_DIR, f) not in target_paths
-    )
+    """Committed .squiggle files (worldview or botec) no current output covers."""
+    out = []
+    for d in (SQUIGGLE_DIR, BOTEC_DIR):
+        if not os.path.isdir(d):
+            continue
+        out += [os.path.join(d, f) for f in os.listdir(d)
+                if f.endswith(".squiggle") and os.path.join(d, f) not in target_paths]
+    return sorted(out)
 
 
 def main():
