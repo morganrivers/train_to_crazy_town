@@ -1,5 +1,12 @@
 # Train to Crazy Town
 
+We are making objective probabilistic expected-value calculations under a set
+of clear assumptions which construct coherent worldviews. The assumptions are
+the moral premises — who counts, how much, under what discount — and they are
+the *only* thing that varies; every empirical magnitude is an input with a
+stated derivation or source to be checked, never an authority's opinion to be
+trusted.
+
 How far down the effective-altruism reasoning train should you ride — and what
 should you donate to at each stop?
 
