@@ -45,7 +45,7 @@ def test_generated_files_are_current():
 def test_numbering_is_linear():
     """Assumption files are numbered 0..N with no doubling and no gaps
     (load_assumptions raises otherwise; assert the expected ladder here)."""
-    assert sorted(W.ASSUMPTIONS) == list(range(12))
+    assert sorted(W.ASSUMPTIONS) == list(range(14))
 
 
 def test_each_edge_adds_exactly_one_assumption():
@@ -61,16 +61,18 @@ def test_each_edge_adds_exactly_one_assumption():
 
 
 def test_combination_rules_limit_the_explosion():
-    """REQUIRES/EXCLUDES/TERMINAL cut 2^11 subsets down to a plausible few."""
-    assert len(VIEWS) == 39, f"expected 39 worldviews, got {len(VIEWS)}"
+    """REQUIRES/EXCLUDES/TERMINAL cut 2^13 subsets down to a plausible few."""
+    assert len(VIEWS) == 73, f"expected 73 worldviews, got {len(VIEWS)}"
     assert not W.is_valid({2}), "animals person must also count far-away humans"
     assert not W.is_valid({1, 4}), "no-discounting requires the discounting stop first"
     assert not W.is_valid({1, 2, 7, 8}), "net-negative lives requires animals_matter_a_lot"
     assert not W.is_valid({1, 2, 3, 4, 5, 7}), \
         "the meat-eater problem is a near-term stop, not combined with no-discounting"
-    assert not W.is_valid({1, 3, 4, 9, 10, 11}), "the two overrides exclude each other"
-    assert not W.is_valid({1, 2, 3, 4, 5, 9, 10}), "overrides only ride their minimal chain"
-    assert W.is_valid({1, 3, 4, 9, 10})
+    assert not W.is_valid({1, 2, 10}), "person-affecting view requires no-discounting"
+    assert not W.is_valid({1, 2, 11}), "soil animals requires animals_matter_a_lot"
+    assert not W.is_valid({1, 3, 4, 9, 12, 13}), "the two overrides exclude each other"
+    assert not W.is_valid({1, 2, 3, 4, 5, 9, 12}), "overrides only ride their minimal chain"
+    assert W.is_valid({1, 3, 4, 9, 12})
 
 
 def test_moral_circle_only_grows():
@@ -102,14 +104,45 @@ def test_the_train_actually_moves():
     assert BY_ID["w1_2"]["top_pick"] == "The Humane League"
     assert BY_ID["w1_3"]["top_pick"] == "GiveWell top charity (AMF)"
     assert BY_ID["w1_3_4"]["top_pick"] == "AI safety (Redwood Research)"
-    assert BY_ID["w1_2_5"]["top_pick"] == "Wild insects (humane pesticides)"
+    assert BY_ID["w1_2_5"]["top_pick"] == "Shrimp Welfare Project"
+
+
+def test_worked_botecs_decide_the_longtermist_race():
+    """ALLFED and AI safety are worked BOTECs sharing the same astronomical
+    future, so which wins is arithmetic on their x-risk-reduced-per-dollar, not a
+    forced multiplier. On the slate's central inputs AI safety edges ALLFED."""
+    ai = BY_ID["w1_3_4"]["evs"]["AI safety (Redwood Research)"]
+    allfed = BY_ID["w1_3_4"]["evs"]["ALLFED"]
+    assert ai > allfed > 0, "both far-future orgs positive, AI safety ahead here"
+    assert 1.2 < ai / allfed < 3, f"expected a close race, got {ai/allfed:.2f}x"
+    # a POSITIVE pure-time discount annihilates the astronomical future, so the
+    # moderate longtermist (stop 3) still ranks present global health on top
+    amf = "GiveWell top charity (AMF)"
+    assert BY_ID["w1_3"]["evs"]["ALLFED"] < BY_ID["w1_3"]["evs"][amf]
+
+
+def test_new_assumptions_flip_the_ranking():
+    """Each added assumption changes an INPUT and the best buy moves; the
+    animals-matter worldview reproduces Grilo's published multiples."""
+    amf = "GiveWell top charity (AMF)"
+    # soil animals: the cropland externality drives human charities net-negative
+    assert BY_ID["w1_2_5"]["evs"][amf] > 0
+    assert BY_ID["w1_2_5_11"]["evs"][amf] < 0
+    # person-affecting view collapses the astronomical case; animal-inclusive
+    # longtermism flips off AI safety back to the best animal buy
+    assert BY_ID["w1_2_3_4_5"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_2_3_4_5_10"]["top_pick"] == "Shrimp Welfare Project"
+    # the mirror: at RP welfare ranges, SWP reproduces Grilo's ~64k x GiveWell
+    gw = BY_ID["w1_2_5"]["evs"][amf]
+    swp = BY_ID["w1_2_5"]["evs"]["Shrimp Welfare Project"]
+    assert 4e4 < swp / gw < 9e4, f"SWP is {swp/gw:.0f}x GiveWell, expected ~64k"
 
 
 def test_overrides_go_flat():
     """The end of the line: anti-realism sets every value to 0; the Boltzmann
     brain collapses everything to one equal pleasant thought."""
-    assert set(BY_ID["w1_3_4_9_10"]["evs"].values()) == {0.0}
-    assert set(BY_ID["w1_3_4_9_11"]["evs"].values()) == {1e-6}
+    assert set(BY_ID["w1_3_4_9_12"]["evs"].values()) == {0.0}
+    assert set(BY_ID["w1_3_4_9_13"]["evs"].values()) == {1e-6}
 
 
 def test_meat_eater_and_net_negative_lives():

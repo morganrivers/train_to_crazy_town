@@ -43,7 +43,7 @@ one.
   tag), with the donation target that worldview ranks first and the public
   figures who most prominently articulate its latest assumption.
 - **An edge accepts exactly one more assumption.**
-- **A band (STOP 0–11) is how far down the line a worldview rides** — its
+- **A band (STOP 0–13) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
   violet at the bottom.
 - **The decision rule never changes.** Every worldview maximizes expected
@@ -64,29 +64,42 @@ a soup kitchen wins. Each numbered assumption modifies the worldview before it:
 
 1. **far-away humans count** — distance is not morally relevant → global health
 2. **animals count, somewhat** — neuron-weighted welfare → corporate campaigns
-3. **future humans matter, discounted** — heavily discounted → global health holds
-4. **no discounting the future** — astronomical stakes → AI safety
-5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates,
-   the ~10^19 soil animals → wild-insect welfare
+3. **future humans matter, discounted** — a positive pure-time rate annihilates
+   the astronomical far future → global health still holds
+4. **no discounting the future** — astronomical stakes → AI safety (which edges
+   out ALLFED on the slate's worked BOTECs — a close, contestable race)
+5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
+   shrimp welfare (this worldview reproduces Grilo's published numbers)
 6. **suffering-focused ethics** — averting suffering beats creating happiness
 7. **the meat-eater problem** — a saved human eats animals for a lifetime, so
-   human charities are charged for the factory farming they cause
+   human charities are charged for the factory farming they cause (Grilo)
 8. **net-negative animal lives** — farmed and wild lives aren't worth living;
    with the meat-eater problem, human charities come out net-harmful
 9. **living in a simulation** — the far future only counts if it keeps running
-10. **morality is not real** — every value goes to 0; keep your money
-11. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+10. **person-affecting view** — making happy people is neutral, so the
+    astronomical case for x-risk collapses (Narveson)
+11. **count soil animals** — ~10^19 soil nematodes/mites; global health expands
+    cropland and, on Grilo's figure, comes out net-harmful
+12. **morality is not real** — every value goes to 0; keep your money
+13. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+
+Two things are deliberately *not* assumptions, because a worldview should change
+what you *believe*, not force a result: **whether resilient foods beat AI
+safety** is decided by the two orgs' worked BOTECs (change an input and the
+ranking moves), and **whether RP's invertebrate welfare ranges are inflated**
+(the two-envelope critique) is a methodological correction documented as a
+judgment call in the code, not a fork.
 
 Not every combination is a coherent person — an animals person won't think only
 their own community matters, and the near-term meat-eater bookkeeping is moot
-once astronomical stakes dominate — so compatibility rules prune 2,048 possible
-chains to **39 worldviews**. The ladder, the rules, and how chains compose are
+once astronomical stakes dominate — so compatibility rules prune 8,192 possible
+chains to **73 worldviews**. The ladder, the rules, and how chains compose are
 documented in [`assumptions/README.md`](assumptions/README.md).
 
 ## What's in the repo
 
-- **[`assumptions/`](assumptions/README.md)** — the single source of truth: ten
-  numbered Python assumption files that compose into the 39 worldviews.
+- **[`assumptions/`](assumptions/README.md)** — the single source of truth:
+  fourteen numbered Python assumption files that compose into the 73 worldviews.
 - **[`squiggle/`](squiggle/README.md)** — one standalone Squiggle model per
   worldview (generated), each exporting its ranking and `worldviewEv`, the
   expected value of that worldview. Runnable locally, in the playground links,
@@ -101,7 +114,7 @@ documented in [`assumptions/README.md`](assumptions/README.md).
 
   prints each org's expected cost-effectiveness (as a multiple of GiveWell top
   charities) and its share of a portfolio. `--center` is the worldview you lean
-  toward (`--list` shows all 23); `--diversification 0` goes all-in on its
+  toward (`--list` shows all 73); `--diversification 0` goes all-in on its
   single winner, higher values spread credence across nearby worldviews and
   fund the best org in each.
 - **`generate.py` / `test_worldviews.py`** — regenerate every derived file from
@@ -117,17 +130,36 @@ documented in [`assumptions/README.md`](assumptions/README.md).
   https://80000hours.org/podcast/episodes/alexander-berger-improving-global-health-wellbeing-clear-direct-ways/
 - *When to get off the train to crazy town?* — EA Forum —
   https://forum.effectivealtruism.org/posts/feejxTPvBJY2cfXRp/when-to-get-off-the-train-to-crazy-town
-- Rethink Priorities, *Welfare range estimates* —
+- Rethink Priorities, *Welfare range estimates* (Fischer et al.) —
   https://rethinkpriorities.org/research-area/welfare-range-estimates/
 - *The meat-eater problem* — EA Forum topic —
   https://forum.effectivealtruism.org/topics/meat-eater-problem
 - Brian Tomasik, *The Importance of Wild-Animal Suffering* —
   https://reducing-suffering.org/the-importance-of-wild-animal-suffering/
-- *Cost-effectiveness of corporate campaigns for chicken welfare* — EA Forum —
+- Vasco Grilo, *Cost-effectiveness of corporate campaigns for chicken welfare*
+  (~1.67–14.3 DALY/$, ~168–1,440× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/8FqWSqv9AeLowgajn/cost-effectiveness-of-corporate-campaigns-for-chicken
-- *Cost-effectiveness of the Shrimp Welfare Project's Humane Slaughter
-  Initiative* — EA Forum —
+- Saulius Šimčikas, *Corporate campaigns affect 9 to 120 years of chicken life
+  per dollar spent* — Rethink Priorities —
+  https://rethinkpriorities.org/research-area/corporate-campaigns-affect-9-to-120-years-of-chicken-life-per-dollar-spent/
+- Vasco Grilo, *Cost-effectiveness of the Shrimp Welfare Project's Humane
+  Slaughter Initiative* (639 DALY/$, ~64k× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/EbQysXxofbSqkbAiT/cost-effectiveness-of-shrimp-welfare-project-s-humane
-- *Cost-effectiveness of paying farmers to use more humane pesticides* — EA
-  Forum —
+- Vasco Grilo, *Cost-effectiveness of paying farmers to use more humane
+  pesticides* (236 DALY/$, ~24k× GiveWell) — EA Forum —
   https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane
+- Vasco Grilo, *GiveWell may have made 1 billion dollars of harmful grants...*
+  (meat-eater / soil-animal accounting) — EA Forum —
+  https://forum.effectivealtruism.org/posts/FqioYEr97eoCQMxhk/givewell-may-have-made-1-billion-dollars-of-harmful-grants
+- Nuño Sempere, *A Bayesian Adjustment to Rethink Priorities' Welfare Range
+  Estimates* —
+  https://nunosempere.com/blog/2023/02/19/bayesian-adjustment-to-rethink-priorities-welfare-range-estimates/
+- David Denkenberger & Joshua Pearce, *Long-term cost-effectiveness of resilient
+  foods for global catastrophes compared to AGI safety* —
+  https://www.sciencedirect.com/science/article/abs/pii/S2212420922000176
+- Linch Zhang, *How many EA 2021 $s would you trade off against a 0.01% chance
+  of existential catastrophe?* — EA Forum —
+  https://forum.effectivealtruism.org/posts/cKPkimztzKoCkZ75r/how-many-ea-2021-usds-would-you-trade-off-against-a-0-01
+- Nick Bostrom, *Astronomical Waste* — https://www.nickbostrom.com/astronomical/waste.html
+- Ajeya Cotra, *Forecasting transformative AI: the "biological anchors" method* —
+  https://www.cold-takes.com/forecasting-transformative-ai-the-biological-anchors-method-in-a-nutshell/
