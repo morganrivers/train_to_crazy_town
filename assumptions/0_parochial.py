@@ -32,8 +32,9 @@ DESC = (
     "defends it."
 )
 
-import math  # noqa: E402  (assumption files run via exec, in chain order)
-import re    # noqa: E402
+import math    # noqa: E402  (assumption files run via exec, in chain order)
+import random  # noqa: E402
+import re      # noqa: E402
 
 HUMAN_NEURONS = 8.6e10
 
@@ -244,9 +245,12 @@ def uncertain_factors(org):
 
 def lognormal_factor(name, lo, hi, comment):
     """An uncertain factor whose two-sided 90% CI is [lo, hi] (rendered
-    symbolically so its mean stays analytic), or a pinned point when lo == hi."""
+    symbolically so its mean stays analytic), or a pinned point when lo == hi.
+    `sampler` carries the raw spec so the confidence Monte-Carlo can draw from
+    the same distribution the mean summarises."""
     return {"name": name, "mean": lognormal_mean(lo, hi), "point": lo == hi,
             "dist": _sq_num(lo) if lo == hi else _sym_lognormal(lo, hi),
+            "sampler": ("point", lo) if lo == hi else ("lognormal", lo, hi),
             "comment": comment}
 
 
@@ -254,7 +258,8 @@ def beta_factor(name, a, b, comment):
     """An uncertain PROBABILITY factor, beta(a, b) — properly bounded to [0, 1]
     where a lognormal would leak past 1. Mean is exactly a/(a+b)."""
     return {"name": name, "mean": a / (a + b), "point": False,
-            "dist": f"Sym.beta({_sq_num(a)}, {_sq_num(b)})", "comment": comment}
+            "dist": f"Sym.beta({_sq_num(a)}, {_sq_num(b)})",
+            "sampler": ("beta", a, b), "comment": comment}
 
 
 def coefficient(org):
@@ -288,6 +293,100 @@ def expected_values():
     return {org["name"]: direct_daly_per_usd(org)
             * (coefficient(org) + externality_coefficient(org))
             for org in SLATE}
+
+
+# ---- confidence: which org is ACTUALLY the best buy, not just in expectation --
+# The models carry full distributions, so "GiveWell wins" can mean "wins on
+# average but the shrimp tail could dwarf it". A Monte-Carlo over the same
+# distributions the means summarise gives P(org is the argmax) — the confidence
+# a worldview's ranking deserves. Deterministic (fixed seed) so generated files
+# stay byte-stable.
+DALYS_PER_LIFE = 30.0  # DALYs from averting one young-child death (age-weighted;
+#                        matches the ALLFED BOTEC's dalyPerLife). wDALY are
+#                        already welfare-range-scaled, so a "life-equivalent" is
+#                        a human life's worth of averted welfare loss.
+
+
+def _standard_normal(rng):
+    """One N(0,1) draw via Box-Muller, using ONLY rng.random() (the Mersenne
+    Twister core, whose stream is identical across CPython versions) — so the
+    confidence Monte-Carlo baked into generated files is byte-reproducible in CI,
+    which random.gauss (an implementation that may change) would not guarantee."""
+    u1 = rng.random() or 1e-300
+    u2 = rng.random()
+    return math.sqrt(-2.0 * math.log(u1)) * math.cos(2.0 * math.pi * u2)
+
+
+def _sample_scalar(spec, rng):
+    """Draw one value from a factor/direct sampler spec."""
+    kind = spec[0]
+    if kind == "point":
+        return spec[1]
+    if kind == "lognormal":
+        lo, hi = spec[1], spec[2]
+        mu = (math.log(lo) + math.log(hi)) / 2
+        sigma = (math.log(hi) - math.log(lo)) / (2 * Z90)
+        return math.exp(mu + sigma * _standard_normal(rng))
+    if kind == "uniform":
+        return spec[1] + (spec[2] - spec[1]) * rng.random()
+    if kind == "beta":
+        a, b, u = spec[1], spec[2], rng.random()
+        if a == 1:   # inverse-CDF of beta(1, b) — the only shape the chain uses
+            return 1.0 - (1.0 - u) ** (1.0 / b)
+        if b == 1:
+            return u ** (1.0 / a)
+        raise NotImplementedError("only beta(1, b) / beta(a, 1) are sampled stably")
+    raise ValueError(f"unknown sampler {kind!r}")
+
+
+def _sample_direct(org, rng):
+    """One draw of the org's direct effect, from the same distribution
+    direct_daly_per_usd takes the mean of."""
+    if "botec" in org:
+        b = org["botec"]
+        if "factors" in b:
+            env = {f["name"]: (float(f["point"]) if "point" in f
+                               else _sample_scalar(("lognormal", *f["ci"]), rng))
+                   for f in b["factors"]}
+            return eval(b["expr"], {"__builtins__": {}}, env)  # trusted in-repo expr
+        return (_sample_scalar(("lognormal", *b["people_helped_per_usd"]), rng)
+                * _sample_scalar(("lognormal", *b["wellbeing_gain_daly"]), rng)
+                * (1 - _sample_scalar(("uniform", *b["counterfactual_bank_value"]), rng)))
+    return _sample_scalar(("lognormal", *org["daly_per_usd"]), rng)
+
+
+def argmax_confidences(n=10000, seed=0):
+    """{org name: P(this org is the single best buy)} under this worldview, by
+    Monte-Carlo over the chain's full distributions. Moral-parameter factors
+    (the discount, the suffering asymmetry, …) are shared by name, so each is
+    drawn ONCE per world-state and applied to every org that carries it; direct
+    effects are independent per org, as in the generated model."""
+    rng = random.Random(seed)
+    # per-org: structural-only coefficient, externality, and the names of the
+    # uncertain moral factors it carries.
+    specs = []
+    shared = {}
+    for org in SLATE:
+        fs = uncertain_factors(org)
+        struct = coefficient(org)
+        for f in fs:
+            struct /= f["mean"]
+            shared.setdefault(f["name"], f["sampler"])
+        specs.append((org, struct, externality_coefficient(org),
+                      [f["name"] for f in fs]))
+    counts = {org["name"]: 0 for org in SLATE}
+    for _ in range(n):
+        fdraw = {name: _sample_scalar(s, rng) for name, s in shared.items()}
+        best_name, best_val = None, -math.inf
+        for org, struct, ext, fnames in specs:
+            fac = 1.0
+            for fn in fnames:
+                fac *= fdraw[fn]
+            val = _sample_direct(org, rng) * (struct * fac + ext)
+            if val > best_val:
+                best_val, best_name = val, org["name"]
+        counts[best_name] += 1
+    return {name: c / n for name, c in counts.items()}
 
 
 # ---- Squiggle generation -----------------------------------------------------

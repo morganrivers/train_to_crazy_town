@@ -87,21 +87,51 @@ def size(n):
     return max(150, int(maxc * 7.2) + 28), len(lines) * 16 + 28
 
 
+def _fmt_lives(x):
+    """Compact lives-saved-equivalent per $1000 (2.1e4 -> '21k', 0.33 -> '0.33')."""
+    ax = abs(x)
+    if ax >= 1000:
+        return f"{x/1000:.0f}k"
+    if ax >= 10:
+        return f"{x:.0f}"
+    if ax >= 1:
+        return f"{x:.1f}"
+    return f"{x:.2g}" if ax > 0 else "0"
+
+
+def pick_lines(n):
+    """The winner + runner-up lines: each org's lives-saved-equivalent per $1000
+    and the confidence (P it is actually the best buy) the distributions give."""
+    picks = n.get('picks') or []
+    if not picks:                      # flat / override worldviews
+        return ['→ ' + n.get('top_pick', '?')]
+    w = picks[0]
+    out = [f"→ {w['org']}",
+           f"   {_fmt_lives(w['lives_per_1000usd'])} lives-eq/$1k · "
+           f"{round(w['confidence']*100)}% best"]
+    if len(picks) > 1:
+        r = picks[1]
+        out.append(f"   runner-up {r['org']} · {round(r['confidence']*100)}%")
+    return out
+
+
 def prepare(nid, collapsed):
     """A render-ready copy of a node for one page: compose its label + link.
     Collapsed boundaries advertise their hidden subtree and link to its page."""
     n = dict(NODES[nid])
-    label = n['lbl'] + '\n→ ' + n.get('top_pick', '?')
+    lines = [n['lbl']] + pick_lines(n)
     if nid in collapsed:
         c = collapsed[nid]
-        n['lbl'] = label + f"\n▼ {c['count']} more worldviews"
+        lines.append(f"▼ {c['count']} more worldviews")
         n['link'] = viewer_url(c['child'])
         n['collapsed'] = True
     else:
         figs = ', '.join(n.get('figures', []))
-        n['lbl'] = label + ('\n(' + figs + ')' if figs else '')
+        if figs:
+            lines.append('(' + figs + ')')
         if PLAY.get(nid):
             n['link'] = PLAY[nid]
+    n['lbl'] = '\n'.join(lines)
     n['w'], n['h'] = size(n)
     return n
 

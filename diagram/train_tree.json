@@ -21,6 +21,18 @@
       "file": "parochial",
       "lbl": "Parochial\ncommunity + nation",
       "top_pick": "Local soup kitchen",
+      "picks": [
+        {
+          "org": "Local soup kitchen",
+          "lives_per_1000usd": 0.019041987582200347,
+          "confidence": 1.0
+        },
+        {
+          "org": "GiveDirectly",
+          "lives_per_1000usd": 0.0,
+          "confidence": 0.0
+        }
+      ],
       "figures": [
         "common-sense default"
       ],
@@ -38,6 +50,18 @@
       "file": "parochial + far_away_humans",
       "lbl": "All present humans\ncount equally\n[1]",
       "top_pick": "GiveWell top charity (AMF)",
+      "picks": [
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.3314661826755369,
+          "confidence": 0.683
+        },
+        {
+          "org": "AIM / Charity Entrepreneurship",
+          "lives_per_1000usd": 0.26899596540477017,
+          "confidence": 0.316
+        }
+      ],
       "figures": [
         "Alexander Berger",
         "Peter Singer"
@@ -57,6 +81,18 @@
       "file": "parochial + far_away_humans + animals_somewhat",
       "lbl": "Animals count\n(neuron-weighted)\n[1+2]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.997
+        },
+        {
+          "org": "AIM / Charity Entrepreneurship",
+          "lives_per_1000usd": 0.26899596540477017,
+          "confidence": 0.002
+        }
+      ],
       "figures": [
         "Peter Singer",
         "Lewis Bollard"
@@ -76,6 +112,18 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting",
       "lbl": "Future humans count\n(discounted)\n[1+3]",
       "top_pick": "GiveWell top charity (AMF)",
+      "picks": [
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.3314661826755369,
+          "confidence": 0.684
+        },
+        {
+          "org": "AIM / Charity Entrepreneurship",
+          "lives_per_1000usd": 0.26899596540477017,
+          "confidence": 0.306
+        }
+      ],
       "figures": [
         "Frank Ramsey",
         "Tyler Cowen"
@@ -96,6 +144,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting",
       "lbl": "Future humans count\n(discounted)\n[1+2+3]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.996
+        },
+        {
+          "org": "AIM / Charity Entrepreneurship",
+          "lives_per_1000usd": 0.26899596540477017,
+          "confidence": 0.002
+        }
+      ],
       "figures": [
         "Frank Ramsey",
         "Tyler Cowen"
@@ -116,6 +176,18 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans",
       "lbl": "No pure-time discount\n(astronomical stakes)\n[1+3+4]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 194459.91382448244,
+          "confidence": 0.574
+        },
+        {
+          "org": "ALLFED",
+          "lives_per_1000usd": 116221.91866893091,
+          "confidence": 0.425
+        }
+      ],
       "figures": [
         "Toby Ord",
         "Nick Bostrom"
@@ -137,6 +209,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans",
       "lbl": "No pure-time discount\n(astronomical stakes)\n[1+2+3+4]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 194459.91382448244,
+          "confidence": 0.55
+        },
+        {
+          "org": "ALLFED",
+          "lives_per_1000usd": 116221.91866893091,
+          "confidence": 0.394
+        }
+      ],
       "figures": [
         "Toby Ord",
         "Nick Bostrom"
@@ -157,6 +241,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot",
       "lbl": "Animals matter a lot\n(RP welfare ranges)\n[1+2+5]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.707
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.292
+        }
+      ],
       "figures": [
         "Bob Fischer",
         "Brian Tomasik"
@@ -178,6 +274,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot",
       "lbl": "Animals matter a lot\n(RP welfare ranges)\n[1+2+3+5]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Bob Fischer",
         "Brian Tomasik"
@@ -200,6 +308,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot",
       "lbl": "Animals matter a lot\n(RP welfare ranges)\n[1+2+3+4+5]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 194459.91382448244,
+          "confidence": 0.154
+        },
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.542
+        }
+      ],
       "figures": [
         "Bob Fischer",
         "Brian Tomasik"
@@ -220,6 +340,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+6]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.999
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 1.0254534565656022,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -241,6 +373,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+6]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.999
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 1.0254534565656022,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -262,6 +406,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+5+6]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.7
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.3
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -284,6 +440,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+4+6]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 62849.64369421357,
+          "confidence": 0.457
+        },
+        {
+          "org": "ALLFED",
+          "lives_per_1000usd": 37563.04337557791,
+          "confidence": 0.312
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -306,6 +474,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+5+6]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -329,6 +509,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused",
       "lbl": "Suffering-focused\nethics\n[1+2+3+4+5+6]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.64
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.27
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Pearce"
@@ -349,6 +541,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+7]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.997
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.3000494845024374,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -370,6 +574,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+7]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.997
+        },
+        {
+          "org": "AIM / Charity Entrepreneurship",
+          "lives_per_1000usd": 0.24350025725533403,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -391,6 +607,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+5+7]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.707
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.292
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -412,6 +640,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + suffering_focused + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+6+7]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.999
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.9940367583925026,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -434,6 +674,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+5+7]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -456,6 +708,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + suffering_focused + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+6+7]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.999
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.9940367583925026,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -478,6 +742,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+5+6+7]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.7
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.3
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -501,6 +777,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem",
       "lbl": "Meat-eater problem\n(saved humans eat animals)\n[1+2+3+5+6+7]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Michael Dickens",
         "Vasco Grilo"
@@ -522,6 +810,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.603
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.397
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -544,6 +844,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.596
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.404
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -566,6 +878,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+6+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.588
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.412
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -588,6 +912,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+7+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.603
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.397
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -611,6 +947,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+6+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.609
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.391
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -634,6 +982,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+7+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.596
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.404
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -657,6 +1017,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+5+6+7+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.588
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.412
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -681,6 +1053,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives",
       "lbl": "Net-negative lives\n(animal suffering dominates)\n[1+2+3+5+6+7+8]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.609
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.391
+        }
+      ],
       "figures": [
         "Brian Tomasik",
         "David Benatar"
@@ -702,6 +1086,18 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+3+4+9]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 19445.991382448243,
+          "confidence": 0.563
+        },
+        {
+          "org": "ALLFED",
+          "lives_per_1000usd": 11622.191866893092,
+          "confidence": 0.4
+        }
+      ],
       "figures": [
         "Nick Bostrom"
       ],
@@ -723,6 +1119,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+2+3+4+9]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 19445.991382448243,
+          "confidence": 0.435
+        },
+        {
+          "org": "ALLFED",
+          "lives_per_1000usd": 11622.191866893092,
+          "confidence": 0.288
+        }
+      ],
       "figures": [
         "Nick Bostrom"
       ],
@@ -745,6 +1153,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+2+3+4+5+9]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.658
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.269
+        }
+      ],
       "figures": [
         "Nick Bostrom"
       ],
@@ -767,6 +1187,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+2+3+4+6+9]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 6284.964369421357,
+          "confidence": 0.279
+        },
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.543
+        }
+      ],
       "figures": [
         "Nick Bostrom"
       ],
@@ -790,6 +1222,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation",
       "lbl": "Living in\na simulation\n[1+2+3+4+5+6+9]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.689
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.288
+        }
+      ],
       "figures": [
         "Nick Bostrom"
       ],
@@ -810,6 +1254,18 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+3+4+10]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 16.726152016116068,
+          "confidence": 0.126
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.3314661826755369,
+          "confidence": 0.548
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -832,6 +1288,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+10]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.958
+        },
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 16.726152016116068,
+          "confidence": 0.025
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -854,6 +1322,18 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+3+4+9+10]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 1.6726152016116067,
+          "confidence": 0.039
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 0.3314661826755369,
+          "confidence": 0.646
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -877,6 +1357,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+5+10]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -900,6 +1392,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+6+10]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.988
+        },
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 5.405909495244242,
+          "confidence": 0.008
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -923,6 +1427,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+9+10]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 23.572965115742573,
+          "confidence": 0.987
+        },
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 1.6726152016116067,
+          "confidence": 0.006
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -947,6 +1463,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+10]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -971,6 +1499,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+5+9+10]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.704
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.296
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -995,6 +1535,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + suffering_focused + living_in_simulation + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+6+9+10]",
       "top_pick": "The Humane League",
+      "picks": [
+        {
+          "org": "The Humane League",
+          "lives_per_1000usd": 72.92743520415426,
+          "confidence": 0.996
+        },
+        {
+          "org": "GiveWell top charity (AMF)",
+          "lives_per_1000usd": 1.0254534565656022,
+          "confidence": 0.001
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -1020,6 +1572,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view",
       "lbl": "Person-affecting\nview\n[1+2+3+4+5+6+9+10]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.708
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Jan Narveson",
         "Melinda Roberts"
@@ -1041,6 +1605,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.707
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.292
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1062,6 +1638,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1083,6 +1671,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.7
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.3
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1104,6 +1704,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+7+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.707
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.292
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1125,6 +1737,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.603
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.397
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1147,6 +1771,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+11]",
       "top_pick": "AI safety (Redwood Research)",
+      "picks": [
+        {
+          "org": "AI safety (Redwood Research)",
+          "lives_per_1000usd": 194459.91382448244,
+          "confidence": 0.154
+        },
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.542
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1169,6 +1805,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1191,6 +1839,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+7+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1213,6 +1873,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.596
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.404
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1235,6 +1907,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+7+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.7
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.3
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1257,6 +1941,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.588
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.412
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1279,6 +1975,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+7+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.603
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.397
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1302,6 +2010,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + person_affecting_view + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+10+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.699
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.301
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1325,6 +2045,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.64
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.27
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1348,6 +2080,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.658
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.269
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1371,6 +2115,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+7+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1394,6 +2150,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.609
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.391
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1417,6 +2185,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + meat_eater_problem + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+7+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 64039.56156176112,
+          "confidence": 0.596
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 39064.123090491164,
+          "confidence": 0.404
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1440,6 +2220,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+5+6+7+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.588
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.412
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1464,6 +2256,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + person_affecting_view + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+10+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.709
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1488,6 +2292,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.689
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.288
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1512,6 +2328,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + living_in_simulation + person_affecting_view + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+9+10+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 21346.52052058704,
+          "confidence": 0.704
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 7812.824618098233,
+          "confidence": 0.296
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1536,6 +2364,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + animals_matter_a_lot + suffering_focused + meat_eater_problem + net_negative_animal_lives + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+5+6+7+8+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 198118.52065987609,
+          "confidence": 0.609
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 120852.26832946761,
+          "confidence": 0.391
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1561,6 +2401,18 @@
       "file": "parochial + far_away_humans + animals_somewhat + future_humans_matter_with_discounting + no_discounting_future_humans + animals_matter_a_lot + suffering_focused + living_in_simulation + person_affecting_view + soil_animals",
       "lbl": "Count soil animals\n(~10^19 nematodes)\n[1+2+3+4+5+6+9+10+11]",
       "top_pick": "Shrimp Welfare Project",
+      "picks": [
+        {
+          "org": "Shrimp Welfare Project",
+          "lives_per_1000usd": 66039.50688662537,
+          "confidence": 0.708
+        },
+        {
+          "org": "Wild insects (humane pesticides)",
+          "lives_per_1000usd": 24170.453665893525,
+          "confidence": 0.291
+        }
+      ],
       "figures": [
         "Vasco Grilo"
       ],
@@ -1582,6 +2434,7 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + morality_is_not_real",
       "lbl": "Morality is not real\n(anti-realism)\n[1+3+4+9+12]",
       "top_pick": "nothing — ranking flat",
+      "picks": [],
       "figures": [
         "J. L. Mackie"
       ],
@@ -1603,6 +2456,7 @@
       "file": "parochial + far_away_humans + future_humans_matter_with_discounting + no_discounting_future_humans + living_in_simulation + boltzmann_brain",
       "lbl": "Boltzmann brain\n(hedonic solipsism)\n[1+3+4+9+13]",
       "top_pick": "nothing — ranking flat",
+      "picks": [],
       "figures": [
         "Ludwig Boltzmann"
       ],
