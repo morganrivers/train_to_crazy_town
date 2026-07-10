@@ -89,6 +89,11 @@ SLATE = [
     {"id": "rainforest", "name": "Rainforest Trust", "domain": "nature",
      "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
      "botec_id": "rainforest"},
+    # Climate mitigation. Weight 0 until the climate_tipping_points assumption
+    # supplies a wDALY-per-tCO2e exchange rate (Bressler + PIK + tipping).
+    {"id": "catf", "name": "Clean Air Task Force", "domain": "climate",
+     "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
+     "botec_id": "catf"},
     # ALLFED and AI safety are WORKED BOTECs sharing the SAME astronomical
     # `futureDalysAtStake` (botecs/future.py), so which one a longtermist funds
     # is arithmetic on their x-risk-reduced-per-dollar, not a chosen result.
@@ -244,7 +249,7 @@ def _shared_botec_factors():
     return shared
 
 
-def argmax_confidences(n=10000, seed=0):
+def argmax_confidences(n=2000, seed=0):
     """{org name: P(this org is the single best buy)} under this worldview, by
     Monte-Carlo over the chain's full distributions. Uncertain factors shared by
     name — moral (the discount, the suffering asymmetry) and empirical
@@ -304,7 +309,7 @@ def squiggle_dist_lines(org):
     """The org's direct-effect distribution as a SINGLE moment-matched lognormal
     SUMMARY (mean AND variance equal to the full botec's), plus a link to the
     standalone derivation. Keeping the full factor derivation out of every one
-    of the 73 worldview models is what stops each model from exploding as the
+    of the hundreds of worldview models is what stops each model from exploding as the
     empirical mechanisms get richer; the derivation lives once, in the botec
     model, and is edited there."""
     var = squiggle_var(org)
@@ -396,7 +401,7 @@ def squiggle(header=""):
               "// botec (mean AND variance exact). The full factor-by-factor derivation —",
               "// with each factor's provenance and source — lives in the linked",
               "// squiggle/botecs/<id>.squiggle model, so it is edited in ONE place and",
-              "// read by every worldview, rather than inlined into all 73."]
+              "// read by every worldview, rather than inlined into every model."]
     for org in SLATE:
         lines += squiggle_dist_lines(org)
     lines += ["",

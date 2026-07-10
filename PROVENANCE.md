@@ -40,6 +40,7 @@ These drive real conclusions and rest on no derivation. Treat with suspicion.
 | `allfed` | `expectedFutureCenturies` | worked-internal | 2.518e+04 | [link](https://globalprioritiesinstitute.org/existential-risk-pessimism-and-the-time-of-perils-david-thorstad/) |
 | `allfed` | `dalyPerFutureLife` | empirical-anchor | 58.57 | — |
 | `amf` | `amfDalyPerUsd` | worked-external | 0.009944 | [link](https://www.givewell.org/how-we-work/our-criteria/cost-effectiveness/cost-effectiveness-models) |
+| `catf` | `catfTco2AvertedPerUsd` | worked-external | 1.212 | [link](https://founderspledge.com/stories/clean-air-task-force) |
 | `gd` | `gdDalyPerUsd` | worked-external | 0.001008 | [link](https://www.givewell.org/international/technical/programs/cash-transfers) |
 | `rainforest` | `rainforestHectaresPerUsd` | worked-external | 0.2868 | [link](https://www.rainforesttrust.org/our-impact/our-approach/) |
 | `redwood` | `pAICatastropheThisCentury` | worked-external | 0.1494 | [link](https://arxiv.org/abs/2206.13353) |

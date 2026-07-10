@@ -45,7 +45,7 @@ def test_generated_files_are_current():
 def test_numbering_is_linear():
     """Assumption files are numbered 0..N with no doubling and no gaps
     (load_assumptions raises otherwise; assert the expected ladder here)."""
-    assert sorted(W.ASSUMPTIONS) == list(range(18))
+    assert sorted(W.ASSUMPTIONS) == list(range(21))
 
 
 def test_each_edge_adds_exactly_one_assumption():
@@ -61,27 +61,38 @@ def test_each_edge_adds_exactly_one_assumption():
 
 
 def test_combination_rules_limit_the_explosion():
-    """REQUIRES/EXCLUDES/TERMINAL cut 2^17 subsets down to a plausible few."""
-    assert len(VIEWS) == 199, f"expected 199 worldviews, got {len(VIEWS)}"
+    """REQUIRES/EXCLUDES/TERMINAL cut 2^20 subsets down to a plausible few."""
+    assert len(VIEWS) == 411, f"expected 411 worldviews, got {len(VIEWS)}"
     assert not W.is_valid({2}), "animals person must also count far-away humans"
-    assert not W.is_valid({1, 5}), "no-discounting requires the discounting stop first"
-    assert not W.is_valid({1, 2, 8, 9}), "net-negative lives requires animals_matter_a_lot"
-    assert not W.is_valid({1, 2, 4, 5, 6, 8}), \
+    assert not W.is_valid({1, 6}), "no-discounting requires the discounting stop first"
+    assert not W.is_valid({1, 2, 9, 10}), "net-negative lives requires animals_matter_a_lot"
+    assert not W.is_valid({1, 2, 5, 6, 7, 9}), \
         "the meat-eater problem is a near-term stop, not combined with no-discounting"
-    assert not W.is_valid({1, 2, 14}), "person-affecting view requires no-discounting"
-    assert not W.is_valid({1, 2, 15}), "soil animals requires animals_matter_a_lot"
-    assert not W.is_valid({1, 4, 5, 13, 16, 17}), "the two overrides exclude each other"
-    assert not W.is_valid({1, 2, 4, 5, 6, 13, 16}), "overrides only ride their minimal chain"
-    assert W.is_valid({1, 4, 5, 13, 16})
+    assert not W.is_valid({1, 2, 17}), "person-affecting view requires no-discounting"
+    assert not W.is_valid({1, 2, 18}), "soil animals requires animals_matter_a_lot"
+    assert not W.is_valid({1, 2, 5, 6, 7, 18}), \
+        "soil animals is a near-term stop, not combined with no-discounting"
+    assert not W.is_valid({1, 5, 6, 16, 19, 20}), "the two overrides exclude each other"
+    assert not W.is_valid({1, 2, 5, 6, 7, 16, 19}), "overrides only ride their minimal chain"
+    assert W.is_valid({1, 5, 6, 16, 19})
     # nature intrinsic value: requires far-away humans, moot under astronomical stakes
     assert not W.is_valid({3}), "nature requires far_away_humans"
-    assert not W.is_valid({1, 3, 4, 5}), "nature excludes no_discounting (moot under astronomical stakes)"
-    assert W.is_valid({1, 3}) and W.is_valid({1, 2, 3, 4})
+    assert not W.is_valid({1, 3, 5, 6}), "nature excludes no_discounting (moot under astronomical stakes)"
+    assert W.is_valid({1, 3}) and W.is_valid({1, 2, 3, 5})
+    # climate tipping points: requires far-away humans, moot under astronomical stakes
+    assert not W.is_valid({4}), "climate requires far_away_humans"
+    assert not W.is_valid({1, 4, 5, 6}), "climate excludes no_discounting (moot under astronomical stakes)"
+    assert W.is_valid({1, 4}) and W.is_valid({1, 3, 4})
     # nuclear second-order forks: require the undiscounted future, mutually exclusive
-    assert not W.is_valid({1, 4, 10}), "deterrence fork requires no_discounting"
-    assert not W.is_valid({1, 4, 5, 11, 12}), "the two collapse-reroll forks exclude each other"
-    assert not W.is_valid({1, 4, 5, 10, 11}), "deterrence and collapse forks are mutually exclusive"
-    assert W.is_valid({1, 4, 5, 12}), "collapse_degrades rides a longtermist chain"
+    assert not W.is_valid({1, 5, 11}), "deterrence fork requires no_discounting"
+    assert not W.is_valid({1, 5, 6, 12, 13}), "the two collapse-reroll forks exclude each other"
+    assert not W.is_valid({1, 5, 6, 11, 12}), "deterrence and collapse forks are mutually exclusive"
+    assert W.is_valid({1, 5, 6, 13}), "collapse_degrades rides a longtermist chain"
+    # space second-order forks: two readings of the hazard curve, mutually exclusive
+    assert not W.is_valid({1, 5, 14}), "perils-exit fork requires no_discounting"
+    assert not W.is_valid({1, 5, 6, 14, 15}), "the two space forks exclude each other"
+    assert W.is_valid({1, 5, 6, 15}), "space-backfire rides a longtermist chain"
+    assert W.is_valid({1, 5, 6, 13, 14}), "a nuclear fork and a space fork combine"
 
 
 def test_moral_circle_only_grows():
@@ -111,29 +122,50 @@ def test_the_train_actually_moves():
     assert BY_ID["w0"]["top_pick"] == "Local soup kitchen"
     assert BY_ID["w1"]["top_pick"] == "GiveWell top charity (AMF)"
     assert BY_ID["w1_2"]["top_pick"] == "The Humane League"
-    assert BY_ID["w1_4"]["top_pick"] == "GiveWell top charity (AMF)"
-    assert BY_ID["w1_4_5"]["top_pick"] == "AI safety (Redwood Research)"
-    assert BY_ID["w1_2_6"]["top_pick"] == "Shrimp Welfare Project"
+    assert BY_ID["w1_5"]["top_pick"] == "GiveWell top charity (AMF)"
+    assert BY_ID["w1_5_6"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_2_7"]["top_pick"] == "Shrimp Welfare Project"
     # nature intrinsic value wins where animals are NOT in the circle to dominate
     assert BY_ID["w1_3"]["top_pick"] == "Rainforest Trust"
     assert BY_ID["w1_2_3"]["top_pick"] == "The Humane League"  # animals still beat nature
     # the pessimistic collapse-reroll flips the longtermist best buy to ALLFED
-    assert BY_ID["w1_4_5_12"]["top_pick"] == "ALLFED"
-    assert BY_ID["w1_4_5_11"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_5_6_13"]["top_pick"] == "ALLFED"
+    assert BY_ID["w1_5_6_12"]["top_pick"] == "AI safety (Redwood Research)"
+    # climate tipping points: CATF wins where neither animals nor nature dominate,
+    # and the forest co-benefit keeps Rainforest Trust ahead when both are held
+    assert BY_ID["w1_4"]["top_pick"] == "Clean Air Task Force"
+    assert BY_ID["w1_3_4"]["top_pick"] == "Rainforest Trust"
+
+
+def test_space_forks_scale_the_shared_future():
+    """The two space forks are opposite multipliers on the SAME shared future:
+    the perils-exit reading inflates both future orgs, the backfire reading
+    trims both — and neither flips the AI-safety-vs-ALLFED race by itself."""
+    ai, af = "AI safety (Redwood Research)", "ALLFED"
+    base, exit_, backfire = (BY_ID["w1_5_6"]["evs"], BY_ID["w1_5_6_14"]["evs"],
+                             BY_ID["w1_5_6_15"]["evs"])
+    assert exit_[ai] > base[ai] and exit_[af] > base[af]
+    assert backfire[ai] < base[ai] and backfire[af] < base[af]
+    # same multiplier on both orgs: the race ratio is untouched by either fork
+    for evs in (exit_, backfire):
+        assert abs(evs[ai] / evs[af] - base[ai] / base[af]) < 1e-9
+    # the backfire fork trims (mean ~0.19) but does not zero the window's value:
+    # x-risk work still beats every near-term org under it
+    assert backfire[ai] > backfire["GiveWell top charity (AMF)"]
 
 
 def test_worked_botecs_decide_the_longtermist_race():
     """ALLFED and AI safety are worked BOTECs sharing the same astronomical
     future, so which wins is arithmetic on their x-risk-reduced-per-dollar, not a
     forced multiplier. On the slate's central inputs AI safety edges ALLFED."""
-    ai = BY_ID["w1_4_5"]["evs"]["AI safety (Redwood Research)"]
-    allfed = BY_ID["w1_4_5"]["evs"]["ALLFED"]
+    ai = BY_ID["w1_5_6"]["evs"]["AI safety (Redwood Research)"]
+    allfed = BY_ID["w1_5_6"]["evs"]["ALLFED"]
     assert ai > allfed > 0, "both far-future orgs positive, AI safety ahead here"
     assert 1.2 < ai / allfed < 3, f"expected a close race, got {ai/allfed:.2f}x"
     # a POSITIVE pure-time discount annihilates the astronomical future, so the
-    # moderate longtermist (stop 3) still ranks present global health on top
+    # moderate longtermist (stop 5) still ranks present global health on top
     amf = "GiveWell top charity (AMF)"
-    assert BY_ID["w1_4"]["evs"]["ALLFED"] < BY_ID["w1_4"]["evs"][amf]
+    assert BY_ID["w1_5"]["evs"]["ALLFED"] < BY_ID["w1_5"]["evs"][amf]
 
 
 def test_new_assumptions_flip_the_ranking():
@@ -141,27 +173,27 @@ def test_new_assumptions_flip_the_ranking():
     animals-matter worldview reproduces Grilo's published multiples."""
     amf = "GiveWell top charity (AMF)"
     # soil animals: the cropland externality drives human charities net-negative
-    assert BY_ID["w1_2_6"]["evs"][amf] > 0
-    assert BY_ID["w1_2_6_15"]["evs"][amf] < 0
+    assert BY_ID["w1_2_7"]["evs"][amf] > 0
+    assert BY_ID["w1_2_7_18"]["evs"][amf] < 0
     # person-affecting view collapses the astronomical case; animal-inclusive
     # longtermism flips off AI safety back to the best animal buy
-    assert BY_ID["w1_2_4_5_6"]["top_pick"] == "AI safety (Redwood Research)"
-    assert BY_ID["w1_2_4_5_6_14"]["top_pick"] == "Shrimp Welfare Project"
+    assert BY_ID["w1_2_5_6_7"]["top_pick"] == "AI safety (Redwood Research)"
+    assert BY_ID["w1_2_5_6_7_17"]["top_pick"] == "Shrimp Welfare Project"
     # the mirror: at RP welfare ranges, SWP reproduces Grilo's ~64k x GiveWell
-    gw = BY_ID["w1_2_6"]["evs"][amf]
-    swp = BY_ID["w1_2_6"]["evs"]["Shrimp Welfare Project"]
+    gw = BY_ID["w1_2_7"]["evs"][amf]
+    swp = BY_ID["w1_2_7"]["evs"]["Shrimp Welfare Project"]
     assert 4e4 < swp / gw < 9e4, f"SWP is {swp/gw:.0f}x GiveWell, expected ~64k"
 
 
 def test_calibration_reproduces_published_figures():
     """The slate's CIs are calibrated so their lognormal MEANS reproduce the
     published numbers each entry cites: Grilo's ~0.00994 DALY/$ GiveWell
-    baseline, and (at RP welfare ranges, w1_2_5) his ~460x / ~64k x / ~24k x
+    baseline, and (at RP welfare ranges, w1_2_7) his ~460x / ~64k x / ~24k x
     multiples for chickens, shrimp and wild insects."""
     amf = "GiveWell top charity (AMF)"
     gw = BY_ID["w1"]["evs"][amf]
     assert abs(gw - 0.00994) / 0.00994 < 0.02, f"GiveWell baseline drifted: {gw}"
-    evs = BY_ID["w1_2_6"]["evs"]
+    evs = BY_ID["w1_2_7"]["evs"]
     assert 300 < evs["The Humane League"] / gw < 700, "THL should be ~460x GiveWell"
     assert 4e4 < evs["Shrimp Welfare Project"] / gw < 9e4, "SWP should be ~64k x"
     assert 1.5e4 < evs["Wild insects (humane pesticides)"] / gw < 3.5e4, \
@@ -177,7 +209,7 @@ def test_new_orgs_enter_at_the_right_stop():
     """Screwworm (wild vertebrate) is outside the circle until wild animals
     fully count; Rainforest Trust is outside every current worldview's circle."""
     assert BY_ID["w1_2"]["evs"]["Screwworm Free Future"] == 0.0     # before animals_matter_a_lot
-    assert BY_ID["w1_2_6"]["evs"]["Screwworm Free Future"] > 0.0    # after
+    assert BY_ID["w1_2_7"]["evs"]["Screwworm Free Future"] > 0.0    # after
     # Rainforest Trust carries value exactly on the chains that hold nature (3)
     assert BY_ID["w1_3"]["evs"]["Rainforest Trust"] > 0.0
     for w in VIEWS:
@@ -186,20 +218,30 @@ def test_new_orgs_enter_at_the_right_stop():
         holds_nature = 3 in w["numbers"]
         assert (w["evs"]["Rainforest Trust"] > 0.0) == holds_nature, \
             f'{w["id"]}: Rainforest Trust value should track holding nature (3)'
+        # Clean Air Task Force carries value exactly on the chains holding climate (4)
+        holds_climate = 4 in w["numbers"]
+        assert (w["evs"]["Clean Air Task Force"] > 0.0) == holds_climate, \
+            f'{w["id"]}: CATF value should track holding climate (4)'
 
 
 def test_models_carry_the_chains_distributions():
     """Every uncertain moral parameter an assumption registers appears as a
     NAMED DISTRIBUTION in the generated model of a chain that holds it — and
-    assumption 4 visibly pins the discount to 1 rather than deleting it."""
+    assumption 6 visibly pins the discount to 1 rather than deleting it."""
     src = lambda wid: BY_ID[wid]["squiggle_source"]  # noqa: E731
-    assert "futureDiscount = Sym.lognormal" in src("w1_4")
-    assert "futureDiscount = 1" in src("w1_4_5")
-    assert "simulationContinues = Sym.beta(1, 9)" in src("w1_4_5_13")
-    assert "presentPeopleFraction = Sym.lognormal" in src("w1_2_4_5_6_14")
-    assert "sufferingPriority = Sym.lognormal" in src("w1_2_7")
+    assert "futureDiscount = Sym.lognormal" in src("w1_5")
+    assert "futureDiscount = 1" in src("w1_5_6")
+    assert "simulationContinues = Sym.beta(1, 9)" in src("w1_5_6_16")
+    assert "presentPeopleFraction = Sym.lognormal" in src("w1_2_5_6_7_17")
+    assert "sufferingPriority = Sym.lognormal" in src("w1_2_8")
+    assert "tippingPointMultiplier = Sym.lognormal" in src("w1_4")
+    assert "perilsExitMultiplier = Sym.lognormal" in src("w1_5_6_14")
+    assert "spaceBackfireMultiplier = Sym.lognormal" in src("w1_5_6_15")
+    # the forest co-benefit only appears when the chain ALSO holds nature (3)
+    assert "forestTippingCobenefit = Sym.lognormal" in src("w1_3_4")
+    assert "forestTippingCobenefit" not in src("w1_4")
     # every model ships a full distribution next to its exact mean
-    assert "dist:" in src("w1_2_6") and "wdalyPerUsd:" in src("w1_2_6")
+    assert "dist:" in src("w1_2_7") and "wdalyPerUsd:" in src("w1_2_7")
     # ... and no model regressed to the sampled-mean `to` syntax
     for w in VIEWS:
         for line in w["squiggle_source"].splitlines():
@@ -211,8 +253,8 @@ def test_models_carry_the_chains_distributions():
 def test_worldview_models_summarise_botecs_and_link_out():
     """Direct effects appear in worldview models as ONE moment-matched lognormal
     summary per org that links to its botec derivation — the full factor
-    breakdown is NOT inlined into all 73 models."""
-    src = BY_ID["w1_4_5"]["squiggle_source"]
+    breakdown is NOT inlined into every worldview model."""
+    src = BY_ID["w1_5_6"]["squiggle_source"]
     assert "allfedDalyPerUsd = Sym.lognormal" in src
     assert "full derivation: squiggle/botecs/allfed.squiggle" in src
     # the mechanistic factors live in the botec model, not the worldview model
@@ -256,7 +298,7 @@ def test_credences_are_a_distribution():
     """allocate.py's worldview credences are a proper distribution: they sum
     to 1 and peak on the chosen center."""
     import allocate
-    for center, div in (("w1_2", 1.0), ("w1_2_6", 2.0), ("w1_4_5", 0.5)):
+    for center, div in (("w1_2", 1.0), ("w1_2_7", 2.0), ("w1_5_6", 0.5)):
         cred = allocate.credences(BY_ID[center], div)
         assert abs(sum(cred.values()) - 1.0) < 1e-9
         assert cred[center] == max(cred.values())
@@ -265,8 +307,8 @@ def test_credences_are_a_distribution():
 def test_overrides_go_flat():
     """The end of the line: anti-realism sets every value to 0; the Boltzmann
     brain collapses everything to one equal pleasant thought."""
-    assert set(BY_ID["w1_4_5_13_16"]["evs"].values()) == {0.0}
-    assert set(BY_ID["w1_4_5_13_17"]["evs"].values()) == {1e-6}
+    assert set(BY_ID["w1_5_6_16_19"]["evs"].values()) == {0.0}
+    assert set(BY_ID["w1_5_6_16_20"]["evs"].values()) == {1e-6}
 
 
 def test_meat_eater_and_net_negative_lives():
@@ -275,19 +317,19 @@ def test_meat_eater_and_net_negative_lives():
     meat channel of its own but amplifies that penalty into net-harmful territory."""
     amf = "GiveWell top charity (AMF)"
     # meat-eater alone shaves human value but (under neuron weights) keeps it positive
-    assert 0 < BY_ID["w1_2_8"]["evs"][amf] < BY_ID["w1_2"]["evs"][amf]
+    assert 0 < BY_ID["w1_2_9"]["evs"][amf] < BY_ID["w1_2"]["evs"][amf]
     # net-negative lives alone touches no human org (it only boosts animal work)
-    assert BY_ID["w1_2_6_9"]["evs"][amf] == BY_ID["w1_2_6"]["evs"][amf]
+    assert BY_ID["w1_2_7_10"]["evs"][amf] == BY_ID["w1_2_7"]["evs"][amf]
     # both together, under heavy animal weight, drive human charities net-negative
-    assert BY_ID["w1_2_6_8_9"]["evs"][amf] < 0
-    assert BY_ID["w1_2_6_8_9"]["evs"]["Local soup kitchen"] < 0
+    assert BY_ID["w1_2_7_9_10"]["evs"][amf] < 0
+    assert BY_ID["w1_2_7_9_10"]["evs"]["Local soup kitchen"] < 0
 
 
 def test_playground_links_roundtrip():
     """The draw.io node links carry the whole model; decoding must reproduce it."""
     sys.path.insert(0, os.path.join(ROOT, "diagram"))
     from squiggle_playground import encode_playground_url, decode_playground_url
-    src = BY_ID["w1_2_6"]["squiggle_source"]
+    src = BY_ID["w1_2_7"]["squiggle_source"]
     assert decode_playground_url(encode_playground_url(src)) == src
 
 

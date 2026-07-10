@@ -1,7 +1,7 @@
 """worldviews.py — compose assumption files into worldviews.
 
 The single source of truth for the train to crazy town is the numbered Python
-ASSUMPTION files in this directory (`0_parochial.py` … `15_boltzmann_brain.py`).
+ASSUMPTION files in this directory (`0_parochial.py` … `20_boltzmann_brain.py`).
 An assumption modifies, in a simple way, the chain of assumptions before it: it
 adds new functions, redefines functions, or changes parameters to functions.
 
@@ -28,7 +28,6 @@ import ast
 import os
 import re
 import sys
-from itertools import combinations
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The assumption chain does `import botecs` (the empirical axis); ensure the repo
@@ -153,13 +152,27 @@ def _wid(numbers):
 
 
 def enumerate_sets():
-    """Every valid assumption set (excluding the implicit base), root first."""
+    """Every valid assumption set (excluding the implicit base), root first.
+
+    Grown INCREMENTALLY rather than by filtering the 2^N powerset: every valid
+    set's parent (the set minus its craziest assumption) is itself valid —
+    REQUIRES point strictly downward, EXCLUDES only shrink, and a TERMINAL is
+    always the max of its minimal chain — so extending each valid set with one
+    strictly-crazier assumption reaches exactly the valid sets. Cost is
+    O(worldviews × ladder), which is what lets the tree grow to thousands of
+    nodes without enumeration becoming the bottleneck."""
     pool = sorted(n for n in ASSUMPTIONS if n > 0)
-    out = []
-    for r in range(len(pool) + 1):
-        for combo in combinations(pool, r):
-            if is_valid(combo):
-                out.append(frozenset(combo))
+    out = [frozenset()]
+    frontier = [frozenset()]
+    while frontier:
+        grown = []
+        for s in frontier:
+            floor = max(s) if s else 0
+            for n in pool:
+                if n > floor and is_valid(s | {n}):
+                    grown.append(s | {n})
+        out += grown
+        frontier = grown
     return out
 
 

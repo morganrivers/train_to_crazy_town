@@ -4,7 +4,7 @@ The train has TWO axes that must never multiply into each other:
 
   * MORAL assumptions (assumptions/*.py) are combinatorial by design — who
     counts, how much, under what discount. That is the ladder, and forking it
-    is what produces the 73+ worldviews.
+    is what produces the hundreds of worldviews.
   * EMPIRICAL magnitudes (this package) are NOT combinatorial. There is one
     true P(nuclear war), one true chicken-years-per-dollar. Disagreement about
     them is resolved by IMPROVING A SHARED DERIVATION, not by forking a
@@ -20,7 +20,7 @@ independent `Factor`s. Because the factors are independent and each appears at
 most once per term, both the mean AND the variance are closed-form — so a
 worldview model can show a single moment-matched lognormal SUMMARY (mean exact,
 variance exact) and link to the full derivation, instead of inlining every
-factor into all 73 models.
+factor into every model.
 
 Provenance is tracked per factor, not buried in prose, so the survey-anchored
 guesses that drive the biggest EV levers are a greppable, machine-checkable
