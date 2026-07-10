@@ -48,14 +48,17 @@ RP_WELFARE_RANGE = {
     "thl": 0.332,
     "swp": 0.031,
     "wildbugs": 0.01,
+    # wild vertebrates (screwworm hosts): a mammalian welfare range, ~RP pigs 0.515
+    "screwworm": 0.5,
 }
 
 _neuron_proxy_moral_weight = moral_weight  # noqa: F821
 
 
 def moral_weight(domain):
-    """REDEFINED: invertebrates — farmed and wild/soil — are inside the circle."""
-    if domain in ("invertebrate", "wild_invertebrate"):
+    """REDEFINED: wild animals — invertebrate (farmed/wild/soil) and vertebrate
+    — are inside the circle."""
+    if domain in ("invertebrate", "wild_invertebrate", "wild_vertebrate"):
         return 1.0
     return _neuron_proxy_moral_weight(domain)
 

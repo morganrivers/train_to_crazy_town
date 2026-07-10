@@ -151,6 +151,22 @@ def test_calibration_reproduces_published_figures():
     assert 4e4 < evs["Shrimp Welfare Project"] / gw < 9e4, "SWP should be ~64k x"
     assert 1.5e4 < evs["Wild insects (humane pesticides)"] / gw < 3.5e4, \
         "wild insects should be ~24k x"
+    # Screwworm Free Future reproduces Grilo's ~1.67-4.59 human-equiv DALY/$
+    assert 1.67 < evs["Screwworm Free Future"] < 4.59, \
+        "screwworm should sit in Grilo's published band"
+    # Rainforest Trust carries no welfare value until the nature assumption
+    assert evs["Rainforest Trust"] == 0.0
+
+
+def test_new_orgs_enter_at_the_right_stop():
+    """Screwworm (wild vertebrate) is outside the circle until wild animals
+    fully count; Rainforest Trust is outside every current worldview's circle."""
+    assert BY_ID["w1_2"]["evs"]["Screwworm Free Future"] == 0.0     # before animals_matter_a_lot
+    assert BY_ID["w1_2_5"]["evs"]["Screwworm Free Future"] > 0.0    # after
+    for w in VIEWS:
+        if w["edge_kind"] == "override":
+            continue  # the terminal overrides flatten every org (0 or 1e-6)
+        assert w["evs"]["Rainforest Trust"] == 0.0  # no nature assumption yet
 
 
 def test_models_carry_the_chains_distributions():

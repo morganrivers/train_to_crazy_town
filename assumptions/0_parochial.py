@@ -79,6 +79,16 @@ SLATE = [
     {"id": "wildbugs", "name": "Wild insects (humane pesticides)", "domain": "wild_invertebrate",
      "animal": True, "averts_intense_suffering": True, "neurons": 1e5,
      "botec_id": "wildbugs"},
+    # Wild-vertebrate suffering (intense myiasis). Enters the circle with the
+    # wild animals at animals_matter_a_lot; the suffering-focused entry.
+    {"id": "screwworm", "name": "Screwworm Free Future", "domain": "wild_vertebrate",
+     "animal": True, "averts_intense_suffering": True, "neurons": 3e9,
+     "botec_id": "screwworm"},
+    # Ecosystems held to have intrinsic value. Weight 0 until the
+    # nature_intrinsic_value assumption supplies a wDALY-per-hectare exchange rate.
+    {"id": "rainforest", "name": "Rainforest Trust", "domain": "nature",
+     "animal": False, "averts_intense_suffering": False, "neurons": 8.6e10,
+     "botec_id": "rainforest"},
     # ALLFED and AI safety are WORKED BOTECs sharing the SAME astronomical
     # `futureDalysAtStake` (botecs/future.py), so which one a longtermist funds
     # is arithmetic on their x-risk-reduced-per-dollar, not a chosen result.

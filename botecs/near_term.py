@@ -86,3 +86,35 @@ _single(
     "insect welfare range 0.01 = 234 DALY/$, reproducing his figure",
     "https://forum.effectivealtruism.org/posts/mgsiDB2Kkm3mDSWWP/cost-effectiveness-of-paying-farmers-to-use-more-humane",
     "Wild insects (humane pesticides); paying farmers for humane pesticides (Grilo).")
+
+# Screwworm Free Future — the suffering-focused entry. New World screwworm
+# eradication averts myiasis (larvae eating hosts alive), about as intense as
+# animal suffering gets, across hundreds of millions to billions of wild and
+# domestic vertebrates. Direct figure in the host's own animal-DALY units; at
+# the wild-vertebrate welfare range (0.5) it reproduces Grilo's published
+# 1.67-4.59 human-equivalent DALY/$ (comparable to corporate chicken campaigns).
+_single(
+    "screwworm", 3.3, 9.2, "worked-external",
+    "Grilo: screwworm-eradication policy advocacy ~1.67-4.59 human-equiv DALY/$ "
+    "(comparable to corporate campaigns); direct CI x wild-vertebrate welfare "
+    "range 0.5 reproduces that band",
+    "https://forum.effectivealtruism.org/posts/bT3WrFn6H4fpvLSk8/policy-advocacy-for-eradicating-screwworm-looks-remarkably",
+    "Screwworm Free Future; wild-animal suffering (intense myiasis) eradication (Grilo).")
+
+# Rainforest Trust — the ecosystem entry. Its DIRECT effect is habitat protected
+# per dollar (hectares), a measured conservation cost. It carries NO welfare
+# value until the `nature_intrinsic_value` assumption supplies the exchange rate
+# (wDALY per hectare, from non-market existence-value estimates); before that its
+# moral weight is 0 in every worldview, like x-risk before the future enters.
+register(Botec(
+    "rainforest",
+    terms=[("rainforestHectaresPerUsd",)],
+    factors={"rainforestHectaresPerUsd": Factor(
+        "rainforestHectaresPerUsd", "lognormal", (0.02, 1.0), "worked-external",
+        "hectares of tropical habitat durably protected per dollar (~$1-$50/ha; "
+        "Rainforest Trust cost-per-acre)",
+        source="https://www.rainforesttrust.org/our-impact/our-approach/")},
+    doc="Rainforest Trust; durable tropical-habitat protection. Direct effect is "
+        "hectares/$ — the nature_intrinsic_value assumption converts it to wDALY.",
+    units="hectares of habitat protected per $ (converted to wDALY by the nature assumption)",
+    source_url="https://www.rainforesttrust.org/our-impact/our-approach/"))
