@@ -27,9 +27,16 @@ assumption, so the graph is a tree and each edge adds exactly one assumption.
 import ast
 import os
 import re
+import sys
 from itertools import combinations
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# The assumption chain does `import botecs` (the empirical axis); ensure the repo
+# root is importable however worldviews.py is reached (generate.py, tests,
+# allocate.py, or standalone).
+_ROOT = os.path.dirname(HERE)
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 FILE_RE = re.compile(r"^(\d+)_([a-z0-9_]+)\.py$")
 
 _META_KEYS = ("NAME", "LABEL", "EDGE_LABEL", "DESC", "FIGURES",
