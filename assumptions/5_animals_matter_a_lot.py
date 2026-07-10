@@ -31,22 +31,19 @@ DESC = (
 #   nematode figure; assumption 11 handles soil animals explicitly).
 #
 # JUDGMENT CALL (documented, not a worldview fork). The RP mainline is contested.
-# The two-envelope objection (Karnofsky; formalised by Nuño Sempere, "A Bayesian
-# Adjustment to Rethink Priorities' Welfare Range Estimates",
-# https://nunosempere.com/blog/2023/02/19/bayesian-adjustment-to-rethink-priorities-welfare-range-estimates/)
-# is that these are expectations over deep sentience uncertainty and that the
-# direction you normalise cross-species welfare (in human vs animal units) swings
-# the answer by orders of magnitude, inflating the smallest, least-understood
-# animals; a Bayesian shrink would pull shrimp/insects down ~1-2 OOM. Rethink
-# Priorities (Fischer) rebuts that they estimate on a fixed human=1 scale and so
-# do not commit the error. Whether to apply the correction is NOT a matter of
-# taste — it has a determinate answer given welfare-range realism + EV — but the
-# premise (realism) and the magnitude (the prior) are genuinely contested, and
-# it is a methodological correction, not a moral premise, so it is NOT modelled
-# as a separate worldview. We adopt the RP mainline medians as the baseline
-# because they are the published, citable standard the field (and Grilo's CEAs)
-# use, and flag the two-envelope reservation here. Shrink these values if you
-# find the correction decisive.
+# The two-envelope objection (Karnofsky; formalised by Nuno Sempere, "A Bayesian
+# Adjustment to Rethink Priorities' Welfare Range Estimates") is that these are
+# expectations over deep sentience uncertainty and that the direction you
+# normalise cross-species welfare (in human vs animal units) swings the answer by
+# orders of magnitude, inflating the smallest, least-understood animals; a
+# Bayesian shrink would pull shrimp/insects down ~1-2 OOM. Rethink Priorities
+# (Fischer) rebuts that they estimate on a fixed human=1 scale and so do not
+# commit the error. Whether to apply the correction is NOT a matter of taste —
+# it has a determinate answer given welfare-range realism + EV — but it is a
+# METHODOLOGICAL correction, not a moral premise, so it is documented here as a
+# judgment call rather than branched as a worldview. We keep the RP mainline
+# medians as the baseline (the published, citable standard Grilo's CEAs use) and
+# flag the reservation; shrink these values if you find the correction decisive.
 RP_WELFARE_RANGE = {
     "thl": 0.332,
     "swp": 0.031,

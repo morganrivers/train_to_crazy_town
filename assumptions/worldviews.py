@@ -1,7 +1,7 @@
 """worldviews.py — compose assumption files into worldviews.
 
 The single source of truth for the train to crazy town is the numbered Python
-ASSUMPTION files in this directory (`0_parochial.py` … `9_boltzmann_brain.py`).
+ASSUMPTION files in this directory (`0_parochial.py` … `15_boltzmann_brain.py`).
 An assumption modifies, in a simple way, the chain of assumptions before it: it
 adds new functions, redefines functions, or changes parameters to functions.
 

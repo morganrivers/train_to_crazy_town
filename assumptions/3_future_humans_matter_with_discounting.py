@@ -2,8 +2,10 @@
 
 Future people enter the circle, but a pure-time discount keeps them from
 dominating. This assumption REDEFINES `moral_weight` (future humans enter the
-circle), ADDS a new function `future_discount`, and WRAPS `coefficient` so the
-discount multiplies every future-facing org.
+circle), ADDS a new parameter `future_discount_ci`, and WRAPS
+`uncertain_factors` so the discount multiplies every future-facing org — as a
+full distribution in the generated model, and as its exact mean in the
+Python-side ranking.
 """
 
 NAME = "future_humans_matter_with_discounting"
@@ -21,21 +23,34 @@ DESC = (
     "astronomical numbers take over."
 )
 
-_present_only_moral_weight = moral_weight  # noqa: F821
-_undiscounted_coefficient = coefficient    # noqa: F821
+_present_only_moral_weight = moral_weight    # noqa: F821
+_undiscounted_uncertain_factors = uncertain_factors  # noqa: F821
+
+# The fraction of far-future value that survives a positive pure-time discount,
+# as a 90% CI rather than a point. Almost all of the astronomical future's value
+# (the x-risk / resilient-food BOTECs' `futureDalysAtStake`) sits millions of
+# years out, and ANY positive pure-time rate, compounded over that span, drives
+# its present value to a rounding error: survival ~ e^(-rate x horizon), and for
+# any rate > 0 over aeons that is ~0. The anchors disagree by orders of
+# magnitude, which is exactly why this is a distribution:
+#   - Ramsey (1928) and the Stern Review (2006, delta ~= 0.1%/yr) argue the PURE
+#     rate should be ~0; even so, over a far-future horizon the surviving share
+#     is tiny — the TOP of this CI;
+#   - Nordhaus (2007, ~1.5%/yr) and Cowen's defence of positive rates compound to
+#     near-total annihilation — the BOTTOM of this CI.
+# The CI's mean (~8e-7) is small enough that a moderate longtermist who keeps ANY
+# positive rate still ranks present global health above the discounted
+# astronomical future. This is exactly why strong longtermism needs a pure rate
+# of ~0 (Ord; Greaves & MacAskill) — the next assumption drops it, and the far
+# future takes over.
+FUTURE_DISCOUNT_CI = (3e-8, 3e-6)
 
 
-def future_discount():
-    """NEW parameter: the pure-time discount applied to far-future value. Future
-    people are still IN the circle — dropping the discount is a separate
-    assumption — but almost all of the astronomical future's value sits millions
-    of years out, and ANY positive pure-time rate, compounded over that span,
-    drives its present value to nearly zero. So a moderate longtermist who keeps
-    a positive rate finds the far future heavily attenuated and present global
-    health still on top; ~1e-6 stands for that near-total suppression. This is
-    exactly why strong longtermism needs a pure rate of ~0 (Ramsey, Stern,
-    Greaves & MacAskill) — the next assumption drops it to 1."""
-    return 1e-6
+def future_discount_ci():
+    """NEW parameter: the aggregate pure-time + hazard attenuation on future
+    people, a lognormal 90% CI. Even a heavy discount leaves them IN the
+    circle — dropping it is a separate assumption."""
+    return FUTURE_DISCOUNT_CI
 
 
 def moral_weight(domain):
@@ -45,9 +60,13 @@ def moral_weight(domain):
     return _present_only_moral_weight(domain)
 
 
-def coefficient(org):
-    """WRAPPED: future-facing value is discounted."""
-    c = _undiscounted_coefficient(org)
+def uncertain_factors(org):
+    """WRAPPED: future-facing value carries the discount — the full
+    distribution in the model, its exact mean in the ranking."""
+    fs = _undiscounted_uncertain_factors(org)
     if org["domain"] in ("future_human", "xrisk_future"):
-        c *= future_discount()
-    return c
+        fs.append(lognormal_factor(  # noqa: F821
+            "futureDiscount", *future_discount_ci(),
+            "pure-time + catastrophe attenuation on far-future value "
+            "(Ramsey/Stern ~0%/yr vs Nordhaus ~1.5%/yr; 1 = no discount)"))
+    return fs

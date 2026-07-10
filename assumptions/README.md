@@ -5,7 +5,7 @@ files** in this directory, and every derived representation is generated from
 them; nothing lives twice:
 
 ```
-                 assumptions/*.py  (0_parochial … 9_boltzmann_brain)
+                 assumptions/*.py  (0_parochial … 13_boltzmann_brain)
                           │  composed per worldview by worldviews.py
                           │  (exec the chain, in craziness order, in one namespace)
         ┌─────────────────┼───────────────────────────┐
@@ -21,13 +21,23 @@ every Squiggle model move together; `python3 test_worldviews.py` (run in CI,
 of assumptions before it — each file does one (or more) of exactly three
 things:
 
-1. **adds new functions** — e.g. `3_…` introduces `future_discount()`,
-   `6_…` introduces `suffering_multiplier(org)`;
+1. **adds new functions** — e.g. `3_…` introduces `future_discount_ci()`,
+   `9_…` introduces `simulation_continuation_beta()`;
 2. **redefines functions** — e.g. `1_…` redefines `moral_weight` (capturing and
    wrapping the parochial one), `5_…` throws away the neuron-count
    `welfare_range` and replaces it with an RP welfare-range table;
-3. **changes parameters to functions** — e.g. `4_…` redefines
-   `future_discount()` from `0.01` to `1.0` and touches nothing else.
+3. **changes parameters to functions** — e.g. `4_…` collapses
+   `future_discount_ci()` from a 90% CI to exactly `1` and touches nothing else.
+
+A parameter that is genuinely uncertain is stated as a **distribution**, not a
+point: assumptions register it through the base `uncertain_factors` hook (a
+`lognormal_factor` 90% CI, or a `beta_factor` for probabilities, which belong
+in [0, 1]). The generated model then carries the named distribution in its
+prelude, while the Python ranking uses its exact mean — factors are independent,
+so the expectation of the product is the product of the expectations, and the
+two representations agree to float precision. Structural weights (who is in the
+circle, relative weightings like the RP welfare-range table) stay points by
+design.
 
 ## How composition works
 
@@ -43,9 +53,15 @@ w1_2_5  =  0_parochial.py  ∘  1_far_away_humans.py  ∘  2_animals_somewhat.py
 The composed namespace ends with two products:
 
 - `expected_values()` — `{org: E[wDALY averted/$]}`, the Python-side ranking
-  (drives `top_pick` in the diagram and `allocate.py`);
+  (drives `top_pick` in the diagram and `allocate.py`); each org's value is
+  `E[direct effect] × (coefficient + externality_coefficient)`, so downstream
+  side effects (the meat-eater and soil-animal charges) scale with the same
+  uncertain direct effect that causes them;
 - `squiggle()` — renders **one standalone Squiggle model** whose `worldviewEv`
-  is the expected value of that worldview. `generate.py` writes it to
+  is the expected value of that worldview. Each scored org carries both `dist`
+  (its full wDALY/$ distribution) and `wdalyPerUsd` (the exact analytic mean of
+  that distribution, which the ranking sorts by — matching `expected_values()`
+  to float precision). `generate.py` writes it to
   `squiggle/worldviews/<id>.squiggle`, and the diagram links each node to that
   model in a temporary playground.
 
@@ -89,34 +105,33 @@ money sitting in a bank — and every worldview downstream carries that agreed
 number unchanged.
 
 ALLFED and AI safety are **worked BOTECs too**, not opaque ranges. ALLFED's value
-is computed from a nuclear-war probability (~0.1%/yr full-scale × ~10%
-conditional nuclear winter), Denkenberger & Pearce's lives-fed-per-dollar, and a
-far-future term for averting civilization-ending collapse; AI safety's from
-Linch's ~$100M-per-0.01%-x-risk bar. Both multiply the *same* astronomical
-`futureDalysAtStake`, so which one a longtermist funds is arithmetic on their
-x-risk-reduced-per-dollar — **not** a chosen result. On the slate's central
-inputs AI safety edges ahead (~1.7×); Denkenberger's more pessimistic
-recovery-from-collapse estimates flip it to ALLFED. A positive pure-time discount
-(`future_discount ≈ 1e-6` at stop 3) annihilates the mostly-aeons-away future, so
-moderate longtermists still rank present global health first; dropping it to 1
-(stop 4) is what lets the astronomical future dominate.
+is computed from a nuclear-war probability (~0.1%/yr full-scale × ~10% conditional
+nuclear winter), Denkenberger & Pearce's lives-fed-per-dollar, and a far-future
+term for averting civilization-ending collapse; AI safety's from Linch's
+~$100M-per-0.01%-x-risk bar. Both carry the *same* astronomical `futureDalysAtStake`,
+so which one a longtermist funds is arithmetic on their x-risk-reduced-per-dollar,
+**not** a chosen result. On the central inputs AI safety edges ahead (~1.7×);
+more pessimistic recovery-from-collapse inputs flip it to ALLFED. A positive
+pure-time discount (`future_discount_ci`, mean ~8e-7 at stop 3) annihilates the
+mostly-aeons-away future, so moderate longtermists still rank present global
+health first; collapsing it to 1 (stop 4) lets the astronomical future dominate.
 
 ## The ladder (ordered by how crazy they are)
 
 | # | assumption | what it does to the chain |
 |---|---|---|
-| 0 | `parochial` | the base: slate, the `moral_weight`/`welfare_range`/`coefficient`/`externality` hooks, `squiggle()` |
+| 0 | `parochial` | the base: slate, the `moral_weight`/`welfare_range`/`coefficient`/`uncertain_factors`/`externality_coefficient` hooks, `squiggle()` |
 | 1 | `far_away_humans` | redefines `moral_weight`: all present humans |
 | 2 | `animals_somewhat` | adds `neuron_count_exponent()`; redefines `welfare_range` |
-| 3 | `future_humans_matter_with_discounting` | adds `future_discount()` (≈ 1e-6); wraps `coefficient` |
-| 4 | `no_discounting_future_humans` | re-parameterises `future_discount()` → 1.0; x-risk enters the circle |
+| 3 | `future_humans_matter_with_discounting` | adds `future_discount_ci()` (90% CI, mean ~8e-7); registers it as a factor on future-facing orgs |
+| 4 | `no_discounting_future_humans` | collapses `future_discount_ci()` → exactly 1; x-risk enters the circle |
 | 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges (Fischer et al.); invertebrates enter |
-| 6 | `suffering_focused` | adds `suffering_multiplier(org)`; wraps `coefficient` (Tomasik, Vinding) |
-| 7 | `meat_eater_problem` | redefines the `externality` hook: charges human orgs for the meat their beneficiaries eat (Grilo) |
-| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering penalty; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
-| 9 | `living_in_simulation` | adds `simulation_continuation_prob()`; attenuates future value (Bostrom) |
-| 10 | `person_affecting_view` | wraps `coefficient`: merely-possible future people get ~no weight (Narveson) |
-| 11 | `soil_animals` | wraps `externality`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
+| 6 | `suffering_focused` | registers the suffering/happiness asymmetry as per-org factor CIs (Tomasik, Vinding) |
+| 7 | `meat_eater_problem` | redefines `externality_coefficient`: charges human orgs, per direct DALY, for the meat their beneficiaries eat (Grilo) |
+| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering CI; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
+| 9 | `living_in_simulation` | adds `simulation_continuation_beta()` (beta(1, 9)); attenuates future value (Bostrom) |
+| 10 | `person_affecting_view` | registers the present-people fraction (CI 3e-7 to 3e-4): merely-possible future people get ~no weight (Narveson) |
+| 11 | `soil_animals` | wraps `externality_coefficient`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
 | 12 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
 | 13 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
 
@@ -161,6 +176,10 @@ assumption.
    insert in the middle).
 2. Have it add / redefine / re-parameterise functions from the chain. Capture a
    previous definition first (`_prev = coefficient`) if you want to wrap it.
+   State any genuinely uncertain magnitude as a distribution: wrap
+   `uncertain_factors` and register a `lognormal_factor` (90% CI) or
+   `beta_factor` (probability), citing the source in its comment — the factor
+   shows up by name in every generated model that holds the assumption.
 3. `python3 generate.py` — regenerates `diagram/train_tree.json` and every
    `squiggle/worldviews/*.squiggle`.
 4. `python3 test_worldviews.py` — asserts numbering, tree shape, and that

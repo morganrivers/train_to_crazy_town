@@ -138,6 +138,54 @@ def test_new_assumptions_flip_the_ranking():
     assert 4e4 < swp / gw < 9e4, f"SWP is {swp/gw:.0f}x GiveWell, expected ~64k"
 
 
+def test_calibration_reproduces_published_figures():
+    """The slate's CIs are calibrated so their lognormal MEANS reproduce the
+    published numbers each entry cites: Grilo's ~0.00994 DALY/$ GiveWell
+    baseline, and (at RP welfare ranges, w1_2_5) his ~460x / ~64k x / ~24k x
+    multiples for chickens, shrimp and wild insects."""
+    amf = "GiveWell top charity (AMF)"
+    gw = BY_ID["w1"]["evs"][amf]
+    assert abs(gw - 0.00994) / 0.00994 < 0.02, f"GiveWell baseline drifted: {gw}"
+    evs = BY_ID["w1_2_5"]["evs"]
+    assert 300 < evs["The Humane League"] / gw < 700, "THL should be ~460x GiveWell"
+    assert 4e4 < evs["Shrimp Welfare Project"] / gw < 9e4, "SWP should be ~64k x"
+    assert 1.5e4 < evs["Wild insects (humane pesticides)"] / gw < 3.5e4, \
+        "wild insects should be ~24k x"
+
+
+def test_models_carry_the_chains_distributions():
+    """Every uncertain moral parameter an assumption registers appears as a
+    NAMED DISTRIBUTION in the generated model of a chain that holds it — and
+    assumption 4 visibly pins the discount to 1 rather than deleting it."""
+    src = lambda wid: BY_ID[wid]["squiggle_source"]  # noqa: E731
+    assert "futureDiscount = Sym.lognormal" in src("w1_3")
+    assert "futureDiscount = 1" in src("w1_3_4")
+    assert "simulationContinues = Sym.beta(1, 9)" in src("w1_3_4_9")
+    assert "presentPeopleFraction = Sym.lognormal" in src("w1_2_3_4_5_10")
+    assert "sufferingPriority = Sym.lognormal" in src("w1_2_6")
+    # the worked far-future BOTECs render their mechanistic factors as distributions
+    assert "allfedPCatastrophePerCentury = Sym.lognormal" in src("w1_3_4")
+    assert "redwoodXRiskReducedPerDollar = Sym.lognormal" in src("w1_3_4")
+    # every model ships a full distribution next to its exact mean
+    assert "dist:" in src("w1_2_5") and "wdalyPerUsd:" in src("w1_2_5")
+    # ... and no model regressed to the sampled-mean `to` syntax
+    for w in VIEWS:
+        for line in w["squiggle_source"].splitlines():
+            if "=" in line and not line.lstrip().startswith("//"):
+                assert " to " not in line.split("//")[0], \
+                    f'{w["id"]}: sampled `to` distribution in {line!r}'
+
+
+def test_credences_are_a_distribution():
+    """allocate.py's worldview credences are a proper distribution: they sum
+    to 1 and peak on the chosen center."""
+    import allocate
+    for center, div in (("w1_2", 1.0), ("w1_2_5", 2.0), ("w1_3_4", 0.5)):
+        cred = allocate.credences(BY_ID[center], div)
+        assert abs(sum(cred.values()) - 1.0) < 1e-9
+        assert cred[center] == max(cred.values())
+
+
 def test_overrides_go_flat():
     """The end of the line: anti-realism sets every value to 0; the Boltzmann
     brain collapses everything to one equal pleasant thought."""
