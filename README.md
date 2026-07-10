@@ -56,9 +56,9 @@ one.
   *challenger* (the org most likely to beat the winner) with its own confidence.
   When a winner leads only on a heavy tail its confidence is low and the
   challenger's is higher — e.g. under the person-affecting view the expected-value
-  pick is AI safety (best just ~4% of the time) while GiveWell is best ~65%.
+  pick is AI safety (best just ~14% of the time) while GiveWell is best ~52%.
 - **An edge accepts exactly one more assumption.**
-- **A band (STOP 0–13) is how far down the line a worldview rides** — its
+- **A band (STOP 0–17) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
   violet at the bottom.
 - **The decision rule never changes.** Every worldview maximizes expected
@@ -85,24 +85,33 @@ a soup kitchen wins. Each numbered assumption modifies the worldview before it:
 
 1. **far-away humans count** — distance is not morally relevant → global health
 2. **animals count, somewhat** — neuron-weighted welfare → corporate campaigns
-3. **future humans matter, discounted** — a positive pure-time rate annihilates
+3. **nature has intrinsic value** — ecosystems matter for themselves, valued at
+   what existence-value studies say they're worth to those who hold the belief →
+   habitat protection (Rainforest Trust) wins where animals don't dominate
+4. **future humans matter, discounted** — a positive pure-time rate annihilates
    the astronomical far future → global health still holds
-4. **no discounting the future** — astronomical stakes → AI safety (which edges
+5. **no discounting the future** — astronomical stakes → AI safety (which edges
    out ALLFED on the slate's worked BOTECs — a close, contestable race)
-5. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
+6. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
    shrimp welfare (this worldview reproduces Grilo's published numbers)
-6. **suffering-focused ethics** — averting suffering beats creating happiness
-7. **the meat-eater problem** — a saved human eats animals for a lifetime, so
+7. **suffering-focused ethics** — averting suffering beats creating happiness
+8. **the meat-eater problem** — a saved human eats animals for a lifetime, so
    human charities are charged for the factory farming they cause (Grilo)
-8. **net-negative animal lives** — farmed and wild lives aren't worth living;
+9. **net-negative animal lives** — farmed and wild lives aren't worth living;
    with the meat-eater problem, human charities come out net-harmful
-9. **living in a simulation** — the far future only counts if it keeps running
-10. **person-affecting view** — making happy people is neutral, so the
+10. **resilience undermines deterrence** — survivable nuclear war deters less, so
+    resilient food partly self-defeats: an alternative, lower estimate for ALLFED
+11. **collapse teaches (reroll better)** — survivors of a near-collapse rebuild
+    wiser, so averting collapse is worth less → AI safety holds
+12. **collapse degrades (reroll worse)** — survivors stagnate into a locked-in
+    worse future, so averting collapse is worth far more → ALLFED overtakes AI safety
+13. **living in a simulation** — the far future only counts if it keeps running
+14. **person-affecting view** — making happy people is neutral, so the
     astronomical case for x-risk collapses (Narveson)
-11. **count soil animals** — ~10^19 soil nematodes/mites; global health expands
+15. **count soil animals** — ~10^19 soil nematodes/mites; global health expands
     cropland and, on Grilo's figure, comes out net-harmful
-12. **morality is not real** — every value goes to 0; keep your money
-13. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+16. **morality is not real** — every value goes to 0; keep your money
+17. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
 
 Two things are deliberately *not* assumptions, because a worldview should change
 what you *believe*, not force a result: **whether resilient foods beat AI
@@ -113,29 +122,41 @@ correction documented as a judgment call in the code, not a fork.
 
 Not every combination is a coherent person — an animals person won't think only
 their own community matters, and the near-term meat-eater bookkeeping is moot
-once astronomical stakes dominate — so compatibility rules prune 8,192 possible
-chains to **73 worldviews**. The ladder, the rules, and how chains compose are
+once astronomical stakes dominate — so compatibility rules prune 131,072 possible
+chains to **199 worldviews**. The ladder, the rules, and how chains compose are
 documented in [`assumptions/README.md`](assumptions/README.md).
 
 ## What's in the repo
 
-- **[`assumptions/`](assumptions/README.md)** — the single source of truth:
-  fourteen numbered Python assumption files that compose into the 73 worldviews.
+- **[`assumptions/`](assumptions/README.md)** — the MORAL axis and single source
+  of truth: eighteen numbered Python assumption files that compose into the 199
+  worldviews. Only the moral premises fork; the empirical numbers do not.
+- **`botecs/`** — the EMPIRICAL axis: one importable, worked derivation per org's
+  direct effect, with each factor tagged by provenance (worked-internal /
+  worked-external / empirical-anchor / expert-judgment). One true value per
+  quantity, read by every worldview and improved in one place. The two
+  load-bearing longtermist numbers are decomposed into mechanisms here (the AI
+  x-risk figure from Carlsmith's premises, the future-at-stake from a Newberry
+  decomposition with an explicit background-extinction lever), and
+  [`PROVENANCE.md`](PROVENANCE.md) is a generated audit that lists every
+  `expert-judgment` weak point.
 - **[`squiggle/`](squiggle/README.md)** — one standalone Squiggle model per
-  worldview (generated), each exporting its ranking and `worldviewEv`, the
-  expected value of that worldview. Runnable locally, in the playground links,
-  or on Squiggle Hub.
+  worldview (generated), each exporting its ranking and `worldviewEv`. Each org's
+  direct effect appears as a single moment-matched lognormal summary linking to
+  its full derivation in `squiggle/botecs/<id>.squiggle`, so a worldview model
+  stays readable no matter how rich the mechanisms get. Runnable locally, in the
+  playground links, or on Squiggle Hub.
 - **[`diagram/`](diagram/README.md)** — the Graphviz → draw.io / PNG / SVG
   pipeline that draws the tree and wires every node to its playground link.
 - **`allocate.py`** — a worldview-diversified donation allocator:
 
   ```bash
-  python3 allocate.py --center w1_2_5 --diversification 2
+  python3 allocate.py --center w1_2_6 --diversification 2
   ```
 
   prints each org's expected cost-effectiveness (as a multiple of GiveWell top
   charities) and its share of a portfolio. `--center` is the worldview you lean
-  toward (`--list` shows all 73); `--diversification 0` goes all-in on its
+  toward (`--list` shows all 199); `--diversification 0` goes all-in on its
   single winner, higher values spread credence across nearby worldviews and
   fund the best org in each.
 - **`generate.py` / `test_worldviews.py`** — regenerate every derived file from
@@ -213,3 +234,22 @@ documented in [`assumptions/README.md`](assumptions/README.md).
 - Rethink Priorities, *Why Neuron Counts Shouldn't Be Used as Proxies for
   Moral Weight* —
   https://rethinkpriorities.org/publications/why-neuron-counts-shouldnt-be-used-as-proxies-for-moral-weight
+- Joseph Carlsmith, *Is Power-Seeking AI an Existential Risk?* (Open
+  Philanthropy; ~10% by 2070, six-premise decomposition behind the AI-safety
+  BOTEC) — https://arxiv.org/abs/2206.13353
+- Toby Newberry, *How many lives does the future hold?* (Global Priorities
+  Institute — the population-per-century × expected-duration decomposition of
+  the future at stake) —
+  https://globalprioritiesinstitute.org/how-many-lives-does-the-future-hold-toby-newberry-future-of-humanity-institute-university-of-oxford/
+- Luisa Rodriguez, *How likely is a nuclear exchange between the US and Russia?*
+  (Rethink Priorities; ~0.38%/yr, the anchor for ALLFED's catastrophe
+  probability and the deterrence-erosion fork) —
+  https://rethinkpriorities.org/research-area/how-likely-is-a-nuclear-exchange-between-the-us-and-russia/
+- Vasco Grilo, *Policy advocacy for eradicating screwworm looks remarkably
+  cost-effective* (~1.67–4.59 human-equiv DALY/$, the Screwworm Free Future
+  entry) —
+  https://forum.effectivealtruism.org/posts/bT3WrFn6H4fpvLSk8/policy-advocacy-for-eradicating-screwworm-looks-remarkably
+- Sam Peltzman, *The Effects of Automobile Safety Regulation* (JPE, 1975) — the
+  risk-compensation / deterrence-erosion mechanism behind assumption 10
+- Rainforest Trust — habitat protection cost-per-acre, the direct effect behind
+  the nature entry — https://www.rainforesttrust.org/our-impact/our-approach/

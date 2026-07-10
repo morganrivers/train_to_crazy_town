@@ -31,9 +31,10 @@ register(Botec(
         "allfedPCatastrophePerCentury": Factor(
             "allfedPCatastrophePerCentury", "lognormal", (0.003, 0.05),
             "expert-judgment",
-            "P(nuclear-winter-scale ag catastrophe this century). See the "
-            "`nuclear` botec for a worked alternative from Rodriguez's "
-            "~0.4%/yr US-Russia estimate."),
+            "P(nuclear-winter-scale ag catastrophe this century). Assumption 10 "
+            "(resilience_undermines_deterrence) re-anchors this to Rodriguez's "
+            "~0.4%/yr US-Russia estimate as an alternative, higher figure.",
+            source="https://rethinkpriorities.org/research-area/how-likely-is-a-nuclear-exchange-between-the-us-and-russia/"),
         "allfedLivesSavedPerDollarIfCatastrophe": Factor(
             "allfedLivesSavedPerDollarIfCatastrophe", "lognormal", (0.02, 2),
             "worked-external",

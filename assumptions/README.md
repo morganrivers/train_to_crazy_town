@@ -1,19 +1,27 @@
 # `assumptions/` — the single source of truth
 
 Every worldview on the train is composed from the numbered Python **assumption
-files** in this directory, and every derived representation is generated from
-them; nothing lives twice:
+files** in this directory (the MORAL axis), operating on the worked derivations
+in the **`botecs/`** package (the EMPIRICAL axis). Every derived representation
+is generated from them; nothing lives twice:
 
 ```
-                 assumptions/*.py  (0_parochial … 13_boltzmann_brain)
-                          │  composed per worldview by worldviews.py
-                          │  (exec the chain, in craziness order, in one namespace)
-        ┌─────────────────┼───────────────────────────┐
-        │ reads           │ generate.py writes         │ generate.py writes
-        ▼                 ▼                            ▼
-   allocate.py    diagram/train_tree.json      squiggle/worldviews/*.squiggle
-   (portfolio)    → build_diagram.py → .drawio  (one standalone model per node)
+   botecs/*.py  (empirical: one worked derivation per org, provenance-tagged)
+        │  imported (read, never forked) by
+        ▼
+   assumptions/*.py  (0_parochial … 17_boltzmann_brain — the moral premises)
+        │  composed per worldview by worldviews.py
+        │  (exec the chain, in craziness order, in one namespace)
+   ┌────┼──────────────┬──────────────────────────┬─────────────────────┐
+   │ reads            │ generate.py writes        │ writes               │ writes
+   ▼                  ▼                           ▼                      ▼
+ allocate.py   diagram/train_tree.json   squiggle/worldviews/*.squiggle  squiggle/botecs/*.squiggle
+ (portfolio)   → build_diagram.py         (one summary model per node)   + PROVENANCE.md
 ```
+
+The two axes never multiply into each other: moral premises fork into worldviews,
+empirical magnitudes are shared and improved in ONE place. See `botecs/base.py`
+for the contract and the provenance taxonomy.
 
 Edit an assumption file, run `python3 generate.py`, and the graph JSON and
 every Squiggle model move together; `python3 test_worldviews.py` (run in CI,
@@ -21,12 +29,12 @@ every Squiggle model move together; `python3 test_worldviews.py` (run in CI,
 of assumptions before it — each file does one (or more) of exactly three
 things:
 
-1. **adds new functions** — e.g. `3_…` introduces `future_discount_ci()`,
-   `9_…` introduces `simulation_continuation_beta()`;
+1. **adds new functions** — e.g. `4_…` introduces `future_discount_ci()`,
+   `13_…` introduces `simulation_continuation_beta()`;
 2. **redefines functions** — e.g. `1_…` redefines `moral_weight` (capturing and
-   wrapping the parochial one), `5_…` throws away the neuron-count
+   wrapping the parochial one), `6_…` throws away the neuron-count
    `welfare_range` and replaces it with an RP welfare-range table;
-3. **changes parameters to functions** — e.g. `4_…` collapses
+3. **changes parameters to functions** — e.g. `5_…` collapses
    `future_discount_ci()` from a 90% CI to exactly `1` and touches nothing else.
 
 A parameter that is genuinely uncertain is stated as a **distribution**, not a
@@ -47,7 +55,7 @@ into one shared namespace — effectively a string of Python imports where each
 later file sees, and may capture/wrap/replace, everything defined so far:
 
 ```
-w1_2_5  =  0_parochial.py  ∘  1_far_away_humans.py  ∘  2_animals_somewhat.py  ∘  5_animals_matter_a_lot.py
+w1_2_6  =  0_parochial.py  ∘  1_far_away_humans.py  ∘  2_animals_somewhat.py  ∘  6_animals_matter_a_lot.py
 ```
 
 The composed namespace ends with two products:
@@ -77,15 +85,15 @@ per dollar** (`wDALY/$`): the native unit of global-health cost-effectiveness
 sentience-adjusted welfare range (Rethink Priorities / Bob Fischer) so one unit
 covers human health, animals, and future minds. One human DALY = 1 wDALY.
 
-The donation slate is fixed across every worldview and lives once, on
-`0_parochial.py`, each org with its direct-effect BOTEC (a lognormal 90% CI) and
-a source URL. Only the coefficients change as assumptions accumulate. Each
-org's *direct* figure is in its beneficiary's own welfare units, before the
-moral circle / welfare range / discount the chain applies; the numbers are
-calibrated so that the **animals-matter-a-lot worldview (`w1_2_5`) reproduces
-Vasco Grilo's published cost-effectiveness figures** and the GiveWell baseline
-reproduces his ~0.00994 DALY/$, so `allocate.py`'s "x GiveWell" column reads his
-own multiples:
+The donation slate is fixed across every worldview. Its ORG identities live once
+on `0_parochial.py`; each org's direct-effect BOTEC (its empirical derivation)
+lives in the `botecs/` package, tagged with per-factor provenance and a source.
+Only the moral coefficients change as assumptions accumulate. Each org's *direct*
+figure is in its beneficiary's own welfare units, before the moral circle /
+welfare range / discount the chain applies; the numbers are calibrated so that
+the **animals-matter-a-lot worldview (`w1_2_6`) reproduces Vasco Grilo's published
+cost-effectiveness figures** and the GiveWell baseline reproduces his ~0.00994
+DALY/$, so `allocate.py`'s "x GiveWell" column reads his own multiples:
 
 | Target | Cause | Direct figure grounded in | ≈ x GiveWell at RP welfare ranges |
 |---|---|---|---|
@@ -96,25 +104,33 @@ own multiples:
 | **The Humane League** | Farmed vertebrates | Saulius chicken-years/$ × Grilo DALY/$ | ~460x |
 | **Shrimp Welfare Project** | Invertebrates | Grilo HSI 639 DALY/$ | ~64,000x |
 | **Wild insects (humane pesticides)** | Wild / soil invertebrates | Grilo 236 DALY/$ | ~24,000x |
+| **Screwworm Free Future** | Wild-vertebrate suffering (myiasis) | Grilo screwworm CEA ~1.67–4.59 DALY/$ | ~290x |
+| **Rainforest Trust** | Ecosystems (intrinsic value) | hectares/$ × existence-value exchange rate | nature-gated |
 | **ALLFED** | Global catastrophic risk / resilience | worked nuclear-winter BOTEC (Denkenberger & Pearce) | future-gated |
-| **AI safety (Redwood Research)** | Existential risk, astronomical waste | worked BOTEC: Linch's $100M/0.01% × Bostrom/Cotra future | future-gated |
+| **AI safety (Redwood Research)** | Existential risk, astronomical waste | worked BOTEC: Carlsmith P(catastrophe) × future (≈ Linch's bar) | future-gated |
 
 The parochial root's soup-kitchen value is a worked BOTEC — people made happier
 per dollar × their wellbeing gain, netted against the counterfactual of the
 money sitting in a bank — and every worldview downstream carries that agreed
 number unchanged.
 
-ALLFED and AI safety are **worked BOTECs too**, not opaque ranges. ALLFED's value
-is computed from a nuclear-war probability (~0.1%/yr full-scale × ~10% conditional
-nuclear winter), Denkenberger & Pearce's lives-fed-per-dollar, and a far-future
-term for averting civilization-ending collapse; AI safety's from Linch's
-~$100M-per-0.01%-x-risk bar. Both carry the *same* astronomical `futureDalysAtStake`,
-so which one a longtermist funds is arithmetic on their x-risk-reduced-per-dollar,
-**not** a chosen result. On the central inputs AI safety edges ahead (~1.7×);
-more pessimistic recovery-from-collapse inputs flip it to ALLFED. A positive
-pure-time discount (`future_discount_ci`, mean ~8e-7 at stop 3) annihilates the
-mostly-aeons-away future, so moderate longtermists still rank present global
-health first; collapsing it to 1 (stop 4) lets the astronomical future dominate.
+ALLFED and AI safety are **worked BOTECs** in the `botecs/` package (the
+empirical axis), not opaque ranges. ALLFED's value is computed from a nuclear-war
+probability (~0.1%/yr full-scale × ~10% conditional nuclear winter), Denkenberger
+& Pearce's lives-fed-per-dollar, and a far-future term for averting
+civilization-ending collapse; AI safety's from a decomposition of P(AI
+catastrophe) (Carlsmith's six premises, ~10%) × the fraction alignment can avert
+× marginal risk removed per dollar — whose central value lands on Linch's
+independently-elicited ~$100M-per-0.01%-x-risk bar (a cross-check, not a fit).
+Both carry the *same* astronomical `futureDalysAtStake` (itself decomposed into
+population-per-century × expected-surviving-centuries × DALYs-per-life, with the
+background-extinction rate an explicit lever), so which one a longtermist funds
+is arithmetic on their x-risk-reduced-per-dollar, **not** a chosen result. On the
+central inputs AI safety edges ahead (~1.8×); the pessimistic collapse-reroll fork
+(`collapse_degrades_future`) flips it to ALLFED. A positive pure-time discount
+(`future_discount_ci`, mean ~8e-7 at stop 4) annihilates the mostly-aeons-away
+future, so moderate longtermists still rank present global health first;
+collapsing it to 1 (stop 5) lets the astronomical future dominate.
 
 ## The ladder (ordered by how crazy they are)
 
@@ -123,17 +139,28 @@ health first; collapsing it to 1 (stop 4) lets the astronomical future dominate.
 | 0 | `parochial` | the base: slate, the `moral_weight`/`welfare_range`/`coefficient`/`uncertain_factors`/`externality_coefficient` hooks, `squiggle()` |
 | 1 | `far_away_humans` | redefines `moral_weight`: all present humans |
 | 2 | `animals_somewhat` | adds `neuron_count_exponent()`; redefines `welfare_range` |
-| 3 | `future_humans_matter_with_discounting` | adds `future_discount_ci()` (90% CI, mean ~8e-7); registers it as a factor on future-facing orgs |
-| 4 | `no_discounting_future_humans` | collapses `future_discount_ci()` → exactly 1; x-risk enters the circle |
-| 5 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges (Fischer et al.); invertebrates enter |
-| 6 | `suffering_focused` | registers the suffering/happiness asymmetry as per-org factor CIs (Tomasik, Vinding) |
-| 7 | `meat_eater_problem` | redefines `externality_coefficient`: charges human orgs, per direct DALY, for the meat their beneficiaries eat (Grilo) |
-| 8 | `net_negative_animal_lives` | re-parameterises the farmed-suffering CI; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
-| 9 | `living_in_simulation` | adds `simulation_continuation_beta()` (beta(1, 9)); attenuates future value (Bostrom) |
-| 10 | `person_affecting_view` | registers the present-people fraction (CI 3e-7 to 3e-4): merely-possible future people get ~no weight (Narveson) |
-| 11 | `soil_animals` | wraps `externality_coefficient`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
-| 12 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
-| 13 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+| 3 | `nature_intrinsic_value` | redefines `moral_weight` (ecosystems enter); wraps `uncertain_factors` with a wDALY-per-hectare existence-value exchange rate on the conservation org |
+| 4 | `future_humans_matter_with_discounting` | adds `future_discount_ci()` (90% CI, mean ~8e-7); registers it as a factor on future-facing orgs |
+| 5 | `no_discounting_future_humans` | collapses `future_discount_ci()` → exactly 1; x-risk enters the circle |
+| 6 | `animals_matter_a_lot` | replaces `welfare_range` with RP welfare ranges (Fischer et al.); invertebrates and wild vertebrates enter |
+| 7 | `suffering_focused` | registers the suffering/happiness asymmetry as per-org factor CIs (Tomasik, Vinding) |
+| 8 | `meat_eater_problem` | redefines `externality_coefficient`: charges human orgs, per direct DALY, for the meat their beneficiaries eat (Grilo) |
+| 9 | `net_negative_animal_lives` | re-parameterises the farmed-suffering CI; wraps `coefficient` to boost suffering-reduction (Tomasik, Benatar) |
+| 10 | `resilience_undermines_deterrence` | wraps `uncertain_factors`: a Peltzman deterrence-erosion multiplier on ALLFED (an alternative, lower estimate) |
+| 11 | `collapse_teaches_better_future` | wraps `uncertain_factors`: a <1 far-future multiplier on ALLFED (survivors rebuild wiser) |
+| 12 | `collapse_degrades_future` | wraps `uncertain_factors`: a >1 far-future multiplier on ALLFED (survivors stagnate); can flip the longtermist winner to ALLFED |
+| 13 | `living_in_simulation` | adds `simulation_continuation_beta()` (beta(1, 9)); attenuates future value (Bostrom) |
+| 14 | `person_affecting_view` | registers the present-people fraction (CI 3e-7 to 3e-4): merely-possible future people get ~no weight (Narveson) |
+| 15 | `soil_animals` | wraps `externality_coefficient`: count ~10^19 soil animals; human orgs go net-negative (Grilo) |
+| 16 | `morality_is_not_real` | override: redefines `coefficient` → 0 for everything (Mackie) |
+| 17 | `boltzmann_brain` | override: everything collapses to one equal pleasant thought |
+
+Assumptions 10–12 are the **nuclear second-order forks** — three mutually
+exclusive readings of resilient-food / civilizational-collapse value, each
+riding a longtermist (undiscounted) chain and each a distinct, durable
+disagreement rather than a botec input. 3 (`nature_intrinsic_value`) is a
+present-world value, so it excludes the astronomical branch (`no_discounting`),
+where a few wDALY/$ from habitat is swamped.
 
 Two things are deliberately **not** on this ladder, because they are not
 worldview forks. (1) **The resilient-foods-vs-AI-safety comparison** is decided
@@ -142,29 +169,34 @@ answer — see "The metric and the slate" above. (2) **Two-envelope skepticism
 about RP's invertebrate welfare ranges** (Nuño Sempere) is a *methodological
 correction*, not a value premise: whether to apply it has a determinate answer
 given welfare-range realism + EV, so it is documented as a judgment call in
-`5_animals_matter_a_lot.py` (we keep RP's published medians as the baseline and
+`6_animals_matter_a_lot.py` (we keep RP's published medians as the baseline and
 flag the contention) rather than branched.
 
 ## Limiting the combinatorial explosion
 
-Fourteen assumptions would naively give 2¹³ = 8,192 chains (the parochial base
+Eighteen assumptions would naively give 2¹⁷ = 131,072 chains (the parochial base
 is always present). Metadata on each file limits combinations to what one person
 could plausibly hold at once:
 
 - **`REQUIRES`** — an animals person won't think only people in their community
-  matter, so `2` requires `1`; `4` modifies the discount `3` introduced, so it
-  requires `3`; `5` upgrades `2`; `7` (meat-eater) needs animals in the circle
-  (`2`); `8` (net-negative lives) and `11` (soil animals) presuppose the RP
-  welfare ranges (`5`); `9` (simulation) and `10` (person-affecting) only make
-  sense to someone already reasoning about the undiscounted far future (`4`).
-- **`EXCLUDES`** — the two overrides (`12`, `13`) can't be held together; and
-  the near-term animal-vs-human stops `7`/`8` are not combined with
-  astronomical-stakes longtermism (`4`), where x-risk swamps the bookkeeping.
+  matter, so `2` requires `1`; `3` (nature) and `4` (discounted future) both
+  require the impartial `1`; `5` (no discount) modifies the discount `4`
+  introduced; `6` upgrades `2`; `8` (meat-eater) needs animals in the circle
+  (`2`); `9` (net-negative lives) and `15` (soil animals) presuppose the RP
+  welfare ranges (`6`); `13` (simulation) and `14` (person-affecting), and the
+  three nuclear forks `10`/`11`/`12`, only make sense to someone already
+  reasoning about the undiscounted far future (`5`).
+- **`EXCLUDES`** — the two overrides (`16`, `17`) can't be held together; the
+  near-term animal-vs-human stops `8`/`9` are not combined with
+  astronomical-stakes longtermism (`5`), where x-risk swamps the bookkeeping;
+  `3` (nature, a present-world value) is likewise excluded from `5`; and the
+  three nuclear second-order forks `10`/`11`/`12` are mutually exclusive — one
+  nuclear nuance per worldview.
 - **`TERMINAL`** — an override invalidates every assumption before it, so it is
   generated only on its minimal `REQUIRES`-closure chain; any larger chain
   would produce a byte-identical all-flat model.
 
-That leaves **73 worldviews**. Every worldview's parent is the same chain minus
+That leaves **199 worldviews**. Every worldview's parent is the same chain minus
 its craziest assumption, so the graph is a tree and every edge adds exactly one
 assumption.
 
