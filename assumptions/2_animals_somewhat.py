@@ -40,7 +40,7 @@ def neuron_count_exponent():
     (https://rethinkpriorities.org/publications/why-neuron-counts-shouldnt-be-used-as-proxies-for-moral-weight);
     the exponent is a MODELLING KNOB, not an empirical estimate — sweeping it
     0..1 swings animal welfare ranges across orders of magnitude, and
-    assumption 6 replaces the proxy with RP's welfare ranges outright."""
+    assumption 7 replaces the proxy with RP's welfare ranges outright."""
     return 0.5
 
 

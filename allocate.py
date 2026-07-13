@@ -12,7 +12,7 @@ shared with the diagram and the generated Squiggle models). Each worldview is a
 chain of assumptions; its per-org expected values come from running the chain's
 Python, the same computation the generated Squiggle model performs.
 
-  --center W           worldview you lean toward, by id (see --list), e.g. w1_2_5
+  --center W           worldview you lean toward, by id (see --list), e.g. w1_2_7
   --diversification D  0 = go all-in on the center worldview's single winner
                        (pure EV-max); higher = spread credence across worldviews
                        by how many assumptions they differ in, funding the best
@@ -22,7 +22,7 @@ Python, the same computation the generated Squiggle model performs.
   --list               list the worldviews and exit.
 
   python3 allocate.py
-  python3 allocate.py --center w1_2_5 --diversification 2
+  python3 allocate.py --center w1_2_7 --diversification 2
 """
 import argparse
 import math

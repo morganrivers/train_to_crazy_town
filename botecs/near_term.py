@@ -101,6 +101,28 @@ _single(
     "https://forum.effectivealtruism.org/posts/bT3WrFn6H4fpvLSk8/policy-advocacy-for-eradicating-screwworm-looks-remarkably",
     "Screwworm Free Future; wild-animal suffering (intense myiasis) eradication (Grilo).")
 
+# Clean Air Task Force — the climate entry. Its DIRECT effect is tonnes of
+# CO2e averted per dollar (advocacy leverage on power-sector policy), a
+# measured mitigation cost (Founders Pledge's CATF evaluation: ~$0.1-$10/tCO2e
+# across its scenarios, central ~$1). Like Rainforest Trust's hectares/$, it
+# carries NO welfare value until the `climate_tipping_points` assumption
+# supplies the exchange rate (wDALY per tCO2e: Bressler's mortality cost of
+# carbon + the PIK income channel, times a tipping multiplier); before that its
+# moral weight is 0 in every worldview.
+register(Botec(
+    "catf",
+    terms=[("catfTco2AvertedPerUsd",)],
+    factors={"catfTco2AvertedPerUsd": Factor(
+        "catfTco2AvertedPerUsd", "lognormal", (0.3, 3.0), "worked-external",
+        "tonnes CO2e averted per dollar (Founders Pledge CATF evaluation, "
+        "~$0.1-$10/tCO2e advocacy scenarios, central ~$1/t)",
+        source="https://founderspledge.com/stories/clean-air-task-force")},
+    doc="Clean Air Task Force; power-sector climate policy advocacy. Direct "
+        "effect is tCO2e averted per $ — the climate_tipping_points assumption "
+        "converts it to wDALY.",
+    units="tonnes CO2e averted per $ (converted to wDALY by the climate assumption)",
+    source_url="https://founderspledge.com/stories/clean-air-task-force"))
+
 # Rainforest Trust — the ecosystem entry. Its DIRECT effect is habitat protected
 # per dollar (hectares), a measured conservation cost. It carries NO welfare
 # value until the `nature_intrinsic_value` assumption supplies the exchange rate

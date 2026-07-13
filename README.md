@@ -12,7 +12,7 @@ should you donate to at each stop?
 
 This repo answers that with a **worldview explorer**: a zoomable tree of
 "get-off points" where every node is a worldview, every worldview ranks the
-same nine donation targets by expected value, and the winner changes as you
+same twelve donation targets by expected value, and the winner changes as you
 accept one more assumption. Click any node and its full cost-effectiveness
 model opens in a live, editable [Squiggle](https://www.squiggle-language.com)
 playground — no account needed — so you can change any number and watch the
@@ -58,7 +58,7 @@ one.
   challenger's is higher — e.g. under the person-affecting view the expected-value
   pick is AI safety (best just ~14% of the time) while GiveWell is best ~52%.
 - **An edge accepts exactly one more assumption.**
-- **A band (STOP 0–17) is how far down the line a worldview rides** — its
+- **A band (STOP 0–20) is how far down the line a worldview rides** — its
   craziest accepted assumption, coloured calm slate at the top to override
   violet at the bottom.
 - **The decision rule never changes.** Every worldview maximizes expected
@@ -88,30 +88,42 @@ a soup kitchen wins. Each numbered assumption modifies the worldview before it:
 3. **nature has intrinsic value** — ecosystems matter for themselves, valued at
    what existence-value studies say they're worth to those who hold the belief →
    habitat protection (Rainforest Trust) wins where animals don't dominate
-4. **future humans matter, discounted** — a positive pure-time rate annihilates
+4. **climate damages are civilizational-scale** — Bressler's mortality cost of
+   carbon, PIK's committed ~19% income loss by 2049, and Rockström tipping-point
+   cascades → Clean Air Task Force (and, held together with nature, protecting
+   tropical forest picks up the tipping-element co-benefit)
+5. **future humans matter, discounted** — a positive pure-time rate annihilates
    the astronomical far future → global health still holds
-5. **no discounting the future** — astronomical stakes → AI safety (which edges
+6. **no discounting the future** — astronomical stakes → AI safety (which edges
    out ALLFED on the slate's worked BOTECs — a close, contestable race)
-6. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
+7. **animals matter a lot** — Rethink Priorities welfare ranges, invertebrates →
    shrimp welfare (this worldview reproduces Grilo's published numbers)
-7. **suffering-focused ethics** — averting suffering beats creating happiness
-8. **the meat-eater problem** — a saved human eats animals for a lifetime, so
+8. **suffering-focused ethics** — averting suffering beats creating happiness
+9. **the meat-eater problem** — a saved human eats animals for a lifetime, so
    human charities are charged for the factory farming they cause (Grilo)
-9. **net-negative animal lives** — farmed and wild lives aren't worth living;
-   with the meat-eater problem, human charities come out net-harmful
-10. **resilience undermines deterrence** — survivable nuclear war deters less, so
+10. **net-negative animal lives** — farmed and wild lives aren't worth living;
+    with the meat-eater problem, human charities come out net-harmful
+11. **resilience undermines deterrence** — survivable nuclear war deters less, so
     resilient food partly self-defeats: an alternative, lower estimate for ALLFED
-11. **collapse teaches (reroll better)** — survivors of a near-collapse rebuild
+12. **collapse teaches (reroll better)** — survivors of a near-collapse rebuild
     wiser, so averting collapse is worth less → AI safety holds
-12. **collapse degrades (reroll worse)** — survivors stagnate into a locked-in
+13. **collapse degrades (reroll worse)** — survivors stagnate into a locked-in
     worse future, so averting collapse is worth far more → ALLFED overtakes AI safety
-13. **living in a simulation** — the far future only counts if it keeps running
-14. **person-affecting view** — making happy people is neutral, so the
+14. **time of perils, space exit** — hazard is high during the AI/nuclear
+    transition but collapses once we are multiplanetary, so the expected future
+    (and x-risk work during the window) scales up (Ord; the backup argument)
+15. **early space expansion backfires** — the capability that settles planets
+    also moves asteroids and exports nationalism (Deudney, *Dark Skies*; the
+    Weinersmiths, *A City on Mars*), so below many independent settlements
+    expansion *adds* risk: accelerate only after geopolitics matures, and the
+    astronomical multiplier is trimmed — the sweet-spot rebuttal to 14
+16. **living in a simulation** — the far future only counts if it keeps running
+17. **person-affecting view** — making happy people is neutral, so the
     astronomical case for x-risk collapses (Narveson)
-15. **count soil animals** — ~10^19 soil nematodes/mites; global health expands
+18. **count soil animals** — ~10^19 soil nematodes/mites; global health expands
     cropland and, on Grilo's figure, comes out net-harmful
-16. **morality is not real** — every value goes to 0; keep your money
-17. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
+19. **morality is not real** — every value goes to 0; keep your money
+20. **Boltzmann brain** — only this moment's feeling is real; nothing to choose
 
 Two things are deliberately *not* assumptions, because a worldview should change
 what you *believe*, not force a result: **whether resilient foods beat AI
@@ -122,14 +134,14 @@ correction documented as a judgment call in the code, not a fork.
 
 Not every combination is a coherent person — an animals person won't think only
 their own community matters, and the near-term meat-eater bookkeeping is moot
-once astronomical stakes dominate — so compatibility rules prune 131,072 possible
-chains to **199 worldviews**. The ladder, the rules, and how chains compose are
+once astronomical stakes dominate — so compatibility rules prune 1,048,576 possible
+chains to **411 worldviews**. The ladder, the rules, and how chains compose are
 documented in [`assumptions/README.md`](assumptions/README.md).
 
 ## What's in the repo
 
 - **[`assumptions/`](assumptions/README.md)** — the MORAL axis and single source
-  of truth: eighteen numbered Python assumption files that compose into the 199
+  of truth: twenty-one numbered Python assumption files that compose into the 411
   worldviews. Only the moral premises fork; the empirical numbers do not.
 - **`botecs/`** — the EMPIRICAL axis: one importable, worked derivation per org's
   direct effect, with each factor tagged by provenance (worked-internal /
@@ -151,12 +163,12 @@ documented in [`assumptions/README.md`](assumptions/README.md).
 - **`allocate.py`** — a worldview-diversified donation allocator:
 
   ```bash
-  python3 allocate.py --center w1_2_6 --diversification 2
+  python3 allocate.py --center w1_2_7 --diversification 2
   ```
 
   prints each org's expected cost-effectiveness (as a multiple of GiveWell top
   charities) and its share of a portfolio. `--center` is the worldview you lean
-  toward (`--list` shows all 199); `--diversification 0` goes all-in on its
+  toward (`--list` shows all 411); `--diversification 0` goes all-in on its
   single winner, higher values spread credence across nearby worldviews and
   fund the best org in each.
 - **`generate.py` / `test_worldviews.py`** — regenerate every derived file from
@@ -212,11 +224,11 @@ documented in [`assumptions/README.md`](assumptions/README.md).
 - Nicholas Stern et al., *The Stern Review on the Economics of Climate Change*
   (2006, pure rate δ ≈ 0.1%/yr) vs William Nordhaus, *A Review of the Stern
   Review* (JEL, 2007, ~1.5%/yr) — the published disagreement behind the
-  discount-rate distribution in assumption 3
+  discount-rate distribution in assumption 5
 - Toby Ord, *The Precipice* (2020) — the ~1/6-per-century existential-risk
   estimate behind the catastrophe-hazard component of the discount
 - Hilary Greaves & William MacAskill, *The Case for Strong Longtermism* (GPI
-  working paper) — and the person-affecting objection assumption 11 encodes
+  working paper) — and the person-affecting objection assumption 17 encodes
 - David Thorstad, *Existential risk pessimism and the time of perils* — the
   skeptical low end of the AI-safety entry's CI —
   https://globalprioritiesinstitute.org/existential-risk-pessimism-and-the-time-of-perils-david-thorstad/
@@ -250,6 +262,31 @@ documented in [`assumptions/README.md`](assumptions/README.md).
   entry) —
   https://forum.effectivealtruism.org/posts/bT3WrFn6H4fpvLSk8/policy-advocacy-for-eradicating-screwworm-looks-remarkably
 - Sam Peltzman, *The Effects of Automobile Safety Regulation* (JPE, 1975) — the
-  risk-compensation / deterrence-erosion mechanism behind assumption 10
+  risk-compensation / deterrence-erosion mechanism behind assumption 11
 - Rainforest Trust — habitat protection cost-per-acre, the direct effect behind
   the nature entry — https://www.rainforesttrust.org/our-impact/our-approach/
+- R. Daniel Bressler, *The mortality cost of carbon* (Nature Communications,
+  2021; ~1 excess death per 4,434 tCO2 — the mortality channel of the climate
+  exchange rate) — https://www.nature.com/articles/s41467-021-24487-w
+- Maximilian Kotz, Anders Levermann & Leonie Wenz, *The economic commitment of
+  climate change* (Nature, 2024; PIK — committed ~19% income loss by 2049, the
+  income channel) — https://www.nature.com/articles/s41586-024-07219-0
+- Johan Rockström et al., *A safe operating space for humanity* (Nature, 2009)
+  and David Armstrong McKay et al., *Exceeding 1.5°C global warming could
+  trigger multiple climate tipping points* (Science, 2022) — the tipping-point
+  amplification behind assumption 4 —
+  https://www.science.org/doi/10.1126/science.abn7950
+- Founders Pledge, *Clean Air Task Force* (climate report; the ~$0.1–$10/tCO2e
+  advocacy cost behind the CATF entry) —
+  https://founderspledge.com/stories/clean-air-task-force
+- Daniel Deudney, *Dark Skies: Space Expansionism, Planetary Geopolitics, and
+  the Ends of Humanity* (2020) — the space-expansion-backfires fork: orbital
+  and asteroid-deflection infrastructure is dual-use, and interplanetary
+  anarchy is a harder security dilemma than the terrestrial one
+- Kelly & Zach Weinersmith, *A City on Mars* (2023; and 80,000 Hours Podcast
+  #187) — why genuinely self-sufficient, decorrelated settlements are much
+  further away than settlement boosterism assumes —
+  https://80000hours.org/podcast/episodes/zach-weinersmith-space-settlement/
+- Toby Ord, *The Precipice* (2020), ch. "The Precipice" — the time-of-perils
+  framing behind the perils-exit fork (also anchors the ~1/6-per-century
+  estimate above)
