@@ -3,11 +3,11 @@
 render_diagram.py — render the train-to-crazy-town tree straight to PNG + SVG.
 
 Reads the same train_tree.json that build_diagram.py uses and lays the tree out
-top-to-bottom with Graphviz (root = least crazy, at the top), colouring each stop
-on the craziness gradient and banding it into a "STOP k" cluster. Unlike
-build_diagram.py (which emits an editable .drawio for draw.io to render), this
-writes the raster/vector images directly, so it needs nothing but Graphviz `dot`
-on PATH — no draw.io app, no Electron.
+with Graphviz via the SHARED layout in graph_common.layout_dot (root = least
+crazy, at the top), so a node sits in the same place here as in the editable
+.drawio that build_diagram.py emits. This pass hands the shared DOT to
+`dot -Tpng/-Tsvg`, letting Graphviz both lay out and draw it, so it needs
+nothing but Graphviz `dot` on PATH — no draw.io app, no Electron.
 
 The tree is cut into bounded, clickable PAGES (train_tree.json's `pages`); this
 renders one PNG + SVG per page. The root page keeps the given basename; each
@@ -21,10 +21,10 @@ Usage:  python render_diagram.py [train_tree.json] [out_basename]
         # writes <out_basename>.png/.svg plus <out_basename>__<id>.png/.svg
 Requires Graphviz `dot` on PATH.
 """
-import json, os, subprocess, sys, urllib.parse
+import json, os, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from squiggle_playground import playground_url
+from graph_common import layout_dot, stop_style, node_link, dot_esc
 
 HERE = os.path.dirname(__file__)
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'train_tree.json')
@@ -32,136 +32,24 @@ OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, 'train_tree')
 OUTDIR = os.path.dirname(OUT) or '.'
 BASE = os.path.basename(OUT)
 
-# Child-page links use the same draw.io viewer + raw-GitHub pattern as
-# build_diagram.py; keep REF a plain branch name (see that file's note).
-REPO = 'morganrivers/train_to_crazy_town'
-REF = os.environ.get('DIAGRAM_REF', 'main')
 
-
-def viewer_url(page_id):
-    raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{page_id}.drawio'
-    return 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
-
-# (fill, stroke/border, font) per stop — the craziness gradient shared with
-# build_diagram.py (calm slate at the top → hot red → override violet). A
-# worldview's stop is its craziest accepted assumption, 0..9.
-STOP_STYLE = [
-    ('#dfe7ef', '#6b7f96', '#1b2733'),   # 0 slate (parochial)
-    ('#cfe6cf', '#5a9367', '#1e3a24'),   # 1 green (all humans)
-    ('#e6e2c0', '#b0a04a', '#3a3410'),   # 2 olive (animals)
-    ('#f2e3b3', '#c9a72a', '#57450e'),   # 3 gold (future, discounted)
-    ('#f6e0c0', '#c9932a', '#5a3f10'),   # 4 amber (no discounting)
-    ('#f5d3b8', '#cc7a33', '#5a300e'),   # 5 orange (RP animals)
-    ('#f2ccc0', '#c96a4a', '#5a2410'),   # 6 clay (suffering)
-    ('#eec2a8', '#c65a2e', '#5a2a10'),   # 7 terracotta (meat-eater)
-    ('#e9b0a0', '#b8402a', '#511810'),   # 8 rust (net-negative lives)
-    ('#eeb3b3', '#c0392b', '#5a1410'),   # 9 red (simulation)
-    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 10 violet (anti-realism)
-    ('#c9b3dd', '#4a2a78', '#201040'),   # 11 dark violet (Boltzmann)
-]
-
-
-def esc(s):
-    """Escape a string for a Graphviz double-quoted label."""
-    return str(s).replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
-
-
-def _fmt_lives(x):
-    """Compact lives-saved-equivalent per $1000 (2.1e4 -> '21k', 0.33 -> '0.33')."""
-    ax = abs(x)
-    if ax >= 1000:
-        return f"{x/1000:.0f}k"
-    if ax >= 10:
-        return f"{x:.0f}"
-    if ax >= 1:
-        return f"{x:.1f}"
-    return f"{x:.2g}" if ax > 0 else "0"
-
-
-def _pick_lines(n):
-    """Winner + runner-up: lives-saved-equivalent per $1000 and the confidence
-    (P it is actually the best buy) the full distributions give."""
-    picks = n.get('picks') or []
-    if not picks:
-        return ['→ ' + n.get('top_pick', '?')]
-    w = picks[0]
-    out = [f"→ {w['org']}",
-           f"   {_fmt_lives(w['lives_per_1000usd'])} lives-eq/$1k · "
-           f"{round(w['confidence']*100)}% best"]
-    if len(picks) > 1:
-        r = picks[1]
-        out.append(f"   runner-up {r['org']} · {round(r['confidence']*100)}%")
-    return out
-
-
-def node_label(n, collapsed):
-    """Worldview headline (latest assumption + accepted chain), its best buy with
-    a lives-equivalent-per-$1000 and confidence, and its runner-up. A collapsed
-    boundary shows a `▼ N more` badge; an expanded node shows the figures."""
-    lines = [n['lbl']] + _pick_lines(n)
-    if n['id'] in collapsed:
-        return '\n'.join(lines + [f"▼ {collapsed[n['id']]['count']} more worldviews"])
-    figs = ', '.join(n.get('figures', []))
-    if figs:
-        lines.append('(' + figs + ')')
-    return '\n'.join(lines)
+def node_style(collapsed):
+    """Per-node Graphviz drawing attributes for the image: colour from the stop
+    gradient, the clickable link, and a double dashed border for a collapsed
+    boundary. Returns a closure over this page's collapsed-boundary map."""
+    def style(n, label):
+        fill, stroke, font = stop_style(n['stop'])
+        url = node_link(n, collapsed)
+        href = f' URL="{dot_esc(url)}", target="_blank"' if url else ''
+        extra = ', style="rounded,filled,dashed"' if n['id'] in collapsed else ''
+        return (f'label="{dot_esc(label)}", fillcolor="{fill}",'
+                f' color="{stroke}", fontcolor="{font}"{href}{extra}')
+    return style
 
 
 def render_page(page, nodes_by_id, edges):
-    ids = set(page['nodes'])
-    collapsed = page['collapsed']
     nodes = [nodes_by_id[i] for i in page['nodes']]
-    stops = sorted({n['stop'] for n in nodes})
-
-    dot = [
-        'digraph T{',
-        '  rankdir=TB; bgcolor="white"; splines=polyline;',
-        '  nodesep=0.5; ranksep=0.8; pad=0.3;',
-        '  node[shape=box, style="rounded,filled", fontname="Helvetica",'
-        ' fontsize=11, margin="0.14,0.08"];',
-        '  edge[fontname="Helvetica", fontsize=9, color="#9aa6b3",'
-        ' fontcolor="#5b6675"];',
-    ]
-
-    # One dashed "STOP k" band per stop, enclosing every worldview at that depth.
-    for s in stops:
-        stroke = STOP_STYLE[min(s, len(STOP_STYLE) - 1)][1]
-        dot.append(f'  subgraph cluster_stop{s} {{')
-        dot.append(f'    label="STOP {s}"; labeljust="l"; fontname="Helvetica-Bold";')
-        dot.append(f'    fontsize=13; fontcolor="{stroke}"; color="{stroke}";')
-        dot.append('    style="dashed,rounded"; penwidth=2;')
-        for n in nodes:
-            if n['stop'] != s:
-                continue
-            fill, stroke, font = STOP_STYLE[min(n['stop'], len(STOP_STYLE) - 1)]
-            if n['id'] in collapsed:
-                # link to the subtree's own page; double border signals "more inside"
-                url = viewer_url(collapsed[n['id']]['child'])
-                extra = ', peripheries=2, penwidth=2.4, style="rounded,filled,dashed"'
-            else:
-                # temporary-playground link, so the SVG is clickable too
-                url = playground_url(n)
-                extra = ''
-            href = f' URL="{esc(url)}", target="_blank"' if url else ''
-            dot.append(
-                f'    "{n["id"]}"[label="{esc(node_label(n, collapsed))}",'
-                f' fillcolor="{fill}", color="{stroke}", fontcolor="{font}"{href}{extra}];')
-        same = [n['id'] for n in nodes if n['stop'] == s]
-        if len(same) > 1:
-            dot.append('    {rank=same; ' + ' '.join(f'"{i}"' for i in same) + ';}')
-        dot.append('  }')
-
-    for e in edges:
-        if e['from'] not in ids or e['to'] not in ids:
-            continue
-        style = 'dashed' if e.get('kind') == 'override' else 'solid'
-        color = '#c0392b' if e.get('kind') == 'override' else '#9aa6b3'
-        label = f', label="{esc(e["label"])}"' if e.get('label') else ''
-        dot.append(f'  "{e["from"]}" -> "{e["to"]}"'
-                   f'[style={style}, color="{color}"{label}];')
-
-    dot.append('}')
-    src = '\n'.join(dot)
+    src = '\n'.join(layout_dot(nodes, edges, page['collapsed'], node_style(page['collapsed'])))
 
     basename = BASE if page['is_root'] else page['id']
     for fmt in ('png', 'svg'):

@@ -11,13 +11,187 @@ stop-banding, colours, and (later) the per-node Guesstimate links.
 Node dicts use the schema documented in train_tree.json. Edge dicts use:
 from, to, flip (label), kind.
 """
-import subprocess, collections, html
+import subprocess, collections, html, os, urllib.parse
+from squiggle_playground import playground_url
 
 S = 72.0  # Graphviz points-per-inch → draw.io pixel scale
+
+# ---- single source of layout truth ------------------------------------------
+# build_diagram.py (editable .drawio) and render_diagram.py (direct PNG/SVG)
+# both feed Graphviz the SAME DOT layout via layout_dot() below, so a node sits
+# at the same place in the image and in the .drawio it links to. Only the DRAWING
+# stage differs (Graphviz draws the image; draw.io draws the .drawio), so the two
+# match structurally without needing draw.io/Electron in CI.
+
+# Craziness gradient (calm slate at the top → hot red → override violet), one
+# (fill, stroke, font) hex triple per stop; a worldview's stop is its craziest
+# accepted assumption, 0..11. Both renderers derive their colours from this.
+GRADIENT = [
+    ('#dfe7ef', '#6b7f96', '#1b2733'),   # 0 slate (parochial)
+    ('#cfe6cf', '#5a9367', '#1e3a24'),   # 1 green (all humans)
+    ('#e6e2c0', '#b0a04a', '#3a3410'),   # 2 olive (animals)
+    ('#f2e3b3', '#c9a72a', '#57450e'),   # 3 gold (future, discounted)
+    ('#f6e0c0', '#c9932a', '#5a3f10'),   # 4 amber (no discounting)
+    ('#f5d3b8', '#cc7a33', '#5a300e'),   # 5 orange (RP animals)
+    ('#f2ccc0', '#c96a4a', '#5a2410'),   # 6 clay (suffering)
+    ('#eec2a8', '#c65a2e', '#5a2a10'),   # 7 terracotta (meat-eater)
+    ('#e9b0a0', '#b8402a', '#511810'),   # 8 rust (net-negative lives)
+    ('#eeb3b3', '#c0392b', '#5a1410'),   # 9 red (simulation)
+    ('#d7c6e6', '#6a3fa0', '#2c1650'),   # 10 violet (anti-realism)
+    ('#c9b3dd', '#4a2a78', '#201040'),   # 11 dark violet (Boltzmann)
+]
+EDGE_COL = '#9aa6b3'
+OVERRIDE_COL = '#c0392b'
+
+# Child-page links use the draw.io viewer + raw-GitHub pattern. Keep REF a plain
+# branch name: draw.io re-parses raw.githubusercontent.com/<user>/<repo>/<branch>
+# /<path> into its GitHub handler, and extra segments make it read the branch as
+# "refs" (File not found).
+REPO = 'morganrivers/train_to_crazy_town'
+REF = os.environ.get('DIAGRAM_REF', 'main')
+
+
+def stop_style(s):
+    """(fill, stroke, font) hex for a stop, clamped to the gradient's range."""
+    return GRADIENT[min(s, len(GRADIENT) - 1)]
+
+
+def viewer_url(basename):
+    """Public read-only draw.io viewer URL for a committed <basename>.drawio."""
+    raw = f'https://raw.githubusercontent.com/{REPO}/{REF}/diagram/{basename}.drawio'
+    return 'https://viewer.diagrams.net/?lightbox=1&nav=1&chrome=0#U' + urllib.parse.quote(raw, safe='')
 
 
 def esc(s):
     return html.escape(str(s), quote=True)
+
+
+def dot_esc(s):
+    """Escape a string for a Graphviz double-quoted label."""
+    return str(s).replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
+
+
+def _fmt_lives(x):
+    """Compact lives-saved-equivalent per $1000 (2.1e4 -> '21k', 0.33 -> '0.33')."""
+    ax = abs(x)
+    if ax >= 1000:
+        return f"{x/1000:.0f}k"
+    if ax >= 10:
+        return f"{x:.0f}"
+    if ax >= 1:
+        return f"{x:.1f}"
+    return f"{x:.2g}" if ax > 0 else "0"
+
+
+def pick_lines(n):
+    """Winner + runner-up: each org's lives-saved-equivalent per $1000 and the
+    confidence (P it is actually the best buy) the full distributions give."""
+    picks = n.get('picks') or []
+    if not picks:                      # flat / override worldviews
+        return ['→ ' + n.get('top_pick', '?')]
+    w = picks[0]
+    out = [f"→ {w['org']}",
+           f"   {_fmt_lives(w['lives_per_1000usd'])} lives-eq/$1k · "
+           f"{round(w['confidence']*100)}% best"]
+    if len(picks) > 1:
+        r = picks[1]
+        out.append(f"   runner-up {r['org']} · {round(r['confidence']*100)}%")
+    return out
+
+
+def compose_label(n, collapsed):
+    """The worldview's multi-line label: headline + best-buy/runner-up figures,
+    then either a `▼ N more worldviews` fold badge (collapsed boundary) or the
+    associated figures. Identical text in both renderers, so node sizes match."""
+    lines = [n['lbl']] + pick_lines(n)
+    if n['id'] in collapsed:
+        lines.append(f"▼ {collapsed[n['id']]['count']} more worldviews")
+    else:
+        figs = ', '.join(n.get('figures', []))
+        if figs:
+            lines.append('(' + figs + ')')
+    return '\n'.join(lines)
+
+
+def node_size(label):
+    """Fixed (w, h) in px for a node box, sized to hold `label` at 11px."""
+    lines = label.split('\n')
+    maxc = max(len(x) for x in lines)
+    return max(150, int(maxc * 7.2) + 28), len(lines) * 16 + 28
+
+
+def node_link(n, collapsed):
+    """The clickable URL for a node: its Squiggle playground, or (for a collapsed
+    boundary) the draw.io viewer of the subtree page it stands for."""
+    if n['id'] in collapsed:
+        return viewer_url(collapsed[n['id']]['child'])
+    return playground_url(n)
+
+
+def _edge_dot_attr(e):
+    """Layout-and-draw attributes for one edge. Only the label affects Graphviz
+    layout; colour/style are honoured when Graphviz draws the image and ignored
+    by the -Tplain parse build_diagram uses."""
+    style = 'dashed' if e.get('kind') == 'override' else 'solid'
+    color = OVERRIDE_COL if e.get('kind') == 'override' else EDGE_COL
+    label = f', label="{dot_esc(e["label"])}"' if e.get('label') else ''
+    return f'style={style}, color="{color}"{label}'
+
+
+def layout_dot(nodes, edges, collapsed, node_style, ranksep=0.8):
+    """Assemble the DOT source that fixes the tree's layout, shared by both
+    renderers. `nodes` are this page's node dicts, `edges` its edges, `collapsed`
+    its boundary map (id -> {count, child}). `node_style(n, label)` returns the
+    per-node drawing attributes (label/colour/href for the image; `label=""` for
+    the geometry-only .drawio pass); layout_dot prepends each node's fixed
+    width/height so both passes get byte-identical positions.
+
+    Bands are drawn as `STOP k` clusters (with rank=same) AND enforced top-to-
+    bottom by invisible funnel nodes, so the ordering is robust even on a page
+    whose stops are not directly edge-connected."""
+    stops = sorted({n['stop'] for n in nodes})
+    by_stop = {s: [n for n in nodes if n['stop'] == s] for s in stops}
+    dot = [
+        'digraph T{',
+        '  rankdir=TB; bgcolor="white"; splines=polyline;',
+        f'  nodesep=0.5; ranksep={ranksep}; pad=0.3;',
+        '  node[shape=box, fixedsize=true, fontname="Helvetica", fontsize=11,'
+        ' style="rounded,filled", margin="0.14,0.08"];',
+        '  edge[fontname="Helvetica", fontsize=9, color="%s", fontcolor="#5b6675"];' % EDGE_COL,
+    ]
+    for s in stops:
+        stroke = stop_style(s)[1]
+        dot.append(f'  subgraph cluster_stop{s} {{')
+        dot.append(f'    label="STOP {s}"; labeljust="l"; fontname="Helvetica-Bold";')
+        dot.append(f'    fontsize=13; fontcolor="{stroke}"; color="{stroke}";')
+        dot.append('    style="dashed,rounded"; penwidth=2;')
+        for n in by_stop[s]:
+            label = compose_label(n, collapsed)
+            w, h = node_size(label)
+            dims = f'width={max(w, 70) / 72.0:.3f}, height={max(h, 30) / 72.0:.3f}'
+            # peripheries/penwidth grow a collapsed boundary's footprint, so they
+            # must be applied in BOTH passes (they affect layout) — unlike colour
+            # or dash style, which each renderer adds in node_style.
+            geo = dims + (', peripheries=2, penwidth=2.4' if n['id'] in collapsed else '')
+            dot.append(f'    "{n["id"]}"[{geo}, {node_style(n, label)}];')
+        same = [n['id'] for n in by_stop[s]]
+        if len(same) > 1:
+            dot.append('    {rank=same; ' + ' '.join(f'"{i}"' for i in same) + ';}')
+        dot.append('  }')
+    for i in range(len(stops) - 1):
+        z = f'__z{i}'
+        dot.append(f'  "{z}"[style=invis, width=0.01, height=0.01, label=""];')
+        for n in by_stop[stops[i]]:
+            dot.append(f'  "{n["id"]}" -> "{z}"[style=invis];')
+        for n in by_stop[stops[i + 1]]:
+            dot.append(f'  "{z}" -> "{n["id"]}"[style=invis];')
+    ids = {n['id'] for n in nodes}
+    for e in edges:
+        if e['from'] not in ids or e['to'] not in ids:
+            continue
+        dot.append(f'  "{e["from"]}" -> "{e["to"]}"[{_edge_dot_attr(e)}];')
+    dot.append('}')
+    return dot
 
 
 def lblh(s):
