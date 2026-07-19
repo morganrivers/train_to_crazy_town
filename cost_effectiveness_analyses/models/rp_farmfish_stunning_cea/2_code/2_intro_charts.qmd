@@ -1,0 +1,328 @@
+---
+title: "2. Introduction section charts"
+author: "Sagar Shah, Rethink Priorities"
+date: "`r Sys.Date()`"
+---
+
+# Navigation
+
+Return to the full [Github repository](https://github.com/rethinkpriorities/farmfish_stunning_cea) for this project, or the [html version of the readme file](https://rethinkpriorities.github.io/farmfish_stunning_cea/).
+
+# About this file
+
+This file prepares the charts used in the introduction section of the report.
+
+# Prep
+
+Clear memory, load packages and run functions script.
+
+```{r}
+#| warning: false
+rm(list=ls())
+library(readxl)
+library(tidyverse)
+library(magrittr)
+library(RColorBrewer)
+library(scales)
+library(gt)
+source("a_functions.R")
+
+```
+
+# Load and process data
+
+I first input a [spreadsheet](https://perma.cc/VB99-T48E) from fishcount.org, providing estimates of the mean slaughter weight and mean lifespan of the 24 most commonly farmed finfish species.
+
+```{r}
+lifeexp <- 
+  # Read file
+  read_excel(
+              "../1_input_data/fishcount_living.xlsx",
+              range = "A9:V33") |>
+  # Select collumns needed
+          select(1,9:10,13:14) %>%
+  # Convert collumn names to lower case
+          mutate(across(1,str_to_lower))
+
+# Rename collumns
+names(lifeexp) <- c("species","weight_lower","weight_upper","lifespan_lower","lifespan_upper")
+
+lifeexp
+```
+
+I then select the species I'm interested in (based on consumption in the EU).
+
+```{r}
+
+#Define search terms to filter collumns
+species_list <- c("common carp","pangas","north african","trout",
+                  "seabream","seabass","salmon","tilapia","striped") %>% 
+                  paste(collapse="|")
+
+# Filter collumns based on search terms
+lifeexp %<>% filter(str_detect(species,species_list)) 
+
+# Assign each species line to a species group
+species_data<- lifeexp %>%
+mutate(
+  species_group=case_when(
+    str_detect(species,"carp") ~ "Common Carp",
+    str_detect(species,"salmon") ~ "Salmon",
+    str_detect(species,"catfish") ~ "Freshwater Catfish",
+    str_detect(species,"trout") ~ "Rainbow Trout",
+    str_detect(species,"seabream") ~ "Gilthead Seabream",
+    str_detect(species,"seabass") ~ "European Seabass",
+    str_detect(species,"tilapia") ~ "Tilapia",
+    TRUE ~ "ERROR"
+  )
+) %>%
+  
+# Order rows by species group
+  relocate(species_group) %>%
+  arrange(species_group) 
+  
+# Calculate upper/lower/average weights and lifespans across all species within a species group
+species_data  %<>%
+  group_by(species_group) %>%
+  summarise(
+    weight_lower=min(weight_lower),
+    weight_upper=max(weight_upper),
+    weight_av=(min(weight_lower)+max(weight_upper))/2,    
+    lifespan_lower=min(lifespan_lower),
+    lifespan_upper=max(lifespan_upper),
+    lifespan_av=(min(lifespan_lower)+max(lifespan_upper))/2
+  ) 
+
+species_data
+```
+
+# Modify weight and lifespan data
+
+I then supplement the fishcount data with my own figures where I think I have better numbers in the EU context than those provided by fishcount.
+
+-   (Small) Rainbow trout - Add in a median expected weight of 500g rather than the mid-point, given number of lives is likely to skew more heavily towards smaller weights given consumption is dominated by weight in countries consuming smaller trout. Used longer life expectancy based on [Jokumsen & Svendsen (2010)](https://perma.cc/T3NM-FKRL), [Animal Ask Denmark report](https://www.animalask.org/post/farmed-fish-advocacy-in-denmark), and [EUMOFA case study](https://perma.cc/G47F-CS6P).
+
+-   (Large) Rainbow Trout - Used longer life expectancy based on [Animal Ask Denmark report](https://www.animalask.org/post/farmed-fish-advocacy-in-denmark) and [EUMOFA case study](https://perma.cc/XV5N-6B5R), and various websites suggesting around 1.5 years during on-growing phase to achieve harvest weight.
+
+-   Atlantic Salmon - Used mean weight from [Norwegian Fish Health](https://perma.cc/FZF4-GYPU) report average slaughter weight and number of smolts put out to sea. Used life expectancy based on [Mowi Industry report](https://perma.cc/5BLM-5EB4).
+
+-   Carp - Used data from [EUMOFA report](https://perma.cc/G9K7-WY3X) suggesting typical weights for consumption is 1.5 to 2kg, and typically 3 year production cycle. Small carp seem less commonly consumed in EU.
+
+```{r}
+species_data %<>%
+  rbind(
+   c("Rainbow Trout (small)",210,1200,500,12,15,13.5),
+  c("Rainbow Trout (large)",1200,5000,3100,21,26,23.5),
+  c("Atlantic Salmon",3614,8434,5663,22,40,31),
+  c("Carp",1250,2250,1750,30,42,36)
+  ) %>%
+    mutate(across(2:7,as.double))
+
+species_data
+```
+
+I now input data on apparent consumption of the most consumed farmed finfish species in the EU27 in 2021, taken from [supply balance sheet data from EUMOFA](https://eumofa.eu/supply-balance-sheet).
+
+Splits between large and small rainbow trout are based on the [EUMOFA large trout case study](https://perma.cc/XV5N-6B5R).
+
+```{r}
+
+eu_consumption_2021 <- tibble(
+# Define species names
+  species_group=c('Atlantic Salmon',"Rainbow Trout",'Rainbow Trout (large)',"Rainbow Trout (small)",'Gilthead Seabream','European Seabass','Freshwater Catfish','Carp','Tilapia'),
+# Add consupmtion in metric tonnes
+  consumption=c(1097029,216425,94033,122392,136724,106776,102039,79726,39833)) %>%
+# Convert to grammes (as fish weight reported in grammes)
+  mutate(consumption=consumption*1E6)
+
+eu_consumption_2021
+```
+
+
+# Run calculations
+
+I then add in the data with species specific data and work out number of animals slaughtered and age.
+
+Note that my uncertainty ranges for lifespan will probably be too narrow, as I've assumed perfect correlation between slaughter weight and lifespan ranges (i.e. heaviest fish have longest lifespan, while lightest fish will have longest lifespan). Had I allowed for the opposite (lightest fish to be associated with longest lifespan), the ranges would have probably have been too wide.
+
+```{r}
+
+eu_consumption_2021 %<>%
+# Add fish weight and lifespan data
+  left_join(species_data,by="species_group") %>%
+  rowwise() %>%
+  mutate(
+# Number of fish slaughtered figures
+    slaughter_upper=consumption/weight_lower,
+    slaughter_lower=consumption/weight_upper,
+    slaughter_midweight=consumption/weight_av,
+# Lifespan ranges, assuming perfect correlation between weight and lifespan ranges
+    lifeyears_1=consumption/weight_lower*lifespan_lower/12,
+    lifeyears_2=consumption/weight_upper*lifespan_upper/12,
+# Min and max lifespan
+    lifeyears_lower=min(lifeyears_1,lifeyears_2),
+    lifeyears_upper=max(lifeyears_1,lifeyears_2),
+# Best guess of average lifespan
+    lifeyears_midwl=slaughter_midweight*lifespan_av/12
+  )
+
+
+```
+
+# Produce charts
+
+## Fig1: Number of fish slaughtered for EU consumption
+
+Construct chart
+
+```{r}
+
+fig1 <-   eu_consumption_2021 %>%
+  filter(species_group!="Rainbow Trout") %>%
+  ggplot(
+    aes(
+      x=reorder(str_to_title(species_group),slaughter_midweight),
+      y=slaughter_midweight,
+      ymin=slaughter_lower,
+      ymax=slaughter_upper
+    )
+  ) + 
+  geom_col(fill="#1B9E77")+
+  geom_errorbar(width=0.2,size=0.3)+
+    scale_y_continuous(labels = scales::label_number_si()) +
+  theme_light() +
+  coord_flip() +
+    labs(
+    title="Number of fish slaughtered",
+    subtitle="Farmed finfish to support EU27 consumption in 2021",
+    y="Number slaughtered",
+    x="")
+
+```
+
+Print chart
+
+```{r}
+  fig1
+```
+
+```{r}
+eu_consumption_2021 %>%
+  select(species_group,slaughter_midweight,slaughter_lower,slaughter_upper) %>%
+  arrange(-slaughter_midweight) %>%
+  set_colnames(c("Species","Mid-point", "Lower", "Upper")) %>%
+  gt() %>%
+  fmt_number(decimals=0,suffixing = TRUE) %>%
+  tab_header(title="Number of farmed fish slaughtered to support EU 27 consumption in 2021") %>%
+  tab_source_note(source_note = "Mid-point estimate assumes weight is the mean of the upper and lower mean weight estimate.  Lower estimate is based on the upper mean weight estimate.  Upper estimate is based on the lower mean weight estimate.")
+
+```
+
+
+## Fig 2: Share of EU farms where fish are stunned before slaughter
+
+Source: Leaked EU impact assessment document
+
+Construct chart
+
+```{r}
+share_stunned <- tibble(
+  species=c("Atlantic Salmon","Rainbow Trout","Carp","Seabream & Seabass"),
+  upper=c(1,0.5,0.1,0.05),
+  lower=c(0.9,0.2,0,0),
+  label=c("> 90%","20% to 50%","< 10%","< 5%")) %>%
+  mutate(label_pos=0.5*(upper+lower))
+
+
+
+fig2 <- share_stunned %>% 
+  ggplot(
+    aes(
+      x=reorder(species,upper),
+      ymin=lower,
+      y=label_pos,
+      ymax=upper
+    )
+  ) + 
+  geom_errorbar(width=0.5,size=1)+
+  geom_linerange(size=8,color="#1B9E77") +
+  geom_text(aes(label=label),nudge_x=0.38) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_light() +
+  coord_flip() + 
+    labs(
+    title="Share of EU farms where fish are stunned",
+    x="",
+    y="")
+```
+
+Print chart
+```{r}
+fig2
+```
+
+## Fig 3 - Consumption by country
+
+Construct chart
+```{r}
+fig_3_data <-
+readRDS("../3_intermediate_data/cons_data.rds") %>%
+  filter(country!="United Kingdom") %>%
+  mutate(species_group=case_when(
+    str_detect(species,"Sea Bream") ~ "Gilthead Seabream",
+    str_detect(species,"Sea Bass") ~ "European Seabass",
+    str_detect(species,"Salmon") ~ "Atlantic Salmon",
+    str_detect(species,"Small") ~ "Rainbow Trout (small)",
+    str_detect(species,"Large") ~ "Rainbow Trout (large)",
+    str_detect(species,"Carp") ~ "Carp",
+    TRUE~"Error")) %>%
+  left_join(species_data,by="species_group") %>%
+  mutate(
+    slaughter_midweight=tons*1E6/weight_av) %>%
+  select(species_group,country,slaughter_midweight) %>%
+  group_by(country) %>%
+  mutate(
+    total_cons=sum(slaughter_midweight)
+  ) %>%
+  ungroup()
+```
+
+```{r}
+fig3 <- fig_3_data %>%
+  filter(!species_group %in% c("Atlantic Salmon","Carp","Rainbow Trout (large)")) %>%
+  group_by(country) %>%
+  mutate(
+    total_cons=sum(slaughter_midweight)
+  ) %>%
+  ungroup() %>%
+ggplot(aes(
+      y=reorder(country,total_cons),
+      x=slaughter_midweight,
+      fill=species_group))+
+    geom_col()+
+    labs(
+    title = "Annual number of farmed fish slaughtered to support consumption in EU27",
+    x = "Estimated number of individual fish (\"mid-point estimate\")",
+    y = "",
+    fill = "Species"
+  ) +
+  scale_x_continuous(labels = label_number(suffix = "M", scale = 1e-6)) +
+  scale_fill_brewer(palette = "Dark2",
+                    labels = c("European Seabass (2016)", "Gilthead Seabream (2019)", "Small Rainbow Trout (2020)")) +
+  theme_light() +
+  theme(legend.position = "right")
+```
+
+Print chart
+```{r}
+fig3
+```
+
+# Export charts into .png format
+
+```{r}
+save_chart("fig1_eu_slaughter_numbers.png",fig1)
+save_chart("fig2_stun_shares.png",fig2)
+save_chart("fig3_slaughter_by_country_consumption.png",fig3)
+
+```

@@ -1,0 +1,291 @@
+---
+title: "EU Farm Fish CEA - 1. Consumption Prep File"
+author: "Sagar Shah, Rethink Priorities"
+date: "`r Sys.Date()`"
+---
+
+# Navigation
+
+Return to the full [Github repository](https://github.com/rethinkpriorities/farmfish_stunning_cea) for this project, or the [html version of the readme file](https://rethinkpriorities.github.io/farmfish_stunning_cea/).
+
+# About this file
+
+This file brings together estimates of per country EU consumption of Sea bream, Sea bass, Carp, Salmon and Rainbow Trout into a single dataset in long format.
+
+# Preparation
+
+## Clear environment
+
+```{r}
+rm(list=ls())
+```
+
+## Load packages
+
+```{r}
+#| warning: false
+library(readxl)
+library(tidyverse)
+library(scales)
+library(DT)
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+# Open data files
+
+This file contains data on:
+
+-   EU country codes (from [Eurostat](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Country_codes))
+
+-   EUFOMA apparent consumption estimates (live weight equivalent) in various EU countries of [Seabass (2016)](https://perma.cc/9AT9-2W26), [Seabream (2019)](https://perma.cc/VQ2G-HDP5) and [Carp(2018)](https://perma.cc/3WCU-EHSY)
+
+-   Portion trout and large trout estimates come from the EUFOMA [large trout in the EU (2020)](https://perma.cc/XV5N-6B5R) study, using apparent consumption estimates for large trout and all trout respectively
+
+-   Salmon consumption estimates are extracted from the chart from page 42 of the [Mowi (2023) industry report](https://perma.cc/5BLM-5EB4) for France, Germany, Italy, Spain and Sweden only.
+
+-   Population data for EU27 countries to estimate salmon consumption (from Eurostat)
+
+```{r}
+xl_data <-"../1_input_data/EUFOMA_consumption_data.xlsx"
+country_codes <- read_excel(xl_data,sheet = "country_codes")
+bass <- read_excel(xl_data,sheet = "seabass_2016")
+bream <- read_excel(xl_data,sheet = "seabream_2019")
+carp <- read_excel(xl_data,sheet = "carp_2018")
+trout <- read_excel(xl_data,sheet = "trout_2020")
+salmon <- read_excel(xl_data,sheet = "salmon_2022_raw")
+population <- read_excel("../1_input_data/country populations.xlsx",sheet = "EU27populations2022")
+```
+
+# Salmon consumption estimates
+
+Mowi industry report only provides salmon consumption estimates for 5 EU countries. For other countries, we need estimate salmon consumption. I do this by assuming:
+
+-   per capita consumption in the Denmark and Finland is equal to per capita consumption in Sweden
+
+-   per capita consumption in Netherlands, Belgium, Austria, Luxembourg and Ireland is equal to per capita consumption in Germany
+
+-   per capita consumption in Portugal, Greece, Cyprus and Malta is equal to per capita consumption in Italy
+
+-   the remainder is equally distributed across the rest of the EU
+
+I also assume that the Mowi industry reports estimate for EU+UK market size actually excludes the UK, based on comparisons with EUFOMA balance sheet data (https://www.eumofa.eu/supply-balance).
+
+I first extract aggregate EU consumption of salmon...
+
+```{r}
+EU_salmon <- salmon %>% filter(Country=="EU27") %>% pull(Tons) %>%mean()
+EU_salmon
+```
+
+I then estimate per capita consumption of salmon (in Tons) for the three reference countries, Sweden, Italy and Germany.
+
+```{r}
+per_capita_salmon <- 
+  salmon %>% 
+  filter(Country %in% c("Sweden","Germany","Italy")) %>%
+  left_join(population,by="Country") %>%
+  mutate(per_capita=Tons/pop) %>%
+  select(Country,per_capita) %>%
+  rename(ref_country=Country)
+
+per_capita_salmon
+```
+
+I then assign these per capita consumption values to selected other countries, and calculate aggregate consumption in those countries.
+
+```{r}
+#Assign country groups
+nordic <- c("Denmark","Finland")
+germanic <- c("Austria","Netherlands","Belgium","Luxembourg","Ireland")
+italian <- c("Portugal","Greece","Malta","Cyprus")
+
+#Estimate salmon consumption in these countries
+salmon_ref_countries <- population %>%
+  filter(Country %in% c(nordic,germanic,italian)) %>%
+  mutate(
+    ref_country=
+    case_when(
+      Country %in% nordic ~ "Sweden",
+      Country %in% germanic ~ "Germany",
+      Country %in% italian ~ "Italy",
+      TRUE ~ "Error"
+    )) %>%
+  left_join(per_capita_salmon,by="ref_country") %>%
+  mutate(
+    Tons=pop*per_capita,
+    Estimate=str_c("ref country per capita - ",str_to_lower(ref_country))) %>%
+  select(Country,Tons,Estimate)
+
+salmon_ref_countries
+```
+
+I then estimate consumption in the remainder of EU countries, by assuming per capita consumption in these countries is equal.
+
+```{r}
+
+#Estimate residual aggregate salmon consumption
+salmon_residual_aggregate<- EU_salmon*2-sum(salmon$Tons)-sum(salmon_ref_countries$Tons)
+
+#Calculate consumption in each country by multiplying aggregate by their population share
+salmon_residual_countries <- population %>%
+  filter(!(Country %in% c(salmon$Country,germanic,italian,nordic))) %>%
+  mutate(
+    Tons=pop/sum(pop)*salmon_residual_aggregate,
+    Estimate="residual EU per capita"
+    ) %>%
+  select(-pop)
+
+salmon_residual_countries
+
+```
+
+Finally I combine the data into final table
+
+```{r}
+#Combined table
+salmon<-salmon %>%
+  filter(Country!="EU27") %>%
+  mutate(Estimate="mowi industry report") %>%
+  rbind(salmon_ref_countries,salmon_residual_countries)
+
+salmon
+```
+
+And check that the values look reasonable (TRUE means working ok).
+
+```{r}
+#Check
+near(EU_salmon,sum(salmon$Tons))
+```
+
+Finally I plot some charts for reference.
+
+Estimated salmon consumption in each EU country
+
+```{r}
+#| label: salmon-estimates
+salmon %>%
+  ggplot(
+    aes(
+      x=Tons,
+      y=reorder(Country,Tons),
+      fill=Estimate
+        )) +
+   geom_col()+
+   labs(
+     title = "Estimated Atlantic Salmon consumption in the EU (2022)",
+     y="Country",
+     fill="Source/method") +
+  scale_fill_brewer(palette="Dark2") +
+  theme_light() +
+  scale_x_continuous(labels = label_number(suffix = "K", scale = 1e-3))
+   
+ 
+```
+
+Per capita Atlantic salmon production
+
+```{r}
+#| label: salmon_per_capita_assumptions
+salmon %>% 
+  left_join(population,by="Country") %>%
+  mutate(per_capita=Tons*1000/pop) %>%
+  ggplot(
+    aes(
+      x=per_capita,
+      y=reorder(Country,per_capita),
+      fill=Estimate
+        )) +
+   geom_col()+
+   labs(
+     title = "Assumed per capita Atlantic Salmon consumption (2022)",
+     y="Country",
+     x="Kg/capita/year",
+     fill="Source/method") +
+  scale_fill_brewer(palette="Dark2") +
+  theme_light()
+```
+
+# Combine data into single file
+
+We now prepare/clean the country species consumption data and assemble to into a "long" dataframe. Steps involved are:
+
+1.  linking country code and country code data
+
+2.  adding species names
+
+3.  apportioning consumption by portion trout and large trout share (iv) combining the species data into a single data frame
+
+4.  making column names lower case for ease of matching
+
+```{r}
+# Add country codes and species name
+bream<- left_join(bream,country_codes,by="Code") %>% mutate(Species="Sea Bream")
+bass<- left_join(bass,country_codes,by="Country") %>% mutate(Species="Sea Bass")
+carp<- left_join(carp,country_codes,by="Code") %>% mutate(Species="Carp")
+salmon<- left_join(salmon,country_codes,by="Country") %>% mutate(Species="Atlantic Salmon")
+
+# Add country codes and fish size and separate into two observations
+trout<- trout %>%
+        left_join(country_codes,by="Code") %>%
+        pivot_longer(
+          cols=c("Rainbow Trout (Small)","Rainbow Trout (Large)"),
+          names_to="Species",values_to="Tons"
+        ) %>%
+        select(-Notes,-Total)
+
+# combine into single dataframe
+cons_data <- bind_rows(bream,bass,carp,trout) %>%
+             mutate(Estimate="EUFOMA") %>%
+             bind_rows(salmon)
+
+
+# make column names lower case and reorder
+names(cons_data) <- str_to_lower(names(cons_data))
+cons_data <- relocate(cons_data, species, country, code, tons)
+  
+```
+
+We do a simple plot of the data to make sure it looks reasonable.
+
+```{r}
+cons_data <- cons_data %>%
+  group_by(country) %>%
+  mutate(total_cons=sum(tons)) %>%
+  ungroup()
+```
+
+```{r}
+#| label: annual-consumption
+#| fig-cap: "Annual consumption of selected species in the EU (kg)"
+cons_data %>%
+  ggplot(
+    aes(
+      x=tons,
+      y=reorder(country,total_cons),
+      fill=species
+      )) +
+  geom_col() +
+    labs(
+    title = "Annual consumption of salmon, carp, trout and seabream/bass in EU",
+    x = "Metric tons (live weight equivalent)",
+    y = "",
+    fill = "Species"
+  ) +
+  scale_x_continuous(labels = label_number(suffix = "K", scale = 1e-3)) +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_light() +
+  theme(legend.position = "top")
+
+```
+
+## Save output file
+
+```{r}
+saveRDS(cons_data,file= "../3_intermediate_data/cons_data.rds")
+```
