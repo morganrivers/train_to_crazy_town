@@ -1,0 +1,713 @@
+---
+title: "3. Main results - stunning intervention"
+author: "Sagar Shah, Rethink Priorities"
+date: "`r Sys.Date()`"
+---
+
+# Navigation
+
+Return to the full [Github repository](https://github.com/rethinkpriorities/farmfish_stunning_cea) for this project, or the [html version of the readme file](https://rethinkpriorities.github.io/farmfish_stunning_cea/).
+
+# About this file
+
+This conducts cost-effectiveness analysis and produces the main results tables charts used in the Results section of the report.
+
+# Generic prep
+
+Open libraries
+
+```{r}
+#| warning: false
+rm(list=ls())
+library(tidyverse)
+options(dplyr.summarise.inform = FALSE)
+library(scales)
+library(rlang)
+library(gt)
+library(RColorBrewer)
+library(forcats)
+library(magrittr)
+library(webshot2)
+```
+
+Load functions and assumptions
+
+```{r}
+#| warning: false
+#Useful monte carlo functions 
+source("a_functions.R")
+#Take on board assupmtions for seabream, seabass and trout
+source("b_fish_assumptions.R") 
+#Modelling assumptions
+source("c_model_assumptions.R") 
+```
+
+## Helper functions
+
+Write helper functions to call object/vectors
+
+```{r}
+consumption <- function(country,species)  obtain(species,country,"tons")
+mshare <- function(scenario,country) obtain("mshare",scenario,country)
+psuccess <- function(scenario) obtain("psuccess",scenario)
+weight <- function(species) obtain("weight",species)
+slaughter_minutes <- function(species) obtain("slaughter_minutes",species)
+stun_share <- function(species) obtain(species,"stunned")
+cost <- function(scenario) obtain("cost",scenario)
+```
+
+# Calculations
+
+## Impact per dollar
+
+### Core calculation functions
+
+```{r}
+
+# Number of fish affected per year
+no_fish_affected_per_year <- function(country,species,scenario) {
+consumption(country,species)*1E3/
+  weight(species)*
+  (1-stun_share(species))*
+  mshare(scenario,country)*
+  psuccess(scenario)*
+  implementation_discount*
+  fish_grocery
+}
+
+# Fish affected across all years of credit
+no_fish_affected <- function(country,species,scenario) {
+no_fish_affected_per_year(country,species,scenario)*years_credit
+}
+
+# Fish minutes affected
+fish_hours_affected <- function(country,species,scenario) {
+no_fish_affected(country,species,scenario)*slaughter_minutes(species)/60
+}
+
+```
+
+### Countries and species combinations over which to run calculations
+
+I now produce a table that produces a possible combination of country and species
+
+```{r}
+no_of_countries <- length(country_list)
+combo <- expand.grid(country=country_list,species=species_list) %>%
+  mutate(country_species=str_c(country,"_",species))
+```
+
+### Function to sum across all country and species
+
+I now write a function that:
+
+-   Works out the total number of fish (or fish minutes) affected in a given scenario, country and species
+
+-   Sums the result for all species and countries
+
+-   Divides by the total program costs for a specific scenario
+
+```{r}
+
+output_per_dollar <- function(fish_function,program) {
+
+temp_output<- map2(                 # Allows repeated calcs across different input vectors
+                combo$country,      # Input vector 1: countries to run function over
+                combo$species,      # Input vector 2: species to run function over
+                get(fish_function), # Calculation function (no of fish or minutes)
+                scenario=program    # Scenario (pilot or scale)
+                  ) %>%
+         as.data.frame() %>%       # Convert to data.frame
+         mutate(
+           total=rowSums(.))
+
+return(
+  temp_output$total/(no_of_countries*cost(program))
+)
+}
+```
+
+Generate table for combinations of output and scenario
+
+```{r}
+
+results_combination <- expand_grid(
+  measure=c("fish_hours_affected","no_fish_affected","no_fish_affected_per_year"),
+  program=c("pilot","scale")) %>%
+  mutate(description=str_c(program,"___",measure))
+```
+
+### Run calculations
+
+I now write a function that works out the number of fish minutes affected and total number of fish affected per dollar across both the pilot and scale scenarios. The results of the montecarlo simulation are in a single table called "impact_per_dollar".
+
+```{r}
+impact_per_dollar <- map2(                          # Function to iterate over vectors
+                      results_combination$measure,  # Vector of different measures
+                      results_combination$program,  # Vector of different scenarios
+                      output_per_dollar) %>%        # Function to repeat
+                      as.data.frame()
+
+
+```
+
+### Format output table
+
+```{r}
+# Assign names to data.frame
+names(impact_per_dollar) <- results_combination$description
+
+# Convert to long format
+impact_per_dollar %<>% 
+  pivot_longer(
+    cols=1:nrow(results_combination),
+    names_to="description",
+    values_to="number"
+) %>%
+  separate_wider_delim(description,delim="___",names=c("scenario","measure"))
+
+
+```
+
+# \$/DALY "welfare range" calculations
+
+## Prep
+
+I first produce estimates of fish years affected per dollar in both scenarios.
+
+```{r}
+fypd_pilot <- output_per_dollar("fish_hours_affected","pilot")*hours_to_years 
+fypd_scale <- output_per_dollar("fish_hours_affected","scale")*hours_to_years  
+fypd <- function(scenario) obtain("fypd",scenario)
+```
+
+## Core calculation functions
+
+```{r}
+wr_dollar_per_daly <- function(scenario) {
+   1/(
+    fypd(scenario)*
+    salmon_wr*
+    duration_share*
+    fish_welfarerange_impact_stun/
+    DALY_share_of_welfare_range)
+}
+```
+
+## Apply calculations
+
+Calculate results and place into data frame
+
+```{r}
+
+results_dollar_per_daly <- 
+tibble(
+          # core calculations
+  pilot=wr_dollar_per_daly("pilot"),
+  scale=wr_dollar_per_daly("scale")) %>%
+          # pivot to long format
+  pivot_longer(
+    cols=1:2,
+    values_to="dollars_per_daly",
+    names_to="scenario"
+  ) %>%
+          # reformat for table production
+  mutate(scenario=str_to_sentence(scenario))
+
+
+```
+
+
+
+# Share of simulations beating \$/DALY benchmark
+
+## Core calculation functions
+
+```{r}
+#Moral value approach
+share_mv <- function(xvar,scenario,bar) {
+  mean(bar>(1/(fypd(scenario)*xvar)))
+} 
+
+# Welfare range approach
+share_wr <- function(xvar,scenario,bar) {
+  mean(bar>
+      (1/
+        (xvar*
+        fypd(scenario)*
+        salmon_wr/
+        DALY_share_of_welfare_range
+        )))
+}
+```
+
+Define parameters over which to calculate results. Definition of xvar provided in the table below.
+
+| Approach      | Meaning of 'xvar' variable means in context of calculations                                             |
+|--------------|----------------------------------------------------------|
+| Moral Value   | Moral value of improving fish welfare for 1 year through intervention relative to averting 1 DALY        |
+| Welfare Range | Welfare gain from intervention **-** expressed as % of entire fish welfare range (negative to positive) |
+
+## Assign values over which calculations are performed
+
+```{r}
+  mv_table_values <- c(0.01,0.1,0.25,0.5,0.75,1,5,10,25,50,75,100,500,1000,5000)
+  wr_table_values <- c(0.01,0.05,0.1,0.25,0.5,0.75,0.9,0.95,0.99,1)
+  chart_values<- 10^seq(-4,4,0.01)
+  xvar_values <- c(chart_values,mv_table_values,wr_table_values)
+  scenario_list <- c("pilot","scale")
+```
+
+## Run calculations
+
+```{r}
+
+share_sims_results_table <- 
+# Generate one row for unique combination of xvar_values and scenario lists
+  expand_grid(
+    xvar=xvar_values,
+    scenario=scenario_list,
+    bar=bar_values) %>%
+# Core calcualtions using share_mv and share_wr calculation functions
+    rowwise() %>%
+    mutate(
+      moral_value=share_mv(xvar,scenario,bar),
+      welfare_range=share_wr(xvar,scenario,bar)
+    ) %>%
+# Convert pivot into longer format to make results easier to plot
+  pivot_longer(
+    cols=c(moral_value,welfare_range),
+    names_to="approach",
+    values_to="share_of_simulations") %>%
+# Change descriptions of variables to make results easier to interpert
+  mutate(
+    scenario=str_to_sentence(scenario),
+    approach=str_to_sentence(str_replace_all(approach,"_"," ")),
+    bar_factor=
+      factor(bar,levels=bar_values,labels=c("50","1K","70K")),
+    bar_description=case_when(
+      bar==50 ~ "50 - Open Philanthropy GHW bar",
+      bar==1000 ~ "1K - Low HDI country HE av.",
+      bar==70000 ~ "70K - Very high HDI country HE av.",
+      TRUE ~ "ERROR")
+  )
+
+
+```
+
+# Functions to produce results tables/charts
+
+## Impact per dollar
+
+### Table
+
+```{r}
+# Code to create impact per dollar density plot 
+
+impact_density_plot <- function(desired_filter,description) { 
+  impact_per_dollar %>%
+  filter(measure==desired_filter) %>%
+  ggplot(
+    aes(
+      x=number,
+      color=str_to_sentence(scenario)
+    )
+  ) + 
+  geom_density() +
+  theme_light() +
+  scale_x_log10(labels = scales::comma_format(drop0trailing = TRUE),n.breaks=8) +
+    labs(
+    title=description,
+    y="Probability density",
+    x=paste0(description," (log scale)"),
+    color="Scenario")
+}
+```
+
+### Plot
+
+```{r}
+impact_table <- function(desired_filter,description) {
+impact_per_dollar %>%
+  filter(measure==desired_filter) %>%
+  mutate(scenario=str_to_sentence(scenario)) %>%
+  group_by(scenario) %>%
+  summarise(
+    Mean=mean(number),
+    p5=quantile(number,0.05),
+    Median=median(number),
+    p95=quantile(number,0.95) 
+  ) %>%
+  pivot_longer(cols=2:5,names_to="Statistic",values_to="Value") %>%
+  pivot_wider(names_from = "scenario",values_from = "Value") %>%
+  gt() %>%
+  fmt_number(decimals = 1) %>%
+  tab_header(
+  title = description) %>%
+  tab_spanner(
+    label = "Scenario",
+    columns = c(Pilot,Scale))
+}
+```
+
+### Generate tables and plots
+
+```{r}
+
+fig9_fish_pd <- impact_density_plot("no_fish_affected","Number of fish affected per dollar")
+tab8_fish_pd<- impact_table("no_fish_affected","Number of fish affected per dollar")
+tab9_fish_pdpy <- impact_table("no_fish_affected_per_year","Number of fish affected per dollar per year")
+fig10_fish_hours_pd <- impact_density_plot("fish_hours_affected","Fish hours affected per dollar")
+tab10_fish_hours_pd <- impact_table("fish_hours_affected","Fish hours affected per dollar")
+
+
+```
+
+## \$/DALY Range
+
+### Plot
+
+```{r}
+fig11_dolperdaly_density <- 
+  results_dollar_per_daly %>%
+  ggplot(
+    aes(
+      x=dollars_per_daly,
+      color=scenario
+    )
+  ) + 
+  geom_density() +
+  theme_light() + 
+  scale_x_log10(
+    breaks=10^seq(0,15,1),
+    labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+    labs(
+    title = "$/DALY Density Plot",
+    y="Probability density",
+    x="$/DALY (log-scale)",
+    color="Scenario")
+```
+
+### Table
+
+```{r}
+tab11_dolperdaly_density <-
+results_dollar_per_daly %>%
+  group_by(scenario) %>%
+  summarise(
+    Mean=mean(dollars_per_daly),
+    p1=quantile(dollars_per_daly,0.01),
+    p5=quantile(dollars_per_daly,0.05),
+    p10=quantile(dollars_per_daly,0.10),
+    p25=quantile(dollars_per_daly,0.25),
+    Median=median(dollars_per_daly),
+    p75=quantile(dollars_per_daly,0.75),
+    p90=quantile(dollars_per_daly,0.90),
+    p95=quantile(dollars_per_daly,0.95), 
+    p99=quantile(dollars_per_daly,0.99)
+  ) %>%
+  pivot_longer(cols=2:11,names_to="Statistic",values_to="$/DALY") %>%
+  pivot_wider(names_from = "scenario",values_from = "$/DALY") %>%
+  gt() %>%
+  tab_spanner(
+    label = "Scenario",
+    columns = c(Pilot,Scale)) %>%
+  fmt_number(columns=2:3,suffixing=TRUE,n_sigfig =3)
+
+tab11_supplement <- 
+results_dollar_per_daly %>%
+  mutate(
+    `$50/DALY`=dollars_per_daly<50,
+    `$1K/DALY`=dollars_per_daly<1000,
+    `$70K/DALY`=dollars_per_daly<70000) %>%
+  group_by(scenario) %>%
+  summarise_if(is.logical,sum,na.rm=TRUE) %>%
+  gt() %>%
+  tab_header(
+  title = "Number of simulations beating selected $/DALY benchmarks") 
+
+
+```
+
+## Share of simulations beating benchmark
+
+### Plot function
+
+```{r}
+share_sims_chart <- function (
+                        chart_approach,
+                        xvar_lower_lim=0,
+                        xvar_upper_lim=max(xvar_values),
+                        xlab_des
+                        ) {
+  
+share_sims_results_table %>%
+    filter(
+    approach==chart_approach,
+    xvar<=xvar_upper_lim,
+    xvar>=xvar_lower_lim
+    ) %>%
+  ggplot(
+    aes(
+      x=xvar,
+      y=share_of_simulations,
+      color=as.factor(scenario),
+      linetype=bar_factor))+
+  geom_line(lwd=0.8)+
+  scale_linetype_manual(values=c("solid","dotted","twodash"))+
+  scale_color_brewer(palette = "Dark2")+
+  theme_light()+
+  scale_y_continuous(limits=c(0,1),n.breaks=10,labels = scales::percent_format(accuracy = 1))+
+  labs(
+    subtitle = str_to_title(paste0(chart_approach," approach")),
+    title="Share of simulations where intervention beats $/DALY benchmark",
+    y="Share of simulations",
+    x=xlab_des,
+    linetype="$/DALY Benchmark",
+    color="Intervention",
+    caption= "Note log scale on x-axis")
+    
+}
+
+
+xlab_wr="
+    Welfare gain from intervention as a % of total fish welfare range"
+
+xlab_mv="Moral value of improving a fish-life year via intervention
+relative to averting a human DALY"
+
+```
+
+### Produce charts
+
+```{r}
+
+fig12_wr_benchmark <-share_sims_chart("Welfare range",xvar_upper_lim=1,xlab_des=xlab_wr)+
+  scale_x_log10(limits=c(0.001,1),labels = scales::percent_format(drop0trailing = TRUE),n.breaks=10)+
+  scale_y_continuous(limits=c(0,0.6),n.breaks=10,labels = scales::percent_format(accuracy = 1))
+
+fig13_mv_benchmark <- share_sims_chart("Moral value",xvar_lower_lim=0.003,xlab_des=xlab_mv)+
+  scale_x_log10(labels = scales::label_number_si(drop0trailing = TRUE),n.breaks=11) 
+```
+
+### Table function
+
+Share of simulations at various welfare range / moral value assumptions.
+
+```{r}
+share_beating_bar_table <- function(values,chart_approach) {
+share_sims_results_table %>%
+  filter(
+      xvar %in% values,
+      approach==chart_approach) %>%
+  select(-approach) %>%
+  distinct() %>%
+  mutate(
+    scenario_bar=paste(scenario,bar,sep="_")) %>%
+  pivot_wider(id_cols=xvar,names_from=scenario_bar,values_from=share_of_simulations) %>%
+  arrange(xvar) %>%
+  gt() %>%
+  tab_header(title = "Share of simulations beating $DALY bar") %>%
+  cols_label(xvar=chart_approach) 
+}
+```
+
+### Produce tables
+
+```{r}
+tab12_wr_benchmark <- share_beating_bar_table(wr_table_values,"Welfare range") %>%
+    fmt_percent(columns=1,decimals=0) %>%
+    fmt_percent(columns=2:7,decimals=1)
+
+
+tab13_mv_benchmark <- share_beating_bar_table(mv_table_values,"Moral value") %>% 
+  fmt_percent(columns=2:7,decimals=1)
+
+
+```
+
+### Minimum moral value table
+
+Minimum moral value needed to achieve given share of simulations to beat \$/DALY bar.
+
+```{r}
+sim_cuts<- c(0,0.01,0.1,0.25,0.5,0.75,0.90,0.95,0.99,1,1.01)
+
+tab14_min_mv <- share_sims_results_table %>%
+filter(approach=="Moral value") %>%
+  mutate(
+    sims_bin=
+      cut(share_of_simulations,breaks=sim_cuts,right=FALSE,labels=head(sim_cuts,-1))) %>%
+  group_by(scenario,bar,sims_bin) %>%
+  summarise(min_moral_value=min(xvar)) %>%
+  mutate(scenario_bar=str_c(scenario,bar,sep="_")) %>%
+  pivot_wider(id_cols=sims_bin,names_from=scenario_bar,values_from=min_moral_value) %>%
+  mutate(sims_bin=head(sim_cuts,-1)) %>%
+  gt() %>%
+  fmt_percent(columns=1,decimals=0) %>%
+  fmt_number(columns=2:7,decimals=1) %>%
+  tab_header(title = "Minimum moral value assumption needed for to achieve share of simulations beating bar") 
+
+
+```
+
+# Print charts and tables
+
+Impact per dollar charts and tables
+
+```{r}
+fig9_fish_pd
+tab8_fish_pd
+tab9_fish_pdpy
+fig10_fish_hours_pd
+tab10_fish_hours_pd
+
+```
+
+Dollar per daly distribution
+
+```{r}
+fig11_dolperdaly_density
+tab11_dolperdaly_density
+tab11_supplement
+```
+
+Welfare range benchmarks
+
+```{r}
+fig12_wr_benchmark
+tab12_wr_benchmark
+```
+
+Moral value benchmarks
+
+```{r}
+
+fig13_mv_benchmark
+tab13_mv_benchmark 
+tab14_min_mv
+
+```
+
+# Export charts and tables
+
+```{r}
+save_chart("fig9_fish_pd.png",fig9_fish_pd)
+save_chart("fig10_fish_hours_pd.png",fig10_fish_hours_pd)
+save_chart("fig11_dolperdaly_density.png",fig11_dolperdaly_density)
+save_chart("fig12_wr_benchmark.png",fig12_wr_benchmark)
+save_chart("fig13_mv_benchmark.png",fig13_mv_benchmark)
+save_chart("fig13_mv_benchmark.png",fig13_mv_benchmark)
+
+
+
+save_table(tab8_fish_pd,"tab8_fish_pd.html")
+save_table(tab9_fish_pdpy,"tab9_fish_pdpy.html")
+save_table(tab10_fish_hours_pd,"tab10_fish_hours_pd.html")
+save_table(tab11_dolperdaly_density,"tab11_dolperdaly_density.html")
+save_table(tab12_wr_benchmark,"tab12_wr_benchmark.html")
+save_table(tab13_mv_benchmark ,"tab13_mv_benchmark.html")
+save_table(tab14_min_mv,"tab14_min_mv.html")
+
+```
+
+```{r}
+saveRDS(fypd_scale,file= "../3_intermediate_data/fypd_scale.rds")
+```
+
+# Additional analyses
+
+## Sensitivity to DALY as a share of human welfare range assumption
+
+This section examines how the share of simulations beating various benchmarks under an assumption that an intervention that improves welfare by 10% of the human welfare range for a year is equivalent to averting a DALY, rather than 50%.
+
+### Calculation function
+
+```{r}
+share_wr_alt <- function(xvar,scenario,bar) {
+  mean(bar>
+      (1/
+        (xvar*
+        fypd(scenario)*
+        salmon_wr_alt/
+        DALY_share_of_welfare_range_alt
+        )))
+}
+```
+
+### Create output table
+
+```{r}
+# Generate one row for unique combination of xvar_values and scenario lists
+
+alt_output_table <- expand_grid(
+    xvar=wr_table_values,
+    scenario="scale",
+    bar=bar_values) %>%
+# Core calcualtions using share_mv and share_wr calculation functions
+    rowwise() %>%
+    mutate(
+      base=share_wr(xvar,scenario,bar),
+      alt=share_wr_alt(xvar,scenario,bar)
+    ) %>%
+   select(-scenario) %>%
+   pivot_longer(
+     cols=c(base,alt),
+     names_to="wr_assumptions",
+     values_to="share_of_sims") %>%
+  mutate(
+      bar_factor=
+      factor(bar,levels=bar_values,labels=c("50","1K","70K"))) %>%
+  pivot_wider(
+    id_cols=xvar,
+    names_from=c(wr_assumptions,bar_factor),
+    values_from=share_of_sims) %>%
+  gt() %>%
+  fmt_percent(decimals =1) %>%
+  fmt_percent(columns=xvar,decimals =0) %>%
+    cols_label(
+    xvar = "Welfare range impact")
+  
+```
+
+Output table is printed below. Overall conclusions do not appear overly sensitive to this assumption. If the stunning intervention improves fish welfare by an average 50% of the fish welfare range for the entire (non-stunning) slaughter duration, it will beat a benchmark of \$1K/DALY in only 14.9% of simulations.
+
+```{r}
+alt_output_table
+```
+
+## How might animals affected per dollar from the fish stunning intervention compare to marginal chicken grants
+
+I this section I perform a quick BOTEC to see how the animals affected per dollar from the fish stunning intervention in the scale scenario might compare to marginal chicken grants.
+
+I first import raw sample data (5000 simulations) for chickens affected per dollar from the Guesstimate model from Šimčikas (2019).
+
+```{r}
+# Import data on chickens affected per dollar from Guesstimate samples
+chickens_per_dollar_historic <- 
+  read_csv("../1_input_data/chickens_per_dollar.csv",show_col_types=FALSE) %>% 
+  pull(chickens_per_dollar) %>%
+  sample(sims,replace=TRUE)
+
+```
+
+I then estimate marginal chickens affected per dollar, conditional on an assumption that marginal grants may impact 3.5 to 5 times fewer animals per dollar (uniform distribution), than historic ones.
+
+```{r}
+# Assumption about guesstimate samples
+decrease_in_chicken_effectiveness <- runi(3.5,5)
+chickens_per_dollar_marginal <- chickens_per_dollar_historic/decrease_in_chicken_effectiveness
+```
+
+I then work out the share of simulations where marginal chicken grants affect more animals per dollar then fish stunning grants in the scale scenario (about half the time)
+
+```{r}
+# Assumption about guesstimate samples
+mean(chickens_per_dollar_marginal>output_per_dollar("no_fish_affected","scale"))
+```
+
+I then look at how the overall distributions compare (look comparable)
+
+```{r}
+summarystats(chickens_per_dollar_marginal,output_per_dollar("no_fish_affected","scale"))
+```

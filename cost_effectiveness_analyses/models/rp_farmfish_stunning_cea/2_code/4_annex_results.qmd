@@ -1,0 +1,578 @@
+---
+title: "4. Annex on non-stunning interventions"
+author: "Sagar Shah, Rethink Priorities"
+date: "`r Sys.Date()`"
+---
+
+# Navigation
+
+Return to the full [Github repository](https://github.com/rethinkpriorities/farmfish_stunning_cea) for this project, or the [html version of the readme file](https://rethinkpriorities.github.io/farmfish_stunning_cea/).
+
+# About this file
+
+This file contains cost-effectiveness analysis of non-slaughter intervention contained within Annex 2 of the report.
+
+# Generic prep
+
+```{r}
+#| warning: false
+
+rm(list=ls())
+library(tidyverse)
+library(scales)
+library(rlang)
+library(gt)
+library(RColorBrewer)
+library(forcats)
+library(magrittr)
+library(webshot2)
+```
+
+Run code to load useful montecarlo simulation functions and general seabream seabass assumptions
+
+```{r}
+#| warning: false
+# Load functions and assumptions
+source("a_functions.R")
+source("b_fish_assumptions.R") 
+source("c_model_assumptions.R") 
+```
+
+# Modelling assumptions
+
+Define parameters over which to calculate share of simulation results. Definition of xvar provided in the table below.
+
+| Approach      | Meaning of 'xvar' variable means in context of calculations                                            |
+|-------------------------|-----------------------------------------------|
+| Moral Value   | Moral value of improving fish welfare for 1 year through intervention relative to averting 1 DALY       |
+| Welfare Range | Welfare gain from intervention **-** expressed as % of entire fish welfare range (negative to positive |
+
+```{r}
+
+# Share of fish life affected by welfare intervention
+  fishlifeshare_values <- c(0.01,0.02,0.05,0.10,0.15,0.25,0.35,0.50)
+  
+# Moral value points
+  mv_table_values <- c(0.01,0.05,0.1,0.25,0.5,0.75,1,5,10,25)
+  
+# Moral value points
+  wr_table_values <- c(0.001,0.01,0.025,0.5,0.1,0.15,0.35,0.5,0.75,0.9,1)
+```
+
+# Calculations
+
+## Helper functions
+
+Write helper functions to call object/vectors
+
+```{r}
+consumption <- function(country,species)  obtain(species,country,"tons")
+mshare <- function(country) obtain("mshare_welfare",country)
+psuccess <- function() get("psuccess_welfare")
+weight <- function(species) obtain("weight",species)
+lifexp <- function(species) obtain("lifexp",species)
+cost <- function() get("cost_welfare")
+stun_share <- function(species) obtain(species,"stunned")
+
+```
+
+## Number of fish affected/\$ and associated lifespan
+
+### Core calculation functions
+
+Calculate number of fish affected per dollar spent
+
+```{r}
+
+# Number of fish affected per dollar
+no_fish_affected <- function(country,species) {
+consumption(country,species)*1E3/
+  weight(species)*
+  mshare(country)*
+  psuccess()*
+  stun_share(species)*
+  years_credit*
+  implementation_discount*
+  fish_grocery
+}
+
+```
+
+Life span of affected fish
+
+```{r}
+# Fish years of affected fish}
+lifespan_affected_fish <- function(country,species) {
+no_fish_affected(country,species)*lifexp(species)/12
+}
+
+```
+
+### Execution functions
+
+Produce a table that produces every possible combination of country and species, and a list of functions over which to calculate results.
+
+```{r}
+no_of_countries <- length(country_list)
+country_species <- expand.grid(country=country_list,species=species_list) 
+measure_list <- c("lifespan_affected_fish","no_fish_affected")
+```
+
+I now write a function that calculates number of fish / lifespan affected per country/species pair, sums across all the country/species pairs, and then divides by costs across all countries.
+
+```{r}
+
+output_per_dollar <- function(fish_function) {
+
+      pmap(                           # Allows repeated calcs across different input vectors
+          country_species,                # Input vector 1: countries to run function over
+          get(fish_function)            # Calculation function (no of fish or minutes)
+                ) %>%
+       as.data.frame() %>%                  # Convert to data.frame
+       mutate(
+         total=rowSums(.)) %>%              # Work out sum of all country and species combinations
+       pull(total)/(no_of_countries*cost()) # Divide by costs across all countries
+
+}
+
+
+```
+
+### Run calculations
+
+I then produce tables with montecarlo simulation results for each measure in both wide and long format.
+
+```{r}
+
+impact_per_dollar_wide <- map(measure_list,output_per_dollar) %>%                            
+                              set_names(measure_list) %>%
+                              as.data.frame() 
+                      
+impact_per_dollar_long <-  impact_per_dollar_wide %>% 
+                            pivot_longer(
+                                cols=1:length(measure_list),
+                                names_to="description",
+                                values_to="number")       
+```
+
+Finally I produce a vector called fypd, that calculates the lifespan of affected fish, which is needed in the \$/DALY and share of simulation results.
+
+```{r}
+fypd <- output_per_dollar("lifespan_affected_fish")
+```
+
+## \$/DALY results
+
+### Core calculation functions
+
+```{r}
+
+results_dollar_per_daly <-
+   1/(
+    fypd*
+    salmon_wr*
+    interventionlifesshare*
+    fish_welfarerange_impact/
+    DALY_share_of_welfare_range) %>%
+    tibble() %>%
+    set_names("dollars_per_daly")
+
+```
+
+## Share of simulations beating \$\$/DALY benchmark
+
+### Core calculation functions
+
+```{r}
+
+#Moral value approach
+share_mv <- function(xvar,fishlifeshare,bar) {
+  mean(bar>(1/(fypd*fishlifeshare*xvar)))
+} 
+
+# Welfare range approach
+share_wr <- function(xvar,fishlifeshare,bar) {
+  mean(bar>
+      (1/
+        (xvar*
+        fypd*
+        fishlifeshare*
+        salmon_wr/
+        DALY_share_of_welfare_range
+        )))
+}
+```
+
+### Calculations
+
+Define xvar (moral value or welfare range) values for calculating share of simulations beating a particular \$/DALY bar and create combinations of xvar values, bar values and, lifeshare values over which to calculate results.
+
+```{r}
+ chart_values<- 10^seq(-4,4,0.01)
+  xvar_values <- c(chart_values,mv_table_values,wr_table_values)
+  
+share_sims_calculation_grid <-   expand_grid(
+                                    xvar=xvar_values,
+                                    bar=bar_values,
+                                    fishlifeshare=fishlifeshare_values)
+  
+```
+
+Calculate results
+
+```{r}
+share_sims_results_table <- 
+# Generate one row for unique combination of xvar_values and scenario lists
+  share_sims_calculation_grid %>%
+# Core calcualtions using share_mv and share_wr calculation functions
+    rowwise() %>%
+    mutate(
+      moral_value=share_mv(xvar,fishlifeshare,bar),
+      welfare_range=share_wr(xvar,fishlifeshare,bar)
+    ) 
+
+
+```
+
+Format results table
+
+```{r}
+share_sims_results_table %<>%
+# Convert pivot into longer format to make results easier to plot
+  pivot_longer(
+    cols=c(moral_value,welfare_range),
+    names_to="approach",
+    values_to="share_of_simulations") %>%
+# Change descriptions of variables to make results easier to interpert
+  mutate(
+    approach=str_to_sentence(str_replace_all(approach,"_"," ")),
+    bar_factor=factor(bar,levels=bar_values,labels=c("50","1K","70K")),
+    fishlifeshare_factor=factor(fishlifeshare,levels=rev(fishlifeshare_values),labels=paste0(rev(fishlifeshare_values)*100,"%")))
+
+```
+
+# Results tables/charts production functions
+
+## Impact per dollar density plots
+
+```{r}
+# Code to create impact per dollar density plot 
+
+impact_density_plot <- function(desired_filter,named_description) { 
+  impact_per_dollar_long %>%
+  filter(description==desired_filter) %>%
+  ggplot(
+    aes(
+      x=number
+    )
+  ) + 
+  geom_density() +
+  theme_light() +
+  scale_x_log10(labels = scales::comma_format(drop0trailing = TRUE),n.breaks=8) +
+    labs(
+    title=named_description,
+    y="Probability density",
+    x=paste0(named_description," (log scale)"))
+}
+```
+
+## Share of simulations
+
+Chart labels
+
+```{r}
+xlab_wr="
+    Welfare gain from intervention as a % of total fish welfare range"
+
+xlab_mv="Moral value of improving a fish life year via intervention
+relative to averting a human DALY"
+```
+
+Chart function
+
+```{r}
+
+share_sims_chart <- function (
+                        chart_approach,
+                        xvar_lower_lim=0,
+                        xvar_upper_lim=max(xvar_values),
+                        xlab_des,
+                        bar_value=50
+                        ) {
+  
+share_sims_results_table %>%
+    filter(
+    approach==chart_approach,
+    xvar<=xvar_upper_lim,
+    xvar>=xvar_lower_lim,
+    bar==bar_value
+    ) %>%
+  ggplot(
+    aes(
+      x=xvar,
+      y=share_of_simulations,
+      color=fishlifeshare_factor))+
+  geom_line()+
+  scale_color_brewer(palette = "Dark2") +
+  theme_light()+
+  labs(
+    subtitle = str_to_title(paste0(chart_approach," approach")),
+    title=paste0("Share of simulations where intervention beats ",bar_value,"$/DALY benchmark"),
+    y="Share of simulations",
+    x=xlab_des,
+    linetype="$/DALY Benchmark",
+    color="Share of fish \nlifespan affected \nby intervention",
+    caption= "Note log scale on x-axis")
+}
+
+```
+
+Table function
+
+```{r}
+share_beating_bar_table <- function(values,chart_approach,bar_value) {
+
+share_sims_results_table %>%
+  filter(
+      xvar %in% values,
+      fishlifeshare %in% fishlifeshare_values,
+      bar==bar_value,
+      approach==chart_approach) %>%
+      select(xvar,share_of_simulations,fishlifeshare_factor) %>%
+      distinct() %>%
+      pivot_wider(id_cols=xvar,names_from=fishlifeshare_factor,values_from=share_of_simulations) %>%
+      arrange(xvar) %>%
+      gt() %>%
+      tab_header(title = paste0("Share of simulations beating $",bar_value,"/DALY bar")) %>%
+      tab_spanner(label="Share of fish lifespan affected by intervention",columns=paste0(fishlifeshare_values*100,"%"))
+}
+
+wr_bar_table <- function(bar_value) {
+  share_beating_bar_table(wr_table_values,"Welfare range",bar_value) %>%
+  fmt_percent(decimals=1) %>%  
+  fmt_percent(columns=xvar,decimals=0) %>%
+  cols_label(xvar=xlab_wr) 
+}
+
+mv_bar_table <- function(bar_value) {
+  share_beating_bar_table(mv_table_values,"Moral value",bar_value) %>%
+  fmt_percent(decimals=1) %>%  
+  fmt_number(columns=xvar,drop_trailing_zeros=TRUE) %>%
+  cols_label(xvar=xlab_mv) 
+}
+```
+
+# Outputs
+
+## Impact per dollar
+
+Density plot: number of fish affected
+
+```{r}
+impact_density_plot("no_fish_affected","Number of fish affected per dollar")
+```
+
+Density plot: lifespan of fish affected
+
+```{r}
+impact_density_plot("lifespan_affected_fish","Lifespan of affected fish per dollar")
+```
+
+Results table
+
+```{r}
+tab_a22_impact_per_dollar_nonstunning <- summarystats(impact_per_dollar_wide)
+tab_a22_impact_per_dollar_nonstunning
+```
+
+## \$/DALY approach
+
+Summary stats
+
+```{r}
+summarystats(results_dollar_per_daly)
+
+
+```
+
+Density plot
+
+```{r}
+fig_a21_dollars_per_daly_nonstunning <- densplotv(results_dollar_per_daly$dollars_per_daly)+
+    scale_x_log10(
+      limits=c(1,1E12),
+      labels = scales::label_number_si(),
+      n.breaks=15)+
+    labs(
+      title="Density plot - $/DALY distribution",
+      y="",
+      x="$/DALY (log scale)")
+
+fig_a21_dollars_per_daly_nonstunning 
+```
+
+Share beating bar
+
+```{r}
+
+share_below_bar <- function(bar_value) (mean(results_dollar_per_daly<bar_value))
+
+tibble(
+  `$/DALY bar`=bar_values,
+  `Share beating bar`=map_vec(bar_values,share_below_bar)) %>% 
+  gt() %>%
+  fmt_percent(columns=`Share beating bar`,decimals =1 )
+
+
+```
+
+## Share of simulations beating bar
+
+Share of simulation chart: welfare range
+
+```{r}
+
+fig_a22_50benchmark_wv_nonstunning <- 
+share_sims_chart("Welfare range",bar_value=50,xvar_lower_lim=0.01,xvar_upper_lim=1,xlab_des=xlab_wr)+
+  scale_x_log10(labels = scales::percent_format(drop0trailing = TRUE),n.breaks=10)+
+  scale_y_continuous(limits=c(0,0.75),n.breaks=10,labels = scales::percent_format(accuracy = 1))
+
+
+```
+
+Share of simulation chart: moral value
+
+```{r}
+
+fig_a23_50benchmark_mv_nonstunning <- 
+  share_sims_chart("Moral value",bar_value=50,xvar_lower_lim=0.001,xvar_upper_lim=30,xlab_des=xlab_mv)+
+  scale_x_log10(labels = scales::label_number_si(drop0trailing = TRUE),n.breaks=11)+
+  scale_y_continuous(limits=c(0,1),n.breaks=10,labels = scales::percent_format(accuracy = 1))
+```
+
+Share of simulation results tables: \$50/DALY benchmark - welfare range
+
+```{r}
+wr_bar_table(50)
+```
+
+Share of simulation results tables: \$50/DALY benchmark - moral value
+
+```{r}
+mv_bar_table(50)
+```
+
+Share of simulations - other results (not published in the main document)
+
+```{r}
+mv_bar_table(1000)
+mv_bar_table(70000)
+wr_bar_table(1000)
+wr_bar_table(70000)
+```
+
+# Export charts for main report
+
+```{r}
+tab_a22_impact_per_dollar_nonstunning
+fig_a21_dollars_per_daly_nonstunning 
+fig_a22_50benchmark_wv_nonstunning
+fig_a23_50benchmark_mv_nonstunning
+
+
+save_chart("fig_a21_dollars_per_daly_nonstunning .png",fig_a21_dollars_per_daly_nonstunning )
+save_chart("fig_a22_50benchmark_wv_nonstunning.png",fig_a22_50benchmark_wv_nonstunning)
+save_chart("fig_a23_50benchmark_mv_nonstunning.png",fig_a23_50benchmark_mv_nonstunning)
+save_table(tab_a22_impact_per_dollar_nonstunning,"tab_a22_impact_per_dollar_nonstunning.html")
+```
+
+# Sensitivity to DALY share of welfare range assumption
+
+I now run a sensitivity analysis to see how the results might differ if:
+
+-   Fish welfare range (relative to humans) was double that used in the baseline analysis
+
+-   Averting a DALY would be equivalent to raising human welfare by 10% of human welfare range for a year (rather than 50%, as per baseline analysis).
+
+Core calculation code
+
+```{r}
+share_wr_alt <- function(xvar,fishlifeshare,bar) {
+  mean(bar>
+      (1/
+        (xvar*
+        fypd*
+        fishlifeshare*
+        salmon_wr_alt/
+        DALY_share_of_welfare_range_alt
+        )))
+}
+```
+
+Combinations over which to run analysis
+
+```{r}
+share_sims_calculation_grid_alt <-  expand_grid(
+                                    xvar=wr_table_values,
+                                    bar=50,
+                                    fishlifeshare=fishlifeshare_values)
+
+
+```
+
+Run calculations
+
+```{r}
+share_sims_results_table_alt <- 
+# Generate one row for unique combination of xvar_values and scenario lists
+  share_sims_calculation_grid_alt %>%
+# Core calcualtions using share_mv and share_wr calculation functions
+    rowwise() %>%
+    mutate(
+      base=share_wr(xvar,fishlifeshare,bar),
+      alt=share_wr_alt(xvar,fishlifeshare,bar)
+    ) %>%
+  distinct() %>%
+  mutate(
+    fishlifeshare=factor(fishlifeshare,labels=paste0(fishlifeshare*100,"%"))) %>%
+  select(-bar) %>%
+  pivot_longer(
+    cols=c(base,alt),
+    names_to="daly_assumption",
+    values_to="share_of_sims")
+```
+
+Format output
+
+```{r}
+
+alt_table_comparison <- function(assumption) {
+share_sims_results_table_alt %>% 
+ filter(daly_assumption==assumption) %>%
+ select(-daly_assumption) %>%
+  pivot_wider(
+    id_cols=xvar,
+    names_from=c(fishlifeshare),
+    values_from=share_of_sims) %>%
+  arrange(xvar) %>%
+  gt() %>%
+  fmt_percent(decimals=1) %>%
+  cols_label(
+    xvar="Welfare gain from intervention as a share of fish welfare range") %>%
+  tab_spanner(
+    label="Share of fish lifespan affected by intervention",
+    columns=-1
+      )
+}
+
+```
+
+Generate output tables
+
+```{r}
+alt_table_comparison("base") %>%
+  tab_header(title="Share of simulations beating $50/DALY - baseline assumptions")
+
+alt_table_comparison("alt") %>%
+  tab_header(title="Share of simulations beating $50/DALY - alternative assumptions")
+```
